@@ -1,0 +1,40 @@
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+        # 让gateway通过服务发现找到其他的微服务
+          enabled: true
+
+
+management:
+  # 展示详细信息
+  endpoint:
+    health:
+      show-details: always
+  # 暴露所有端点
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+#权限配置
+security:
+  #rsa非对称加密
+  rsa:
+    # 参数加密是否开启
+    enable: false
+    #公钥
+    public-key: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDT+DeESB8GTwh7KBhS344MAK6qA7HoqhwacYzkkOwlK2aig0zatLY6iHNpNGp2CO/XebR3CvrudqBEhMj+53Om7JxwGcyyv/aShEksIqBweCoUja/e5Flm6c2GSb/+AlcGxEMW2zs2ee0+6/6dEE81leIL8hcvZQsMTRg1a8RdCQIDAQAB
+    #私钥
+    private-key: MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBANP4N4RIHwZPCHsoGFLfjgwArqoDseiqHBpxjOSQ7CUrZqKDTNq0tjqIc2k0anYI79d5tHcK+u52oESEyP7nc6bsnHAZzLK/9pKESSwioHB4KhSNr97kWWbpzYZJv/4CVwbEQxbbOzZ57T7r/p0QTzWV4gvyFy9lCwxNGDVrxF0JAgMBAAECgYEAlFVxVEq8G0gXYUfvrZ7v4opfsG4hg/X28LJhrFmWR3SVwEgt8ibgFxoB2a9qiOs8HAf5OA0hCNtO0GQz293QWcrs7VtleiySo+BQ+9bAx/N2ejXipDfEMzKJCGO9g1WwyEtDFe8eaNQWFLJlq+Tm3PvCmhfYaN8tBJGahw0vfpkCQQD7CtPRLyTXzG9fH9DshxEphkobSkiQG3NbsmwLp48sByG9aDgVLyWg1AkpPduDjS3cQg0wvM/sJraovPJCSpeTAkEA2CfaYCfPj8lSOrEka5T/aF7J1LDA3IGtc+RFdCyONlUWAK9NSMChpw6CtgYmPsjrQOxElUlEC3a3pYt/flRicwJAD7h12zugiwL6VnKfmrA6mucV7O+R67RMXQmnSnOLu64Wps3H9Uumh5O/nx2IiYxlus1IFi08uAUUmyx53zzckQJAPqPN9O+UhuagncGX/FVBbs2JT8mpGj26NkuAlRoUXEpsBebHTr4EGpVp67X8f1VaV4YgmeKRhYDx11eFquZpYQJAQHzOPDgmo7hNbqNCP0vPywB3w6thfZ3DWEaxjM4XUuPG4G30oc1LYt2EoJ5bfL5M6i2EcB/8uWHVW25eqVGO+w==
+  #asc对称加密
+  aes:
+    encode:
+      #对称秘钥
+      key: ashdoawonnfvoiah
+      #编排方式
+      algorithm: AES/CBC/PKCS5Padding
+logging:
+  level:
+    root: info

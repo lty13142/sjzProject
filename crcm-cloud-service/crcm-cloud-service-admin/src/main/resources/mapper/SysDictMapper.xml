@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.sysOrg//DTD Mapper 3.0//EN" "http://mybatis.sysOrg/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.admin.mapper.SysDictMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.crcm.admin.model.entity.SysDict">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="version" property="version"/>
+        <result column="deleted" property="deleted"/>
+        <result column="code" property="code"/>
+        <result column="pid" property="pid"/>
+        <result column="value" property="value"/>
+        <result column="comments" property="comments"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        version,
+        deleted,
+        id, pid, value, comments
+    </sql>
+
+    <select id="findByDicCode" resultType="com.crcm.admin.model.entity.SysDict">
+        select * from sys_dict sd where pid = (select id from sys_dict s where s.code = #{code} and s.deleted = 0)
+        and sd.deleted = 0
+        order by sd.sort_order,sd.value
+    </select>
+    <select id="findAllDicContent" resultType="com.crcm.admin.model.entity.SysDict">
+        select dct.*,dce.code dic_code from t_sys_dic_content dct
+        inner join t_sys_dic_code dce on dct.dic_code_id = dce.id
+        where dct.deleted = 0 and dce.deleted = 0
+        order by dct.sort_order,dct.value
+    </select>
+    <select id="findContentCodeById" resultType="com.crcm.admin.model.entity.SysDict">
+        select dct.*, dce.code dic_code from t_sys_dic_content dct
+        inner join t_sys_dic_code dce on dct.dic_code_id = dce.id
+        where dct.id = #{id}
+        and dct.deleted = 0 and dce.deleted = 0
+    </select>
+    <select id="findContentCodeByCodeId" resultType="com.crcm.admin.model.entity.SysDict">
+        select dct.*, dce.code dic_code from t_sys_dic_content dct
+        inner join t_sys_dic_code dce on dct.dic_code_id = dce.id
+        where dce.id = #{codeId}
+        and dct.deleted = 0 and dce.deleted = 0
+    </select>
+    <select id="selectCacheDicts" resultType="com.crcm.admin.model.entity.SysDict">
+        select id,pid,code,name,value,comments,type,sort_order
+        from sys_dict
+        where deleted = 0
+        and enabled = #{enabled}
+        order by code,sort_order
+    </select>
+
+    <delete id="deleteByPid" parameterType="string">
+        delete from sys_dict
+        where
+        pid
+        = #{id}
+    </delete>
+
+
+</mapper>

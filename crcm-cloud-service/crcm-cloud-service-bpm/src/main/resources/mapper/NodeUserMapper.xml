@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.bpm.mapper.NodeUserMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.crcm.bpm.domain.entity.NodeUserDO">
+                    <id column="id" property="id"/>
+                <result column="create_by" property="createBy"/>
+                <result column="update_by" property="updateBy"/>
+                <result column="create_time" property="createTime"/>
+                <result column="update_time" property="updateTime"/>
+                    <result column="apply_id" property="applyId"/>
+                    <result column="proc_inst_id" property="procInstId"/>
+                    <result column="process_id" property="processId"/>
+                    <result column="process_key" property="processKey"/>
+                    <result column="node_id" property="nodeId"/>
+                    <result column="node_name" property="nodeName"/>
+                    <result column="parent_node_id" property="parentNodeId"/>
+                    <result column="parent_node_name" property="parentNodeName"/>
+                    <result column="definition_id" property="definitionId"/>
+                    <result column="tenant_id" property="tenantId"/>
+                    <result column="assignee_userId_list" property="assigneeUseridList"/>
+                    <result column="assignee_user_name_list" property="assigneeUserNameList"/>
+                    <result column="skip" property="skip"/>
+                    <result column="default_set_admin" property="defaultSetAdmin"/>
+                    <result column="error" property="error"/>
+                    <result column="remarks" property="remarks"/>
+                    <result column="deleted" property="deleted"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                create_by,
+                update_by,
+                create_time,
+                update_time,
+            id, apply_id, proc_inst_id, process_id, process_key, node_id, node_name, parent_node_id, parent_node_name, definition_id, tenant_id, assignee_userId_list, assignee_user_name_list, skip, default_set_admin, error, remarks, deleted
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM bpm_node_user WHERE id = #{id}
+    </delete>
+
+
+    <!-- MybatisPlus update PAI无法满足业务需求, 自定义""或null值更新的sql -->
+    <update id = "updateCustomIfNullById" parameterType="com.crcm.bpm.domain.entity.NodeUserDO">
+        update bpm_node_user
+        <set>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(applyId)">
+                        apply_id = #{applyId},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(procInstId)">
+                        proc_inst_id = #{procInstId},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(processId)">
+                        process_id = #{processId},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(processKey)">
+                        process_key = #{processKey},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(nodeId)">
+                        node_id = #{nodeId},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(nodeName)">
+                        node_name = #{nodeName},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(parentNodeId)">
+                        parent_node_id = #{parentNodeId},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(parentNodeName)">
+                        parent_node_name = #{parentNodeName},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(definitionId)">
+                        definition_id = #{definitionId},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(tenantId)">
+                        tenant_id = #{tenantId},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(assigneeUseridList)">
+                        assignee_userId_list = #{assigneeUseridList},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(assigneeUserNameList)">
+                        assignee_user_name_list = #{assigneeUserNameList},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(skip)">
+                        skip = #{skip},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(defaultSetAdmin)">
+                        default_set_admin = #{defaultSetAdmin},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(error)">
+                        error = #{error},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(remarks)">
+                        remarks = #{remarks},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(deleted)">
+                        deleted = #{deleted},
+                    </if>
+        </set>
+        where
+        id = #{id}
+    </update>
+
+</mapper>

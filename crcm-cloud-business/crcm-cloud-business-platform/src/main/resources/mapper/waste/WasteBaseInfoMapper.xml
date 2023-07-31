@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.waste.WasteBaseInfoMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.waste.WasteBaseInfo" id="WasteBaseInfoResult">
+        <result property="id" column="id"/>
+        <result property="directoryVersion" column="directory_version"/>
+        <result property="wasteCategory" column="waste_category"/>
+        <result property="wasteType" column="waste_type"/>
+        <result property="wasteTypeName" column="waste_type_name"/>
+        <result property="wasteCode" column="waste_code"/>
+        <result property="wasteCodeName" column="waste_code_name"/>
+        <result property="hazards" column="hazards"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectWasteBaseInfoVo">
+        select id,
+               directory_version,
+               waste_category,
+               waste_type,
+               waste_type_name,
+               waste_code,
+               waste_code_name,
+               hazards,
+               deleted,
+        from tbl_waste_base_info
+    </sql>
+
+</mapper>

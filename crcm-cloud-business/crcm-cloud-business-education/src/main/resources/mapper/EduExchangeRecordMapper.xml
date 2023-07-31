@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.education.mapper.EduExchangeRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.sjz.education.model.entity.EduExchangeRecord">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="productsId" column="products_id" jdbcType="VARCHAR"/>
+            <result property="needPoint" column="need_point" jdbcType="INTEGER"/>
+            <result property="totalPoint" column="total_point" jdbcType="INTEGER"/>
+            <result property="exchangeNumber" column="exchange_number" jdbcType="INTEGER"/>
+            <result property="exchangeCode" column="exchange_code" jdbcType="VARCHAR"/>
+            <result property="writeOffCode" column="write_off_code" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+            <result property="version" column="version" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,user_name,
+        products_id,need_point,total_point,
+        exchange_number,exchange_code,write_off_code,
+        create_time,create_by,update_time,
+        update_by,deleted,version
+    </sql>
+    <select id="countPointsByMonth" resultType="com.sjz.education.model.vo.EchartsVO">
+        SELECT DATE_FORMAT(create_time,'%Y-%m-%d') as name,sum(total_point) as value
+        FROM edu_exchange_record
+        where deleted = 0
+        and create_time between (select DATE_ADD(curdate(),interval -day(curdate())+1 day))
+        and (select last_day(curdate()))
+        GROUP BY name
+        ORDER BY name asc;
+    </select>
+
+    <select id="countPointsByYear" resultType="com.sjz.education.model.vo.EchartsVO">
+        SELECT DATE_FORMAT(create_time,'%Y-%m') as name,sum(total_point) as value
+        FROM edu_exchange_record
+        where DATE_FORMAT(create_time,'%Y') = YEAR(now())
+        and deleted = 0
+        GROUP BY name
+        ORDER BY name asc;
+    </select>
+
+    <select id="selectThisCount" resultType="java.lang.Integer">
+        select count(id)
+        from edu_exchange_record
+        where deleted = 0
+        <if test="startTime != null and startTime != ''">
+            and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(#{startTime},'%Y-%m')
+        </if>
+    </select>
+    <select id="selectLastCount" resultType="java.lang.Integer">
+        select count(id)
+        from edu_exchange_record
+        where deleted = 0
+        <if test="startTime != null and startTime != ''">
+            and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(#{startTime},'%Y-%m')
+        </if>
+    </select>
+    <select id="selectAllCount" resultType="java.lang.Integer">
+        select count(id)
+        from edu_exchange_record
+        where deleted = 0
+    </select>
+    <select id="selectLastYearCount" resultType="java.lang.Integer">
+        select count(id)
+        from edu_exchange_record
+        where deleted = 0
+        <if test="startTime != null and startTime != ''">
+            and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(#{startTime},'%Y-%m')
+        </if>
+    </select>
+    <select id="selectStaticList" resultType="com.sjz.education.model.vo.StatisticsVO">
+        select
+            <if test='queryType == "4"'>
+                DATE_FORMAT(create_time,'%Y-%m') as name,
+            </if>
+            <if test='queryType != "4"'>
+                DATE_FORMAT(create_time,'%Y-%m-%d') as name,
+            </if>
+            count(id) as value
+        from edu_exchange_record
+        where deleted = 0
+        <if test="startTime != null and startTime != ''">
+            and DATE_FORMAT(create_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{startTime},'%Y-%m-%d')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{endTime},'%Y-%m-%d')
+        </if>
+        group by name
+        order by name DESC
+    </select>
+
+    <select id="selectAllPass" resultType="com.sjz.education.model.entity.EduExchangeRecord">
+        select *
+        from
+            edu_exchange_record
+        where
+            write_off_code is not null
+        and
+            deleted = 0
+        and
+            write_off_code != ""
+        order by update_time desc
+    </select>
+
+    <select id="selectOwnPass" parameterType="string" resultType="com.sjz.education.model.entity.EduExchangeRecord">
+        select *
+        from
+            edu_exchange_record
+        where
+            write_off_code is not null
+          and
+            deleted = 0
+          and
+            write_off_code != ""
+          and
+            update_by = #{userId}
+        order by update_time desc
+    </select>
+</mapper>

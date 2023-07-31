@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.partbuilding.mapper.LeaderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.sjz.partbuilding.model.entity.Leader">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="version" property="version"/>
+        <result column="deleted" property="deleted"/>
+        <result column="org_id" property="orgId"/>
+        <result column="org_name" property="orgName"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="post_id" property="postId"/>
+        <result column="branch_type" property="branchType"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+    </resultMap>
+
+
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                create_by,
+                create_time,
+                update_by,
+                update_time,
+                version,
+                deleted,
+            id, org_id, org_name, user_id, user_name, post_id, branch_type, start_time, end_time
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM dj_leader WHERE id = #{id}
+    </delete>
+    <delete id="deleteByUseridAndOrgid">
+        update dj_leader set deleted = 1 WHERE user_id = #{userId} and org_id = #{orgId}
+    </delete>
+
+    <select id="findPage" resultMap="BaseResultMap">
+        SELECT
+        tl.`id`,tl.`org_id`,tg.`name` AS org_name,tl.`user_id`,tl.`user_name`,tl.`post_id`,tl.`branch_type`,tl.`start_time`,tl.`end_time`,tl.`create_time`,tl.`update_time`
+        FROM
+        dj_leader tl
+        LEFT JOIN dj_sys_org tg ON tl.`org_id` = tg.`id`
+        WHERE tl.`deleted` = 0
+        AND tg.`deleted` = 0
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(leader.orgId)">
+            and tl.`org_id` = #{leader.orgId}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(leader.username)">
+            and tl.`user_name` = #{leader.username}
+        </if>
+        order by tl.`post_id` ASC
+    </select>
+    <select id="getList" resultType="com.sjz.partbuilding.model.vo.LeaderVo">
+        select l.id,l.org_id,l.org_name,l.user_id,l.user_name,l.post_id
+        from dj_leader l
+        left join dj_sys_user_detail su on l.user_id = su.user_id
+        where l.deleted=0
+        and l.org_id =#{orgId}
+        order by post_id ASC
+    </select>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.sysOrg//DTD Mapper 3.0//EN" "http://mybatis.sysOrg/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.file.mapper.AttachmentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.crcm.file.model.entity.Attachment">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="version" property="version"/>
+        <result column="deleted" property="deleted"/>
+        <result column="file_name" property="fileName"/>
+        <result column="size" property="size"/>
+        <result column="path" property="path"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        version,
+        deleted,
+        id, business_id, user_id, file_name, size, path, file_type, ext, code
+    </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM t_attachments WHERE id = #{id}
+    </delete>
+
+</mapper>

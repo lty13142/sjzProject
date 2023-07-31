@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.bpm.mapper.ModelMapper">
+
+    <resultMap type="com.crcm.bpm.domain.entity.ModelDO" id="ModelResult">
+        <result property="id"    column="id"    />
+        <result property="modelName"    column="model_name"    />
+        <result property="definitionId"    column="definition_id"    />
+        <result property="flowType"    column="flow_type"    />
+        <result property="formType"    column="form_type"    />
+        <result property="formId"    column="form_id"    />
+        <result property="formName"    column="form_name"    />
+        <result property="formCode"    column="form_code"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="status"    column="status"    />
+        <result property="version"    column="version"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="flowIcon"    column="flow_icon"    />
+    </resultMap>
+
+    <sql id="selectFlowModelVo">
+        id, model_name, show_name, definition_id, flow_type, form_type, form_id, form_name, form_code, tenant_id,
+        status, model_node, create_time, update_time, create_by, update_by,
+        version, deleted, process_xml, process_key, process_svg, remark, enabled,
+        model_version, main_version, auto_complete_first_node, company_id, company_name, flow_icon
+    </sql>
+    <select id="selectPageModel" resultType="com.crcm.bpm.domain.dto.response.ModelDTO">
+        SELECT
+        m.id,
+        m.model_name,
+        m.definition_id,
+        m.flow_type,
+        m.form_type,
+        m.form_id,
+        m.form_name,
+        m.form_code,
+        m.status,
+        m.enabled,
+        m.create_time,
+        m.create_by,
+        m.update_time,
+        m.update_by,
+        m.version,
+        m.process_key,
+        m.process_xml,
+        m.process_svg,
+        m.remark,
+        m.model_version,
+        m.main_version,
+        m.auto_complete_first_node,
+        m.company_id,
+        m.company_name,
+        f.fields,
+        m.flow_icon
+        FROM
+        bpm_model m
+        LEFT JOIN
+        bpm_form f ON m.form_id = f.id
+        WHERE m.deleted = '0'
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(model.processKey)">
+            AND m.process_key = #{model.processKey}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(model.modelName)">
+            AND m.model_name like concat('%', #{model.modelName}, '%')
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(model.flowType)">
+            AND m.flow_type = #{model.flowType}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(model.companyId)">
+            AND m.company_id = #{model.companyId}
+        </if>
+        <if test="model.mainVersion != null">
+            AND m.main_version = #{model.mainVersion}
+        </if>
+        ORDER BY m.id DESC
+    </select>
+
+    <select id="selectFormIdList" resultType="java.lang.String">
+        select form_id from bpm_model where company_id=#{companyId} and deleted = 0
+    </select>
+
+    <select id="getMaxVersion" resultType="java.lang.Integer">
+        select MAX(model_version) from bpm_model where process_key = #{processKey}
+    </select>
+
+    <select id="findModelById" resultType="com.crcm.bpm.domain.entity.ModelDO">
+        select <include refid="selectFlowModelVo"/> from bpm_model where id=#{id}
+    </select>
+
+</mapper>

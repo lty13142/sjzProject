@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.evaluations.mapper.ExamineTaskMapper">
+
+    <resultMap type="com.sjz.evaluations.model.entity.ExamineTask" id="ExamineTaskResult">
+        <result property="id" column="id"/>
+        <result property="examineName" column="examine_name"/>
+        <result property="examineYear" column="examine_year"/>
+        <result property="publishDate" column="publish_date"/>
+        <result property="publishType" column="publish_type"/>
+    </resultMap>
+
+    <sql id="selectExamineTaskVo">
+        select id, examine_name, examine_year, publish_date, publish_type from kh_examine_task
+    </sql>
+
+
+    <!--查询管区考核任务分页-->
+    <select id="findRegionExamineTaskPage" resultType="com.sjz.evaluations.model.entity.ExamineTask">
+        SELECT
+        et.`id`,
+        et.`examine_name`,
+        et.`examine_year`,
+        et.`create_by`,
+        et.`publish_date`
+        FROM
+        kh_examine_task et
+        LEFT JOIN kh_examine_indicators ei ON et.`id` = ei.`examine_id`
+        LEFT JOIN kh_region_examine re ON ei.`id` = re.`indicators_id`
+        WHERE re.deleted = 0
+        AND re.`region_area_code` = #{areaCode}
+        <if test="examineTask.examineYear != null">
+            AND et.examine_year = #{examineTask.examineYear}
+        </if>
+        <if test="examineTask.examineName != '' and examineTask.examineName != null">
+            AND et.examine_name LIKE CONCAT('%',#{examineTask.examineName},'%')
+        </if>
+        GROUP BY et.`id`
+        order by et.create_time DESC
+
+    </select>
+
+    <!--查询村级考核任务分页-->
+    <select id="findVillageExamineTaskPage" resultType="com.sjz.evaluations.model.entity.ExamineTask">
+        SELECT
+        et.`id`,
+        et.`examine_name`,
+        et.`examine_year`,
+        et.`create_by`,
+        et.`publish_date`
+        FROM
+        kh_examine_task et
+        LEFT JOIN kh_examine_indicators ei ON et.`id` = ei.`examine_id`
+        LEFT JOIN kh_village_examine ve ON ei.`id` = ve.`indicators_id`
+        WHERE ve.deleted = 0
+        AND ve.`village_area_code` = #{areaCode}
+        <if test="examineTask.examineYear != null">
+            AND et.examine_year = #{examineTask.examineYear}
+        </if>
+        <if test="examineTask.examineName != '' and examineTask.examineName != null">
+            AND et.examine_name LIKE CONCAT('%',#{examineTask.examineName},'%')
+        </if>
+        GROUP BY et.`id`
+        ORDER BY et.`create_time` DESC
+    </select>
+
+
+    <!--查询管区的考核评分情况-->
+    <select id="findRegionScorePage" resultType="com.sjz.evaluations.model.vo.ExamineScoreVO">
+        SELECT
+        et.`id`,
+        et.`examine_name`,
+        et.`examine_year`,
+        re.`region_area_code`,
+        COUNT(ve.`village_area_code`) AS count_num,
+        COUNT(ve.`status` = 0 OR NULL) AS no_feedback,
+        COUNT(ve.`status` = 1 OR NULL) AS already_feedback,
+        COUNT(ve.`status` = 2 OR NULL) AS rated
+        FROM
+        kh_examine_task et
+        LEFT JOIN kh_examine_indicators ei ON et.`id` = ei.`examine_id`
+        LEFT JOIN kh_region_examine re ON ei.`id` = re.`indicators_id`
+        LEFT JOIN kh_village_examine ve ON re.`id` = ve.`region_examine_id`
+        WHERE re.deleted = 0
+        AND re.`region_area_code` = #{areaCode}
+        <if test="examineScoreDTO.examineYear != '' and examineScoreDTO.examineYear != null">
+            AND et.examine_year = #{examineScoreDTO.examineYear}
+        </if>
+        <if test="examineScoreDTO.examineName != '' and examineScoreDTO.examineName != null">
+            AND et.examine_name LIKE CONCAT('%',#{examineScoreDTO.examineName},'%')
+        </if>
+        GROUP BY et.`id`
+        ORDER BY et.`create_time` DESC
+    </select>
+
+    <!--查询村级考核评分-->
+    <select id="findVillageScorePage" resultType="com.sjz.evaluations.model.vo.VillageIndicatorsVO">
+        SELECT
+        ei.`id` AS indicators_id,
+        ei.`indicators_name`,
+        ei.`indicators_content`,
+        ei.`type`,
+        ei.`full_marks`,
+        ve.`id` AS village_id,
+        ve.`village_area_name`,
+        ve.`target`,
+        ve.`unit`,
+        ve.`complete_status`,
+        ve.`complete_value`,
+        ve.`status`,
+        ve.`feedback_content`,
+        ve.`feedback_attr`,
+        ve.`feedback_attr_name`,
+        ve.`score`,
+        ve.`score_content`,
+        ve.`verify_complete_status`
+        FROM
+        kh_examine_indicators ei
+        LEFT JOIN kh_region_examine re ON ei.`id` = re.`indicators_id`
+        LEFT JOIN kh_village_examine ve ON re.`id` = ve.`region_examine_id`
+        WHERE ve.deleted = 0
+        AND ei.`examine_id` = #{villageScoreDTO.examineId}
+        AND re.`region_area_code` = #{villageScoreDTO.regionAreaCode}
+        <if test="villageScoreDTO.indicatorsName != '' and villageScoreDTO.indicatorsName != null">
+            AND ei.indicators_name LIKE CONCAT('%',#{villageScoreDTO.indicatorsName},'%')
+        </if>
+        <if test="villageScoreDTO.villageAreaName != '' and villageScoreDTO.villageAreaName != null">
+            AND ve.village_area_name LIKE CONCAT('%',#{villageScoreDTO.villageAreaName},'%')
+        </if>
+        <if test="villageScoreDTO.status != null">
+            AND ve.status = #{villageScoreDTO.status}
+        </if>
+        ORDER BY ve.`village_area_code` ASC
+    </select>
+
+    <!--查询镇级考核任务评分  被设置了only_full_group_by-->
+    <select id="findTownScorePage" resultType="com.sjz.evaluations.model.vo.ExamineScoreVO">
+        SELECT
+        ANY_VALUE(et.`id`) AS id,
+        ANY_VALUE(et.`examine_name`) AS examine_name,
+        ANY_VALUE(et.`examine_year`) AS examine_year,
+        COUNT(ve.`village_area_code`) AS count_num,
+        COUNT(ve.`status` = 0 OR NULL) AS no_feedback,
+        COUNT(ve.`status` = 1 OR NULL) AS already_feedback,
+        COUNT(ve.`status` = 2 OR NULL) AS rated
+        FROM
+        kh_examine_task et
+        LEFT JOIN kh_examine_indicators ei ON et.`id` = ei.`examine_id`
+        LEFT JOIN kh_village_examine ve ON ei.`id` = ve.`indicators_id`
+        WHERE ve.deleted = 0
+        <if test="examineScoreDTO.examineYear != '' and examineScoreDTO.examineYear != null">
+            AND et.examine_year = #{examineScoreDTO.examineYear}
+        </if>
+        <if test="examineScoreDTO.examineName != '' and examineScoreDTO.examineName != null">
+            AND et.examine_name LIKE CONCAT('%',#{examineScoreDTO.examineName},'%')
+        </if>
+        GROUP BY et.`id`
+        ORDER BY et.`create_time` DESC
+    </select>
+
+    <!--查询考核任务下所有管区的评分情况分页-->
+    <select id="findTaskRegionScorePage" resultType="com.sjz.evaluations.model.vo.RegionScoreVO">
+        SELECT
+        ei.`examine_id`,
+        ANY_VALUE(re.`region_area_code`) AS region_area_code,
+        ANY_VALUE(re.`region_area_name`) AS region_area_name,
+        COUNT(ve.`village_area_code`) AS count_num,
+        COUNT(ve.`status` = 0 OR NULL) AS no_feedback,
+        COUNT(ve.`status` = 1 OR NULL) AS already_feedback,
+        COUNT(ve.`status` = 2 OR NULL) AS rated
+        FROM
+        kh_examine_indicators ei
+        LEFT JOIN kh_region_examine re ON ei.`id` = re.`indicators_id`
+        LEFT JOIN kh_village_examine ve ON re.`id` = ve.`region_examine_id`
+        WHERE re.deleted = 0
+        AND ei.`examine_id` = #{examineScoreDTO.examineId}
+        <if test="examineScoreDTO.regionAreaName != '' and examineScoreDTO.regionAreaName != null">
+            AND re.`region_area_name` LIKE CONCAT('%',#{examineScoreDTO.regionAreaName},'%')
+        </if>
+        GROUP BY re.`region_area_code`
+        ORDER BY re.`region_area_code` ASC
+    </select>
+
+    <!--查询当前考核任务下的所有村级考核信息-->
+    <select id="findTownExamineResultList" resultType="com.sjz.evaluations.model.vo.ExamineResultInfoVO">
+        SELECT
+        ei.`id` indicators_id,
+        ei.`indicators_name`,
+        ei.`type`,
+        ve.`target`,
+        ve.`unit`,
+        re.`region_area_code`,
+        re.`region_area_name`,
+        ve.`village_area_code`,
+        ve.`village_area_name`,
+        IF(ve.`score` IS NULL, 0, ve.`score`) AS score,
+        ve.`verify_complete_status`
+        FROM
+        kh_examine_task et
+        LEFT JOIN kh_examine_indicators ei ON et.id = ei.examine_id
+        LEFT JOIN kh_region_examine re ON ei.`id` = re.`indicators_id`
+        LEFT JOIN kh_village_examine ve ON re.`id` = ve.`region_examine_id`
+        WHERE ei.`deleted` = 0
+        <if test="examineResultDTO.examineYear != '' and examineResultDTO.examineYear != null">
+            AND et.`examine_year` = #{examineResultDTO.examineYear}
+        </if>
+        <if test="examineResultDTO.regionAreaCode != '' and examineResultDTO.regionAreaCode != null">
+            AND re.`region_area_code` = #{examineResultDTO.regionAreaCode}
+        </if>
+        <if test="examineResultDTO.indicatorsName != '' and examineResultDTO.indicatorsName != null">
+            AND ei.indicators_name LIKE CONCAT('%',#{examineResultDTO.indicatorsName},'%')
+        </if>
+        <if test="examineResultDTO.orgId != '' and examineResultDTO.orgId != null">
+            AND ei.`org_id` = #{examineResultDTO.orgId}
+        </if>
+        <if test="examineResultDTO.nikeName != '' and examineResultDTO.nikeName != null">
+            AND ei.`nike_name` LIKE CONCAT('%',#{examineResultDTO.nikeName},'%')
+        </if>
+        <if test="examineResultDTO.type != null">
+            AND ei.`type` = #{examineResultDTO.type}
+        </if>
+        AND ve.`id` IS NOT NULL
+        ORDER BY ei.create_time,re.`region_area_code`,ve.`village_area_code` ASC
+    </select>
+
+    <!--查询当前考核任务下的所有指标,指标的顺序必须和上面一个接口相同-->
+    <select id="findTownExamineIndicatorsList" resultType="com.sjz.evaluations.model.vo.ExamineResultInfoVO">
+        SELECT
+        et.`examine_year`,
+        et.`examine_name`,
+        ei.`org_name`,
+        ei.`nike_name`,
+        ei.`id` indicators_id,
+        ei.`indicators_name`,
+        ei.`type`
+        FROM
+        kh_examine_task et
+        LEFT JOIN kh_examine_indicators ei ON et.id = ei.examine_id
+        LEFT JOIN kh_region_examine re ON ei.`id` = re.`indicators_id`
+        LEFT JOIN kh_village_examine ve ON re.`id` = ve.`region_examine_id`
+        WHERE ei.`deleted` = 0
+        <if test="examineResultDTO.examineYear != '' and examineResultDTO.examineYear != null">
+            AND et.`examine_year` = #{examineResultDTO.examineYear}
+        </if>
+        <if test="examineResultDTO.regionAreaCode != '' and examineResultDTO.regionAreaCode != null">
+            AND re.`region_area_code` = #{examineResultDTO.regionAreaCode}
+        </if>
+        <if test="examineResultDTO.indicatorsName != '' and examineResultDTO.indicatorsName != null">
+            AND ei.indicators_name LIKE CONCAT('%',#{examineResultDTO.indicatorsName},'%')
+        </if>
+        <if test="examineResultDTO.orgId != '' and examineResultDTO.orgId != null">
+            AND ei.`org_id` = #{examineResultDTO.orgId}
+        </if>
+        <if test="examineResultDTO.nikeName != '' and examineResultDTO.nikeName != null">
+            AND ei.`nike_name` LIKE CONCAT('%',#{examineResultDTO.nikeName},'%')
+        </if>
+        <if test="examineResultDTO.type != null">
+            AND ei.`type` = #{examineResultDTO.type}
+        </if>
+        AND ve.`id` IS NOT NULL
+        GROUP BY ei.`id`
+        ORDER BY ei.create_time ASC
+    </select>
+
+    <!--查询村级考核结果-->
+    <select id="findVillageExamineResult" resultType="com.sjz.evaluations.model.vo.VillageIndicatorsVO">
+        SELECT
+        et.`examine_year`,
+        et.`examine_name`,
+        ei.`org_name`,
+        ei.`nike_name`,
+        ei.`id` AS indicators_id,
+        ei.`indicators_name`,
+        ei.`indicators_content`,
+        ei.`type`,
+        ve.`id` AS village_id,
+        ve.`village_area_code`,
+        ve.`village_area_name`,
+        ve.`target`,
+        ve.`unit`,
+        ve.`complete_status`,
+        ve.`complete_value`,
+        ve.`status`,
+        ve.`feedback_content`,
+        ve.`feedback_attr`,
+        ve.`feedback_attr_name`,
+        ve.`score`,
+        ve.`score_content`,
+        ve.`verify_complete_status`
+        FROM
+        kh_examine_task et
+        LEFT JOIN kh_examine_indicators ei ON et.id = ei.examine_id
+        LEFT JOIN kh_village_examine ve ON ei.`id` = ve.`indicators_id`
+        WHERE ve.deleted = 0
+        AND ve.`village_area_code` = #{villageScoreDTO.villageAreaCode}
+        AND (ve.status = 2 OR ve.status = 3)
+        <if test="villageScoreDTO.examineYear != '' and villageScoreDTO.examineYear != null">
+            AND et.`examine_year` = #{villageScoreDTO.examineYear}
+        </if>
+        <if test="villageScoreDTO.indicatorsName != '' and villageScoreDTO.indicatorsName != null">
+            AND ei.indicators_name LIKE CONCAT('%',#{villageScoreDTO.indicatorsName},'%')
+        </if>
+        <if test="villageScoreDTO.orgId != '' and villageScoreDTO.orgId != null">
+            AND ei.`org_id` = #{villageScoreDTO.orgId}
+        </if>
+        <if test="villageScoreDTO.nikeName != '' and villageScoreDTO.nikeName != null">
+            AND ei.`nike_name` LIKE CONCAT('%',#{villageScoreDTO.nikeName},'%')
+        </if>
+        <if test="villageScoreDTO.type != null">
+            AND ei.`type` = #{villageScoreDTO.type}
+        </if>
+        ORDER BY ve.`village_area_code` ASC,ve.create_time DESC
+    </select>
+</mapper>

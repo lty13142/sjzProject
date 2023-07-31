@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.yearPlan.YearPlanEnvironmentMonitoringMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.yearPlan.YearPlanEnvironmentMonitoring"
+               id="YearPlanEnvironmentMonitoringResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="lyczssjcqk" column="LYCZSSJCQK"/>
+        <result property="wrwjczbpc" column="WRWJCZBPC"/>
+        <result property="zxjcqk" column="ZXJCQK"/>
+        <result property="wtjcqk" column="WTJCQK"/>
+        <result property="sssheng" column="SSSHENG"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="xgsj" column="XGSJ"/>
+    </resultMap>
+
+    <sql id="selectYearPlanEnvironmentMonitoringVo">
+        select ID,
+               MAINID,
+               LYCZSSJCQK,
+               WRWJCZBPC,
+               ZXJCQK,
+               WTJCQK,
+               SSSHENG,
+               SSSHI,
+               SSQU,
+               XGSJ,
+        from pp_wxfw_year_plan_environment_monitoring
+    </sql>
+
+</mapper>

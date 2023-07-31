@@ -1,0 +1,144 @@
+package ${packageName}.model.entity.${moduleName};
+
+import com.baomidou.mybatisplus.annotation.*;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import java.io.Serializable;
+#foreach ($import in $importList)
+import ${import};
+#end
+#if($isLombok)
+import lombok.*;
+#else
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+#end
+#if($table.crud)
+import $baseEntityClass;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+#elseif($table.tree)
+
+#end
+/**
+ * ${functionName}对象 ${tableName}
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+#if($table.crud)
+    #set($Entity="BaseEntity")
+#elseif($table.tree)
+    #set($Entity="TreeEntity")
+#end
+#if($isLombok)
+@Setter
+@Getter
+@ToString
+#end
+@ApiModel("${functionName}")
+@TableName("${tableName}")
+public class ${ClassName} extends ${Entity} implements Serializable {
+private static final long serialVersionUID = 1L;
+
+#foreach ($column in $columns)
+    #if(!$table.isSuperColumn($column.javaField))
+    /** $column.columnComment */
+    ## 逻辑删除注解
+        #if($column.javaField == 'deleted')
+    @TableLogic
+    @TableField(fill = FieldFill.INSERT)
+        #end
+        #if(${column.pk})
+            ## 主键
+            #if($column.javaType == 'String')
+    @TableId(value = "${column.columnName}", type = IdType.ASSIGN_UUID)
+            #else
+    @TableId(value = "${column.columnName}", type = IdType.AUTO)
+            #end
+        #end
+        #if($column.isRequired == '1')
+    @ApiModelProperty(value = "$column.columnComment", required = true)
+        #else
+    @ApiModelProperty(value = "$column.columnComment")
+        #end
+        #if($column.list)
+            #set($parentheseIndex=$column.columnComment.indexOf("（"))
+            #if($parentheseIndex != -1)
+                #set($comment=$column.columnComment.substring(0, $parentheseIndex))
+            #else
+                #set($comment=$column.columnComment)
+            #end
+            #if($parentheseIndex != -1)
+            #elseif($column.javaType == 'Date')
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+            #end
+        #end
+        #if($column.isRequired == '1' && $column.javaType == 'String')
+    @NotBlank(message = "${column.columnComment}不能为空")
+        #elseif($column.isRequired == '1')
+    @NotNull(message = "${column.columnComment}不能为空")
+        #end
+        #if($column.javaType == 'String')
+            #set($StringLengthStartIndex=$column.columnType.indexOf("("))
+            #set($StringLengthRealStartIndex= $StringLengthStartIndex + 1)
+            #set($StringLengthEndIndex=$column.columnType.indexOf(")"))
+            #if($StringLengthStartIndex != -1)
+                #set($StringLength=$column.columnType.substring($StringLengthRealStartIndex, $StringLengthEndIndex))
+    @Size(max = ${StringLength}, message = "${column.columnComment}最多输入${StringLength}个字符")
+            #end
+        #end
+        #if($column.javaType == 'BigDecimal')
+            #set($fieldType=$column.columnType)
+            #if($fieldType.indexOf("(") != -1)
+                #set($intStart=$fieldType.indexOf("(") + 1)
+                #set($intEnd=$fieldType.indexOf(","))
+                #set($fractionStart=$fieldType.indexOf(",") + 1)
+                #set($fractionEnd=${fieldType.length()} - 1)
+                #set($totalLength=$fieldType.substring($intStart,$intEnd))
+                #set($fractionLength=$fieldType.substring($fractionStart,$fractionEnd))
+                #set($intLength=${totalLength} - ${fractionLength})
+    @Digits(integer = ${intLength},fraction = ${fractionLength},message = "${column.columnComment}整数最多${intLength}位，小数最多${fractionLength}位")
+            #end
+        #end
+    private $column.javaType $column.javaField;
+
+    #end
+#end
+#if(!$isLombok)
+    #foreach ($column in $columns)
+        #if(!$table.isSuperColumn($column.javaField))
+            #if($column.javaField.length() > 2 && $column.javaField.substring(1,2).matches("[A-Z]"))
+                #set($AttrName=$column.javaField)
+            #else
+                #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+            #end
+        public void set${AttrName}($column.javaType $column.javaField)
+                {
+                this.$column.javaField = $column.javaField;
+                }
+
+        public $column.javaType get${AttrName}()
+                {
+                return $column.javaField;
+                }
+        #end
+    #end
+
+@Override
+public String toString() {
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+    #foreach ($column in $columns)
+        #if($column.javaField.length() > 2 && $column.javaField.substring(1,2).matches("[A-Z]"))
+            #set($AttrName=$column.javaField)
+        #else
+            #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+        #end
+            .append("${column.javaField}", get${AttrName}())
+    #end
+        .toString();
+        }
+#end
+}

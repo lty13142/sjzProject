@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.partbuilding.mapper.PartyPaymentsMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.sjz.partbuilding.model.entity.PartyPayments">
+                    <id column="id" property="id"/>
+                <result column="create_by" property="createBy"/>
+                <result column="create_time" property="createTime"/>
+                <result column="update_by" property="updateBy"/>
+                <result column="update_time" property="updateTime"/>
+                <result column="version" property="version"/>
+                <result column="deleted" property="deleted"/>
+                    <result column="money" property="money"/>
+                    <result column="type" property="type"/>
+                    <result column="org_id" property="orgId"/>
+                    <result column="org_name" property="orgName"/>
+                    <result column="payment_time" property="paymentTime"/>
+                    <result column="remarks" property="remarks"/>
+                    <result column="party_org_id" property="partyOrgId"/>
+                    <result column="title" property="title"/>
+                    <result column="balance" property="balance"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                create_by,
+                create_time,
+                update_by,
+                update_time,
+                version,
+                deleted,
+            id, money, type, org_id, org_name, payment_time, remarks, party_org_id, title, balance
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM djparty_payments WHERE id = #{id}
+    </delete>
+
+    <select id="getBalance" resultType="decimal">
+        SELECT
+		(ss1 - ss2) balance
+	FROM
+		( SELECT IFNULL(sum(money),0) AS ss1 FROM dj_party_payments WHERE type = 0 and org_id = #{orgId}  and deleted=0 ) s1,
+		( SELECT IFNULL(sum(money),0) AS ss2 FROM dj_party_payments WHERE type = 1 and org_id = #{orgId}  and deleted=0 ) s2
+    </select>
+
+    <select id="getPage" resultType="com.sjz.partbuilding.model.vo.PartyPaymentsVo">
+        select pp.id,pp.money,pp.type,pp.org_id,pp.org_name,date_format(pp.payment_time,'%Y-%m-%d') as paymentTimeStr,pp.remarks,
+        pp.party_org_id,pp.title,if(pp.type=0,pp.money,'') as inMoney,if(pp.type=1,pp.money,'') as outMoney,pp.balance
+        from dj_party_payments pp where pp.deleted = 0
+        <if test="t.orgId != null and t.orgId != '' ">
+            and pp.org_id = #{t.orgId}
+        </if>
+        <if test="t.title != null and t.title != ''">
+            and pp.title like concat('%',#{t.title},'%')
+        </if>
+        <if test="t.type != null and t.type != ''">
+            and pp.type =#{t.type}
+        </if>
+        <if test="t.year != null and t.year != ''">
+            and pp.payment_time like concat('%',#{t.year},'%')
+        </if>
+        <if test="t.startTime != null and t.startTime != '' ">
+            and date_format(pp.payment_time,'%Y-%m-%d') >= date_format(#{t.startTime},'%Y-%m-%d')
+        </if>
+        <if test="t.endTime != null and t.endTime != '' ">
+            and date_format(#{t.endTime},'%Y-%m-%d') >= date_format(pp.payment_time,'%Y-%m-%d')
+        </if>
+        /*order by pp.payment_time desc, pp.update_time desc*/
+        order by pp.create_time desc
+    </select>
+
+    <select id="findPaymentsByYear" resultType="decimal">
+        select ifnull(sum(pp.money),0)
+        from dj_party_payments pp where pp.deleted = 0
+        <choose>
+            <when test="t.year != null and t.year !=''">
+                and YEAR(pp.payment_time)=YEAR(#{t.year})
+            </when>
+            <otherwise>
+                and YEAR(pp.payment_time)=YEAR(now())
+            </otherwise>
+        </choose>
+        <if test="t.orgId != null and t.orgId != '' ">
+            and pp.org_id = #{t.orgId}
+        </if>
+        <if test="t.partyOrgId != null and t.partyOrgId != '' ">
+            and pp.party_org_id = #{t.partyOrgId}
+        </if>
+        <if test="t.type != null and t.type != ''">
+            and pp.type = #{t.type}
+        </if>
+    </select>
+
+    <select id="findPaymentsByYear2" resultType="decimal">
+        select ifnull(sum(pp.money),0)
+        from dj_party_payments pp where pp.deleted = 0
+        <choose>
+            <when test="t.year != null and t.year !=''">
+                and YEAR(pp.payment_time)=YEAR(#{t.year})
+            </when>
+            <otherwise>
+                and YEAR(pp.payment_time)=YEAR(now())
+            </otherwise>
+        </choose>
+        and pp.org_id in
+        <foreach collection="ids" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        <if test="t.partyOrgId != null and t.partyOrgId != '' ">
+            and pp.party_org_id = #{t.partyOrgId}
+        </if>
+        <if test="t.type != null and t.type != ''">
+            and pp.type = #{t.type}
+        </if>
+    </select>
+
+    <select id="getPaymentsByMonth" resultType="map">
+        SELECT concat(a.month,'月') as month , ifnull(b.money, 0) partyMoney  FROM
+        (SELECT 1 month UNION ALL SELECT 2 month UNION ALL SELECT 3 month UNION ALL SELECT 4 month
+        UNION ALL SELECT 5 month UNION ALL SELECT 6 month UNION ALL  SELECT 7 month UNION ALL
+        SELECT 8 month UNION ALL SELECT 9 month UNION ALL SELECT 10 month UNION ALL SELECT 11 month
+        UNION ALL SELECT 12 month ) a
+        left join
+        (select MONTH(pp.payment_time) month,sum(pp.money) as money from dj_party_payments pp where pp.deleted = 0
+        and YEAR(payment_time)=YEAR(now())
+        <if test="t.orgId != null and t.orgId != '' ">
+            and pp.org_id = #{t.orgId}
+        </if>
+        <if test="t.partyOrgId != null and t.partyOrgId != '' ">
+            and pp.party_org_id = #{t.partyOrgId}
+        </if>
+        <if test="t.type != null and t.type != ''">
+            and pp.type = #{t.type}
+        </if>
+        GROUP BY MONTH(pp.payment_time)) b  on a.month = b.month
+        ORDER BY a.month
+    </select>
+
+    <!-- 首页查询年度党建经费列表 -->
+    <select id="findPartyPaymentsPage" resultType="com.sjz.partbuilding.model.vo.PartyPaymentsVo">
+        select pp.id,pp.money,pp.type,pp.org_id,pp.org_name,date_format(pp.payment_time,'%Y-%m-%d') as paymentTimeStr,pp.remarks,
+        pp.party_org_id,pp.title,if(pp.type=0,pp.money,'') as inMoney,if(pp.type=1,pp.money,'') as outMoney,pp.balance
+        from dj_party_payments pp where pp.deleted = 0
+        <if test="t.orgId != null and t.orgId != '' ">
+            and pp.org_id = #{t.orgId}
+        </if>
+        <if test="t.title != null and t.title != ''">
+            and pp.title like concat('%',#{t.title},'%')
+        </if>
+        <if test="t.type != null and t.type != ''">
+            and pp.type =#{t.type}
+        </if>
+        <choose>
+            <when test="t.year != null and t.year != ''">
+                and YEAR(pp.payment_time)=YEAR(#{t.year})
+            </when>
+            <otherwise>
+                and YEAR(pp.payment_time)=YEAR(now())
+            </otherwise>
+        </choose>
+        /*order by pp.payment_time desc, pp.update_time desc*/
+        order by pp.create_time desc
+    </select>
+</mapper>

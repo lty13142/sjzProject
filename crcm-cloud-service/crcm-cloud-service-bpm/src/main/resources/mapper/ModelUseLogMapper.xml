@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.bpm.mapper.ModelUseLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.crcm.bpm.domain.entity.ModelUseLogDO">
+        <id column="id" property="id" />
+        <result column="use_uri" property="useUri" />
+        <result column="use_method" property="useMethod" />
+        <result column="use_user_id" property="useUserId" />
+        <result column="use_user_name" property="useUserName" />
+        <result column="old_data" property="oldData" />
+        <result column="new_data" property="newData" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="use_ip" property="useIp" />
+        <result column="business_id" property="businessId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, use_uri, use_method, use_user_id, use_user_name, old_data, new_data, create_time, update_time, use_ip, business_id
+    </sql>
+
+</mapper>

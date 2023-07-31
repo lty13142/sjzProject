@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.admin.mapper.SysPositionMapper">
+    
+    <resultMap type="com.crcm.admin.model.entity.SysPosition" id="PositionResult">
+        <result property="id"    column="id"    />
+        <result property="positionName"    column="position_name"    />
+        <result property="departmentId"    column="department_id"    />
+        <result property="positionLevel"    column="position_level"    />
+        <result property="deleted"    column="deleted"    />
+    </resultMap>
+
+    <sql id="selectPositionVo">
+        select id, position_name, department_id, position_level, deleted, from sys_position
+    </sql>
+
+    <select id="findPositionPageVo" parameterType="com.crcm.admin.model.vo.SysPositionVo" resultType="com.crcm.admin.model.vo.SysPositionVo">
+        select
+            a.*,
+            b.name as orgName
+        from
+            sys_position a
+        inner join sys_org b on a.department_id = b.id
+        where
+            a.deleted = 0
+        <if test="vo.positionName != '' and vo.positionName != null">
+            and position_name like CONCAT('%',#{vo.positionName},'%')
+        </if>
+    </select>
+
+</mapper>

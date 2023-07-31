@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.bpm.mapper.ReportColumnMapper">
+
+    <resultMap type="com.crcm.bpm.domain.entity.ReportColumnDO" id="FormResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="version"    column="version"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="columnTypeName"    column="column_type_name"/>
+        <result property="value"    column="value"/>
+        <result property="filed"    column="filed"/>
+    </resultMap>
+
+    <sql id="Base">
+       r.id,r.name,r.version,r.deleted,r.company_id,r.company_name,r.column_type_name,r.value,r.filed
+    </sql>
+
+
+    <select id="searchPage" resultType="com.crcm.bpm.api.vo.ReportColumnVO">
+        select h.data_value,h.apply_id,c.column_type_name,c.`value`,h.apply_id
+        from bpm_history_form_data h
+        join bpm_report_column c on  c.`value`=data_name
+        where 1=1
+        and data_name in
+        <foreach collection="collect" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+          and filed=#{filed}
+          and process_id=#{id}
+          and c.deleted=0
+    </select>
+
+</mapper>

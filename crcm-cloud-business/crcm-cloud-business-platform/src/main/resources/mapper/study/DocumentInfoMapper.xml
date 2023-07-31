@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.study.DocumentInfoMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.study.DocumentInfo" id="DocumentInfoResult">
+        <result property="id" column="id"/>
+        <result property="file_name" column="fileName"/>
+        <result property="fileId" column="file_id"/>
+        <result property="doc_type" column="docType"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectDocumentInfoVo">
+        select id, file_name, file_id, doc_type, create_user, deleted
+        from tbl_document_info
+    </sql>
+
+    <select id="findDocumentInfoPage" resultType="com.zsgf.platform.vo.study.DocumentInfoVo">
+        select id, file_name, file_id, doc_type, deleted, create_user, create_time, update_time
+        from tbl_document_info
+        where deleted = 0
+        <if test="doc.docType != null">
+            and doc_type = #{doc.docType}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(doc.fileName)">
+            and file_name like CONCAT('%', #{doc.fileName}, '%')
+        </if>
+        order by create_time desc
+    </select>
+
+</mapper>

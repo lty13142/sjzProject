@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.admin.mapper.ResourceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.crcm.admin.model.entity.SysResource">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+        <result column="name" property="name"/>
+        <result column="pid" property="pid"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        version,
+        deleted,
+        id, name, code, pid,  comments
+    </sql>
+    <delete id="realDelete">
+        delete from sys_resource where id = #{id}
+    </delete>
+
+    <select id="findTree" resultType="com.crcm.core.dto.TreeView">
+        select id,name as label,pid from sys_resource where deleted = 0
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+        order by id
+    </select>
+    <select id="selectUserResources" resultType="com.crcm.admin.model.entity.SysResource">
+        SELECT
+            r.id,
+            r.name,
+            r.value,
+            r.description,
+            r.enabled,
+            r.auth_type,
+            ur.user_id
+        FROM
+            sys_user_role ur
+            INNER JOIN sys_permission p ON p.role_id = ur.role_id
+            AND p.type = 1
+            INNER JOIN sys_resource r ON r.id = p.permission_id
+        WHERE
+            ur.user_id = 1
+        ORDER BY r.id
+    </select>
+    <select id="selectAllEnabledResource" resultType="com.crcm.admin.model.dto.res.ResourceDTO">
+        SELECT
+            r.id,
+            r.NAME,
+            r.url,
+            r.description,
+            GROUP_CONCAT( CONCAT(ro.organize,'_',ro.value) ) roles
+        FROM
+            sys_resource r
+            INNER JOIN sys_permission p ON r.id = p.permission_id
+            LEFT JOIN sys_role ro ON ro.id = p.role_id
+            AND p.type = 1
+        WHERE
+            r.enabled = 1
+            AND r.deleted = 0
+            AND r.type = 0
+        GROUP BY
+            r.id
+        ORDER BY
+            r.id
+    </select>
+
+</mapper>

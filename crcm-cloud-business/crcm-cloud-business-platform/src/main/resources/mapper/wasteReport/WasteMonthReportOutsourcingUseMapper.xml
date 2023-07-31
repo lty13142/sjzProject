@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.wasteReport.WasteMonthReportOutsourcingUseMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.wasteReport.WasteMonthReportOutsourcingUse"
+               id="WasteMonthReportOutsourcingUseResult">
+        <result property="id" column="ID"/>
+        <result property="childid" column="CHILDID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="zyldbh" column="ZYLDBH"/>
+        <result property="jsdwssseng" column="JSDWSSSENG"/>
+        <result property="jsdwmc" column="JSDWMC"/>
+        <result property="wwlyczl" column="WWLYCZL"/>
+        <result property="xzz" column="XZZ"/>
+        <result property="czfsdl" column="CZFSDL"/>
+        <result property="czfsxl" column="CZFSXL"/>
+        <result property="xkzbh" column="XKZBH"/>
+        <result property="rqsl" column="RQSL"/>
+        <result property="jldw" column="JLDW"/>
+        <result property="remark" column="REMARK"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectWasteMonthReportOutsourcingUseVo">
+        select ID,
+               CHILDID,
+               MAINID,
+               ZYLDBH,
+               JSDWSSSENG,
+               JSDWMC,
+               WWLYCZL,
+               XZZ,
+               CZFSDL,
+               CZFSXL,
+               XKZBH,
+               RQSL,
+               JLDW,
+               REMARK,
+               MODIFYRQ,
+        from pp_wxfw_waste_month_report_outsourcing_use
+    </sql>
+
+</mapper>

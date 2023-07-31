@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.evaluations.mapper.GrRewardPunishmentMapper">
+    
+    <resultMap type="com.sjz.evaluations.model.entity.GrRewardPunishment" id="GrRewardPunishmentResult">
+        <result property="name"    column="name"    />
+        <result property="rewardTime"    column="reward_time"    />
+        <result property="organizationalMatters"    column="organizational_matters"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="attachment"    column="attachment"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="organizationId"    column="organization_id"    />
+    </resultMap>
+
+    <sql id="selectGrRewardPunishmentVo">
+        select name, reward_time, organizational_matters, remarks, attachment, deleted, organization_id, from gr_reward_punishment
+    </sql>
+    <select id="findGrRewardPunishmentPage" resultType="com.sjz.evaluations.model.entity.GrRewardPunishment">
+        select p.*,gom.name as gomName,d.name as dName
+        from gr_reward_punishment p
+        join gr_organization_management gom on p.organization_id = gom.id
+        left join gr_district d on d.id=gom.pid  where d.deleted=0 and p.deleted=0 and gom.deleted=0
+        <where>
+            <if test="gr.organizationId!=null and gr.organizationId!=''">
+              and p.organization_id =#{gr.organizationId}
+            </if>
+            <if test="gr.name!=null and gr.name!=''">
+                and p.name like concat('%', #{gr.name}, '%')
+            </if>
+
+        </where>
+
+    </select>
+    <select id="penaltyStatistics" resultType="com.sjz.evaluations.model.vo.RewardPunishmentVo">
+        select organization_id name,count(*) num from gr_reward_punishment where deleted=0 and organizational_matters=1 group by organization_id order by count(*) desc
+    </select>
+
+</mapper>

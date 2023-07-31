@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.businessReport.BusinessMonthReportSecondaryWasteMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.businessReport.BusinessMonthReportSecondaryWaste"
+               id="BusinessMonthReportSecondaryWasteResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="mlnf" column="MLNF"/>
+        <result property="fwdlbh" column="FWDLBH"/>
+        <result property="fwdlmc" column="FWDLMC"/>
+        <result property="fwxlbh" column="FWXLBH"/>
+        <result property="fwxlmc" column="FWXLMC"/>
+        <result property="fwxxmc" column="FWXXMC"/>
+        <result property="dycsl" column="DYCSL"/>
+        <result property="zxlyczl" column="ZXLYCZL"/>
+        <result property="dydzcl" column="DYDZCL"/>
+        <result property="sydzcl" column="SYDZCL"/>
+        <result property="wwlyczl" column="WWLYCZL"/>
+        <result property="wwczdwmc" column="WWCZDWMC"/>
+        <result property="dnljcsl" column="DNLJCSL"/>
+        <result property="sldw" column="SLDW"/>
+        <result property="state" column="STATE"/>
+        <result property="bz" column="BZ"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectBusinessMonthReportSecondaryWasteVo">
+        select ID,
+               MAINID,
+               MLNF,
+               FWDLBH,
+               FWDLMC,
+               FWXLBH,
+               FWXLMC,
+               FWXXMC,
+               DYCSL,
+               ZXLYCZL,
+               DYDZCL,
+               SYDZCL,
+               WWLYCZL,
+               WWCZDWMC,
+               DNLJCSL,
+               SLDW,
+               STATE,
+               BZ,
+               SSSHI,
+               SSQU,
+               MODIFYRQ,
+        from pp_wxfw_business_month_report_secondary_waste
+    </sql>
+
+</mapper>

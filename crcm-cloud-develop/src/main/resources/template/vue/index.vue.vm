@@ -1,0 +1,409 @@
+<template>
+  <div class="app-container">
+    <el-card>
+      <div class="filter-container">
+        <el-form
+        :model="queryParams"
+        ref="queryForm"
+        :inline="true"
+        label-width="68px">
+#foreach($column in $columns)
+#if($column.query)
+#set($dictType=$column.dictType)
+#set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+#set($parentheseIndex=$column.columnComment.indexOf("（"))
+#if($parentheseIndex != -1)
+#set($comment=$column.columnComment.substring(0, $parentheseIndex))
+#else
+#set($comment=$column.columnComment)
+#end
+#if($column.htmlType == "input")
+          <el-form-item label="${comment}" prop="${column.javaField}">
+            <el-input
+              v-model="queryParams.${column.javaField}"
+              placeholder="请输入${comment}"
+              clearable
+              size="small"
+              @keyup.enter.native="handleFilter"
+            />
+          </el-form-item>
+#elseif(($column.htmlType == "select" || $column.htmlType == "radio") && "" != $dictType)
+          <el-form-item label="${comment}" prop="${column.javaField}">
+            <el-select v-model="queryParams.${column.javaField}" placeholder="请选择${comment}" clearable size="small">
+              <el-option
+                v-for="dict in ${column.javaField}Options"
+                :key="dict.value"
+                :label="dict.chName"
+                :value="dict.value"
+              />
+            </el-select>
+          </el-form-item>
+#elseif(($column.htmlType == "select" || $column.htmlType == "radio") && $dictType)
+          <el-form-item label="${comment}" prop="${column.javaField}">
+            <el-select v-model="queryParams.${column.javaField}" placeholder="请选择${comment}" clearable size="small">
+              <el-option label="请选择字典生成" value="" />
+            </el-select>
+          </el-form-item>
+#elseif($column.htmlType == "datetime")
+          <el-form-item label="${comment}" prop="${column.javaField}">
+            <el-date-picker clearable size="small" style="width: 200px"
+              v-model="queryParams.${column.javaField}"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="选择${comment}">
+            </el-date-picker>
+          </el-form-item>
+#end
+#end
+#end
+          <el-form-item>
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleFilter">
+                查询
+            </el-button>
+            <el-button
+              icon="el-icon-refresh"
+              size="mini"
+              @click="resetQuery">
+                重置
+            </el-button>
+            <el-button
+              type="primary"
+              icon="el-icon-plus"
+              size="mini"
+              @click="handleAdd"
+              v-hasPermission="['add']"
+            >
+              新增
+            </el-button>
+            <el-button
+              type="warning"
+              icon="el-icon-download"
+              size="mini"
+              @click="handleDownload"
+              :loading="downloadLoading"
+              v-hasPermission="['export']"
+            >
+              导出
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+
+        <el-table
+          :key="tableKey"
+          v-loading="listLoading"
+          :data="listData"
+          border
+          fit:true
+          highlight-current-row
+          style="width: 100%"
+          @selection-change="handleSelectionChange"
+        >
+          <el-table-column type="selection" width="55" align="center" />
+#foreach($column in $columns)
+#set($javaField=$column.javaField)
+#set($parentheseIndex=$column.columnComment.indexOf("（"))
+#if($parentheseIndex != -1)
+#set($comment=$column.columnComment.substring(0, $parentheseIndex))
+#else
+#set($comment=$column.columnComment)
+#end
+#if($column.pk)
+        <el-table-column label="${comment}" align="center" prop="${javaField}" />
+#elseif($column.list && $column.htmlType == "datetime")
+          <el-table-column label="${comment}" align="center" prop="${javaField}" width="180">
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.${javaField}, '{y}-{m}-{d}') }}</span>
+            </template>
+          </el-table-column>
+#elseif($column.list && "" != $column.dictType)
+        <el-table-column label="${comment}" align="center" prop="${javaField}" :formatter="${javaField}Format" />
+#elseif($column.list && "" != $javaField)
+        <el-table-column label="${comment}" align="center" prop="${javaField}" />
+#end
+#end
+          <el-table-column label="操作" align="center" width="210px" class-name="small-padding fixed-width">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="primary"
+                @click="handleUpdate(scope.row)"
+                v-hasPermission="['edit']"
+              >
+              修改
+              </el-button>
+              <el-button
+                size="mini"
+                type="primary"
+                @click="handleView(scope.row)"
+                v-hasPermission="['view']"
+              >
+              查看
+              </el-button>
+              <el-button
+                size="mini"
+                type="danger"
+                @click="handleDelete(scope.row)"
+                v-hasPermission="['delete']"
+              >
+              删除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+    
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="queryParams.current"
+          :limit.sync="queryParams.size"
+          @pagination="getList"
+        />
+
+        <!-- 添加或修改${functionName}对话框 -->
+        <el-dialog
+          :title="textMap[dialogStatus]"
+          v-if="dialogFormVisible"
+          :visible.sync="dialogFormVisible"
+          :close-on-click-modal="false"
+          width="500px"
+        >
+          <${BusinessName}Form ref="${businessName}Form" :operate-type="dialogStatus" />
+          <div slot="footer" class="dialog-footer" align="center">
+            <el-button
+              v-if="dialogStatus !== 'view'"
+              type="primary"
+              :loading="btnLoading"
+              @click="submitForm()"
+            >
+              确定
+            </el-button>
+            <el-button @click="dialogFormVisible = false"> 取消 </el-button>
+          </div>
+        </el-dialog>
+    </el-card>
+  </div>
+</template>
+
+<script>
+import Pagination from '@/components/Pagination'
+import { page${BusinessName},  del${BusinessName} } from "@/api/${moduleName}/${businessName}";
+import ${BusinessName}Form from './index.vue${BusinessName}Form'
+export default {
+  name: "${BusinessName}",
+  components: {
+    Pagination,
+    ${BusinessName}Form
+  },
+  data() {
+    return {
+      tableKey: 0,
+      // 数据加载状态
+      listLoading: false,
+      // 按钮加载状态
+      btnLoading: false,
+       // 下载加载状态
+      downloadLoading: false,
+      // 选中数组
+      ids: [],
+      // 总条数
+      total: 0,
+      // ${functionName}表格数据
+      listData: [],
+      // 是否显示弹出层
+      dialogFormVisible: false,
+      // 操作识别字段 create/update/view
+      dialogStatus: '',
+      // 常量字段列表
+      textMap: {
+        update: '编辑${functionName}',
+        create: '新增${functionName}',
+        view: '查看${functionName}'
+      },
+#foreach ($column in $columns)
+#set($parentheseIndex=$column.columnComment.indexOf("（"))
+#if($parentheseIndex != -1)
+#set($comment=$column.columnComment.substring(0, $parentheseIndex))
+#else
+#set($comment=$column.columnComment)
+#end
+#if(${column.dictType} != '')
+      // $comment字典
+      ${column.javaField}Options: [],
+#end
+#end
+      // 查询参数
+      queryParams: {
+        current: 1,
+        size: 10,
+#foreach ($column in $columns)
+#if($column.query)
+        $column.javaField: undefined#if($velocityCount != $columns.size()),#end
+#end
+#end
+      },
+      // 表单参数
+      form: {},
+
+    };
+  },
+  created() {
+    this.getList();
+#foreach ($column in $columns)
+#if(${column.dictType} != '')
+    this.getDicts("${column.dictType}").then(response => {
+      this.${column.javaField}Options = response.data;
+    });
+#end
+#end
+  },
+  methods: {
+    /** 刷新${functionName}列表 */
+    refresh () {
+      this.dialogFormVisible = false
+      this.btnLoading = false
+      this.getList()
+    },
+    /** 查询${functionName}列表 */
+    getList() {
+      this.listLoading = true;
+      page${BusinessName}(this.queryParams).then(res => {
+        if (res.success) {
+            this.listData = res.data.records
+            this.total = res.data.total
+        }
+        this.listLoading = false;
+      });
+    },
+    /** 搜索按钮操作 */
+    handleFilter() {
+      this.queryParams.current = 1;
+      this.getList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleFilter();
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.${pkColumn.javaField})
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.dialogStatus = 'create'
+      this.dialogFormVisible = true
+      this.btnLoading = false
+      this.$nextTick(() => {
+        this.$refs.${businessName}Form.init()
+      })
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.dialogStatus = 'update'
+      this.dialogFormVisible = true
+      this.btnLoading = false
+      this.$nextTick(() => {
+        this.$refs.${businessName}Form.form = Object.assign({}, row)
+        this.$refs.${businessName}Form.init()
+      })
+    },
+    /** 提交按钮 */
+    submitForm: function() {
+      this.$refs.${businessName}Form.validateForm().then(valid => {
+        if (this.dialogStatus === 'create') {
+             this.messageBox.confirm('确认新增吗?').then(() => {
+                this.btnLoading = true
+                this.$refs.${businessName}Form.create()
+              }).then(() => {
+                setTimeout(() => {
+                  this.refresh()
+                }, 1000)
+              })
+          } else {
+            this.messageBox.confirm('确认修改吗?').then(() => {
+                this.btnLoading = true
+                this.$refs.${businessName}Form.update()
+              }).then(() => {
+                setTimeout(() => {
+                  this.refresh()
+                }, 1000)
+              })
+          }
+      })
+    },
+    /** 查看详情操作 */
+    handleView(row) {
+      this.dialogStatus = 'view'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs.${businessName}Form.form = Object.assign({}, row)
+        this.$refs.${businessName}Form.init()
+      })
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const data = { id: row.${pkColumn.javaField} }
+      this.messageBox.confirm('是否确认删除${functionName}编号为："' + row.${pkColumn.javaField} + '"的数据?').then(() => {
+        del${BusinessName}(data).then(res => {
+          if (res.success) {
+            this.messageBox.success('删除成功')
+          } else {
+            this.messageBox.error('删除成功')
+          }
+        }).then(() => {
+          setTimeout(() => {
+            this.refresh()
+          }, 1000)
+        })
+      })
+    },
+    /** 导出按钮操作 */
+    ## handleExport() {
+    ##   const queryParams = this.queryParams;
+    ##   this.messageBox.confirm('是否确认导出所有${functionName}数据?').then(() => {
+    ##     this.downloadLoading = true
+    ##     export${BusinessName}(queryParams)
+    ##   }).then(() => {
+    ##     this.downloadLoading = false
+    ##   })
+    ## },
+    /** 前端导出，需要后端导出请用easyExcel */
+    handleDownload () {
+      this.messageBox.confirm('是否确认导出${functionName}数据?').then(() => {
+        this.downloadLoading = true
+        import('@/utils/Export2Excel').then(excel => {
+          const tHeader = [
+          #foreach ($column in $columns)
+              '$column.columnComment'#if($velocityCount != $columns.size()), #end
+          #end
+          ]
+          const filterVal = [
+            #foreach ($column in $columns)
+              '$column.javaField'#if($velocityCount != $columns.size()), #end
+            #end
+          ]
+          const data = this.formatJson(filterVal)
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            autoWidth: false,
+            filename: '${functionName}'
+          })
+        })
+      }).then(() => {
+        this.downloadLoading = false
+      })
+    },
+    formatJson (filterVal) {
+      return this.listData.map(v => filterVal.map(j => {
+        return v[j]
+      }))
+    }
+  }
+};
+</script>

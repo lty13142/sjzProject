@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.evaluations.mapper.AssessmentScoreMapper">
+    
+    <resultMap type="com.sjz.evaluations.model.entity.AssessmentScore" id="AssessmentScoreResult">
+        <result property="id"    column="id"    />
+        <result property="examineId"    column="examine_id"    />
+        <result property="firstOrder"    column="first_order"    />
+        <result property="secondaryOrder"    column="secondary_order"    />
+        <result property="threeOrder"    column="three_order"    />
+        <result property="fourOrder"    column="four_order"    />
+        <result property="content"    column="content"    />
+        <result property="lastStage"    column="last_stage"    />
+        <result property="confirm"    column="confirm"    />
+        <result property="complete"    column="complete"    />
+        <result property="areaId"    column="area_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="attachment"    column="attachment"    />
+        <result property="score"    column="score"    />
+        <result property="deleted"    column="deleted"    />
+    </resultMap>
+
+    <sql id="selectAssessmentScoreVo">
+        select id, examine_id, first_order, secondary_order, three_order, four_order, content, last_stage, confirm, complete, area_id, user_id, attachment, score, deleted, from gr_assessment_score
+    </sql>
+    <select id="assessmentScorePage" resultType="com.sjz.evaluations.model.vo.scoreVo">
+        select area_id name, sum(score) score,count(*) from gr_assessment_score where yearly=#{assessmentScore.yearly} group by  area_id order by score desc
+    </select>
+    <select id="lastStatistics" resultType="com.sjz.evaluations.model.entity.AssessmentScore">
+        select * from gr_assessment_score where yearly=#{year} order by score desc  limit 5
+    </select>
+    <select id="scoreCount" resultType="java.util.Map">
+        select ifnull(b.num,0) num,a.date month from (
+                                                         SELECT DATE_FORMAT(DATE_SUB(curdate(), INTERVAL 0 MONTH), '%Y-%m') AS date UNION
+                                                         SELECT DATE_FORMAT(DATE_SUB(curdate(), INTERVAL 1 MONTH), '%Y-%m') AS date UNION
+                                                         SELECT DATE_FORMAT(DATE_SUB(curdate(), INTERVAL 2 MONTH), '%Y-%m') AS date UNION
+                                                         SELECT DATE_FORMAT(DATE_SUB(curdate(), INTERVAL 3 MONTH), '%Y-%m') AS date UNION
+                                                         SELECT DATE_FORMAT(DATE_SUB(curdate(), INTERVAL 4 MONTH), '%Y-%m') AS date UNION
+                                                         SELECT DATE_FORMAT(DATE_SUB(curdate(), INTERVAL 5 MONTH), '%Y-%m') AS date UNION
+                                                         SELECT DATE_FORMAT(DATE_SUB(curdate(), INTERVAL 6 MONTH), '%Y-%m') AS date UNION
+                                                         SELECT DATE_FORMAT(DATE_SUB(curdate(), INTERVAL 7 MONTH), '%Y-%m') AS date UNION
+                                                         SELECT DATE_FORMAT(DATE_SUB(curdate(), INTERVAL 8 MONTH), '%Y-%m') AS date UNION
+                                                         SELECT DATE_FORMAT(DATE_SUB(curdate(), INTERVAL 9 MONTH), '%Y-%m') AS date UNION
+                                                         SELECT DATE_FORMAT(DATE_SUB(curdate(), INTERVAL 10 MONTH), '%Y-%m') AS date UNION
+                                                         SELECT DATE_FORMAT(DATE_SUB(curdate(), INTERVAL 11 MONTH), '%Y-%m') AS date) a
+                                                         left join (
+            select sum(score) num,date_format(update_time,'%Y-%m') month from gr_assessment_score where area_id=#{areaId} and yearly=#{year}      AND DATE_FORMAT(update_time,'%Y-%m') > DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 12 MONTH),'%Y-%m') group by month
+        ) b on a.date=b.month
+    </select>
+    <select id="indicatorCategoryStatistics" resultType="java.util.Map">
+        select four_order,area_id,score from gr_assessment_score where yearly=#{year}  group by area_id, four_order order by score desc, area_id limit 6
+    </select>
+
+    <select id="getAllList" parameterType="list" resultType="com.sjz.evaluations.model.entity.AssessmentScore">
+        select *
+        from
+            gr_assessment_score
+        where
+            deleted = 0
+        and
+            yearly = YEAR(SYSDATE())
+    </select>
+
+    <select id="getAllListLast" parameterType="list" resultType="com.sjz.evaluations.model.entity.AssessmentScore">
+        select *
+        from
+            gr_assessment_score
+        where
+            deleted = 0
+          and
+            yearly = YEAR(SYSDATE()) - 1
+    </select>
+
+</mapper>

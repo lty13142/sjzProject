@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.crcm.file.api.feign.fallback.RemoteFileServiceFallbackFactory

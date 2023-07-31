@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.businessLicense.BusinessLicenseMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.businessLicense.BusinessLicense" id="BusinessLicenseResult">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="operateWay" column="operate_way"/>
+        <result property="operateScale" column="operate_scale"/>
+        <result property="certAuth" column="cert_auth"/>
+        <result property="certAuthLev" column="cert_auth_lev"/>
+        <result property="licenseCode" column="license_code"/>
+        <result property="firstTime" column="first_time"/>
+        <result property="certTime" column="cert_time"/>
+        <result property="validStart" column="valid_start"/>
+        <result property="validEnd" column="valid_end"/>
+        <result property="facilitiesAddress" column="facilities_address"/>
+        <result property="companyType" column="company_type"/>
+        <result property="permitType" column="permit_type"/>
+        <result property="nullifyTime" column="nullify_time"/>
+        <result property="limitArea" column="limit_area"/>
+        <result property="limitCompanyType" column="limit_company_type"/>
+        <result property="state" column="state"/>
+        <result property="wasteType" column="waste_type"/>
+        <result property="dataSource" column="data_source"/>
+        <result property="operateScaleFile" column="operate_scale_file"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectBusinessLicenseVo">
+        select bl.id,
+               bl.company_id,
+               bl.operate_way,
+               bl.operate_scale,
+               bl.cert_auth,
+               bl.cert_auth_lev,
+               bl.license_code,
+               bl.first_time,
+               bl.cert_time,
+               bl.valid_start,
+               bl.valid_end,
+               bl.facilities_address,
+               bl.company_type,
+               bl.permit_type,
+               bl.nullify_time,
+               bl.limit_area,
+               bl.limit_company_type,
+               bl.state,
+               bl.waste_type,
+               bl.data_source,
+               bl.operate_scale_file,
+               bl.update_time,
+               bl.deleted
+    </sql>
+
+    <select id="findBusinessLicensePage" resultType="com.zsgf.platform.vo.businessLicense.BusinessLicenseVo">
+        <include refid="selectBusinessLicenseVo"/>
+        ,ci.ENTERNAME AS companyName
+        from pp_wxfw_business_license bl
+        inner join pp_company_info ci
+        on bl.company_id = ci.ID
+        where bl.deleted = 0
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.licenseCode)">
+            and bl.license_code like CONCAT('%', #{dto.licenseCode}, '%')
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.operateWay)">
+            and bl.operate_way like CONCAT('%', #{dto.operateWay}, '%')
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.companyId)">
+            and bl.company_id = #{dto.companyId}
+        </if>
+        order by bl.cert_time desc
+    </select>
+
+</mapper>

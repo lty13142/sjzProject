@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.SysOrg//DTD Mapper 3.0//EN" "http://mybatis.SysOrg/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.admin.mapper.RoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.crcm.admin.model.entity.SysRole">
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        version,
+        id, role_name, role_code, pid, deleted
+    </sql>
+
+</mapper>

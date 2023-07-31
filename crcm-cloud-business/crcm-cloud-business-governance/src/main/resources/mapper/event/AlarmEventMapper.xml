@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.governance.mapper.event.AlarmEventMapper">
+
+    <resultMap type="com.sjz.governance.model.entity.event.AlarmEvent" id="AlarmEventResult">
+        <result property="id"    column="id"    />
+        <result property="eventNumber"    column="event_number"    />
+        <result property="eventUrl"    column="event_url"    />
+        <result property="eventType"    column="event_type"    />
+        <result property="eventName"    column="event_name"    />
+        <result property="dealNode"    column="deal_node"    />
+        <result property="addressNetwork"    column="address_network"    />
+        <result property="recognitionRate"    column="recognition_rate"    />
+        <result property="isMisinformation"    column="is_misinformation"    />
+        <result property="villageId"    column="village_id"    />
+        <result property="remark"    column="remark"    />
+        <result property="eventSource"    column="event_source"    />
+        <result property="alarmTime"    column="alarm_time"    />
+        <result property="deleted"    column="deleted"    />
+    </resultMap>
+
+    <sql id="selectAlarmEventVo">
+        select id, event_number, event_url, event_type, event_name, deal_node, address_network, recognition_rate, is_misinformation, remark, deleted, from ct_alarm_event
+    </sql>
+
+    <sql id="pageField">
+        id, event_number, event_url, event_type, event_name, deal_node, address_network, recognition_rate, is_misinformation, remark, deleted, village_id, alarm_time, event_source
+    </sql>
+
+    <sql id="cae_pageField">
+        cae.id, cae.event_number, cae.event_url, cae.event_type, cae.event_name, cae.deal_node, cae.address_network, cae.recognition_rate,cae.village_id, cae.is_misinformation, cae.remark, cae.create_time, cae.alarm_time, cae.event_source, cae.create_by
+    </sql>
+
+    <select id="findAlarmEventPageByDealPerson" resultType="com.sjz.governance.model.vo.event.AlarmEventVO">
+        select <include refid="cae_pageField"/>,
+        any_value(caefn.deal_status) deal_status,max(caefn.create_time)
+        from  ct_alarm_event cae
+        inner join ct_alarm_event_flow_node caefn on cae.id = caefn.event_id and cae.deal_node = caefn.deal_node
+        <where>
+            cae.deleted = 0
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.dealPerson)">
+                and caefn.deal_person = #{dto.dealPerson}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.eventType)">
+                and cae.event_type = #{dto.eventType}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.eventNumber)">
+                and cae.event_number like concat('%',#{dto.eventNumber},'%')
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.villageId)">
+                and cae.village_id = #{dto.villageId}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.eventName)">
+                and cae.event_name like concat('%',#{dto.eventName},'%')
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.dealNodes)">
+                and cae.deal_node in
+                <foreach collection="dto.dealNodes.split(',')" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.startTime)">
+                and cae.alarm_time &gt;= #{dto.startTime}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.endTime)">
+                and cae.alarm_time &lt;= #{dto.endTime}
+            </if>
+        </where>
+        group by caefn.event_id
+        order by cae.deal_node asc, cae.alarm_time desc
+    </select>
+    <select id="findAlarmEventPage" resultType="com.sjz.governance.model.vo.event.AlarmEventVO">
+        select <include refid="cae_pageField"/>
+        from  ct_alarm_event cae
+        left join ct_alarm_event_flow_node caefn on cae.id = caefn.event_id
+        <where>
+            cae.deleted = 0
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.dealPerson)">
+                and caefn.deal_person = #{dto.dealPerson}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.eventType)">
+                and cae.event_type = #{dto.eventType}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.eventName)">
+                and cae.event_name  like concat('%',#{dto.eventName},'%')
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.villageId)">
+                and cae.village_id = #{dto.villageId}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.eventNumber)">
+                and cae.event_number like concat('%',#{dto.eventNumber},'%')
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.dealNode)">
+                and cae.deal_node = #{dto.dealNode}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.startTime)">
+                and cae.alarm_time &gt;= #{dto.startTime}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.endTime)">
+                and cae.alarm_time &lt;= #{dto.endTime}
+            </if>
+        </where>
+        group by cae.id
+        order by cae.deal_node asc, cae.alarm_time desc
+    </select>
+
+    <select id="pageByCreateBy" resultType="com.sjz.governance.model.vo.event.AlarmEventVO">
+        select <include refid="cae_pageField"/>
+        from  ct_alarm_event cae
+        <where>
+            cae.deleted = 0
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.eventType)">
+                and cae.event_type = #{dto.eventType}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.eventName)">
+                and cae.event_name  like concat('%',#{dto.eventName},'%')
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.villageId)">
+                and cae.village_id = #{dto.villageId}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.eventNumber)">
+                and cae.event_number like concat('%',#{dto.eventNumber},'%')
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.dealNode)">
+                and cae.deal_node = #{dto.dealNode}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.createBy)">
+                and cae.create_by = #{dto.createBy}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.startTime)">
+                and cae.alarm_time &gt;= #{dto.startTime}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.endTime)">
+                and cae.alarm_time &lt;= #{dto.endTime}
+            </if>
+        </where>
+        order by  cae.alarm_time desc
+    </select>
+
+    <select id="statisticEventHome" resultType="com.sjz.governance.model.vo.event.AlarmEventStatisticHome">
+        select
+               a.village as villageCode,
+               a.num as eventNum,
+               row_number() OVER(order by a.num desc ) as "rank"
+        from
+             (select count(village) num ,village FROM ct_alarm_event group by  village) a
+    </select>
+
+    <select id="getEventCountByStatus" resultType="com.crcm.core.vo.echarts.EChartsIntegerPie">
+        select deal_node as typeCode, count(1) as valueData
+        from ct_alarm_event
+        where deleted = 0
+        and deal_node is not null
+        and deal_node != ''
+        group by deal_node
+    </select>
+
+    <select id="governanceHomePage" resultType="com.sjz.governance.model.vo.event.IntelligentRecognitionEventVo">
+        select cae.id, cae.event_name, cae.event_url, cae.create_time, cae.recognition_rate, ccm.camera_name
+        from ct_alarm_event cae
+        left join ct_camera_management ccm
+        on cae.camera_id = ccm.id
+        where cae.deleted = 0
+        and cae.deal_node != '6'
+        order by cae.alarm_time desc
+    </select>
+
+    <select id="intelligentRecognitionPage" resultType="com.sjz.governance.model.vo.event.IntelligentRecognitionEventVo">
+        select cae.id, cae.event_name, cae.event_url, cae.create_time, cae.recognition_rate, ccm.camera_name
+        from ct_alarm_event cae
+        left join ct_camera_management ccm
+        on cae.camera_id = ccm.id
+        where cae.deleted = 0
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.cameraId)">
+            and cae.camera_id = #{dto.cameraId}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.eventType)">
+            and cae.event_type = #{dto.eventType}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.beginTime) and @org.apache.commons.lang3.StringUtils@isNotBlank(dto.endTime)">
+            and cae.alarm_time between #{dto.beginTime} and #{dto.endTime}
+        </if>
+        order by cae.alarm_time desc
+    </select>
+
+    <select id="getInfoById" resultType="com.sjz.governance.model.vo.event.AlarmEventVO">
+        select <include refid="cae_pageField"/>
+        from  ct_alarm_event cae
+        inner join ct_alarm_event_flow_node caefn on cae.id = caefn.event_id
+        where
+        cae.deleted = 0
+        and
+        cae.id = #{id}
+        order by cae.deal_node asc, cae.alarm_time desc
+    </select>
+</mapper>

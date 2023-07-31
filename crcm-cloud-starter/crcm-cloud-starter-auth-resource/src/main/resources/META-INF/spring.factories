@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.crcm.cloud.start.resource.properties.PermitAllUrlProperties,\
+com.crcm.cloud.start.resource.properties.Oauth2Properties,\
+com.crcm.cloud.start.resource.config.TokenStoreConfig

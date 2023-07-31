@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.education.mapper.EduReportRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.sjz.education.model.entity.EduReportRecord">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="ruleId" column="rule_id" jdbcType="VARCHAR"/>
+            <result property="textDescription" column="text_description" jdbcType="VARCHAR"/>
+            <result property="imagePath" column="image_path" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="reviewComment" column="review_comment" jdbcType="VARCHAR"/>
+            <result property="earnPoints" column="earn_points" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+            <result property="version" column="version" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,user_name,
+        rule_id,text_description,
+        image_path,status,review_comment,
+        earn_points,create_time,create_by,
+        update_time,update_by,deleted,
+        version
+    </sql>
+
+    <select id="countPointsByYear" resultType="com.sjz.education.model.vo.EchartsVO">
+        SELECT DATE_FORMAT(create_time,'%Y-%m') as name,sum(earn_points) as value
+        FROM edu_report_record
+        where DATE_FORMAT(create_time,'%Y') = YEAR(now())
+        and deleted = 0 and status = 1
+        GROUP BY name
+        ORDER BY name asc;
+    </select>
+</mapper>

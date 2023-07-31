@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.partbuilding.mapper.OrgEventMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.sjz.partbuilding.model.entity.OrgEvent">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="version" property="version"/>
+        <result column="deleted" property="deleted"/>
+        <result column="org_id" property="orgId"/>
+        <result column="org_name" property="orgName"/>
+        <result column="theme" property="theme"/>
+        <result column="event_time" property="eventTime"/>
+        <result column="place" property="place"/>
+        <result column="host" property="host"/>
+        <result column="recorder" property="recorder"/>
+        <result column="type" property="type"/>
+        <result column="present" property="present"/>
+        <result column="attend" property="attend"/>
+        <result column="absence" property="absence"/>
+        <result column="unite" property="unite"/>
+        <result column="group_id" property="groupId"/>
+        <result column="material_ids" property="materialIds"/>
+        <result column="notes_ids" property="notesIds"/>
+        <result column="content" property="content"/>
+        <result column="num" property="num"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                create_by,
+                create_time,
+                update_by,
+                update_time,
+                version,
+                deleted,
+            id, org_id, org_name, theme, event_time, place, host, recorder, type, present, attend, absence, unite, group_id, material_ids, notes_ids,content,num
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM dj_org_event WHERE id = #{id}
+    </delete>
+
+
+    <select id="selectCustomerPage" resultType="com.sjz.partbuilding.model.vo.OrgEventVo">
+        select
+        a.id,
+        a.org_id,
+        a.org_name,
+        a.theme,
+        a.event_time,
+        a.place,
+        a.host,
+        a.recorder,
+        a.`type`,
+        a.present,
+        a.attend,
+        a.absence,
+        a.unite,
+        a.group_id,
+        a.material_ids,
+        a.notes_ids,
+        a.content,
+        a.num,
+        a.present_ids,
+        a.attend_ids,
+        a.absence_ids,
+        a.create_time
+        from
+        dj_org_event a
+        where a.deleted = 0 and a.type = #{vo.type}
+        <if test="vo.orgId != null and vo.orgId != ''">
+            and a.org_id =#{vo.orgId}
+        </if>
+        <if test="vo.year != null and vo.year != ''">
+            and DATE_FORMAT(event_time,"%Y") = #{vo.year}
+        </if>
+        <if test="vo.orgName != null and vo.orgName != ''">
+            and a.name like concat ('%',#{vo.orgName},'%')
+        </if>
+        <if test="vo.theme != null and vo.theme != ''">
+            and a.theme like concat ('%',#{vo.theme},'%')
+        </if>
+        <!--<if test="vo.type == 4 ">
+            or (a.unite in (2,3) and a.org_id =#{vo.orgId} )
+        </if>
+        <if test="vo.type == 5 ">
+            or (a.unite in (1,3) and a.org_id =#{vo.orgId} )
+        </if>-->
+        order by a.event_time desc, a.create_time desc
+    </select>
+
+    <!-- 自定义单挑查询 -->
+    <select id="selectCustomerById" resultType="com.sjz.partbuilding.model.vo.OrgEventVo">
+        select
+            a.id,
+            a.org_id,
+            a.org_name,
+            a.theme,
+            a.event_time,
+            a.place,
+            a.host,
+            a.recorder,
+            a.`type`,
+            a.present,
+            a.attend,
+            a.absence,
+            a.unite,
+            a.group_id,
+            a.material_ids,
+            a.notes_ids,
+            a.content,a.num,
+            a.present_ids,
+            a.attend_ids,
+            a.absence_ids,
+            a.present_count,
+            a.attend_count,
+            a.absence_count
+        from
+            dj_org_event a
+        where a.deleted = 0 and a.id = #{id}
+    </select>
+
+
+    <select id="selectMeets" resultType="com.sjz.partbuilding.model.vo.OrgEventVo">
+        select
+            a.id,
+            a.org_id,
+            a.org_name,
+            a.theme,
+            a.event_time,
+            a.place,
+            a.host,
+            a.recorder,
+            a.`type`,
+            a.present,
+            a.attend,
+            a.absence,
+            a.unite,
+            a.group_id,
+            a.material_ids,
+            a.notes_ids,
+            a.content,a.num,
+            a.present_ids,
+            a.attend_ids,
+            a.absence_ids
+        from
+            dj_org_event a
+        where a.deleted = 0
+        and a.`type` in('0','1','2')
+        <if test="title != null and title !=''">
+            and a.theme like concat ('%', #{title},'%')
+        </if>
+        <if test="orgId != null and orgId !=''">
+            and a.org_id = #{orgId}
+        </if>
+        order by a.event_time desc, a.create_time desc
+    </select>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="MonthStatisticsBaseResultMap" type="com.sjz.partbuilding.model.vo.EventStatisticsVo">
+        <id column="id" property="id"/>
+        <result column="org_id" property="orgId"/>
+        <result column="org_name" property="orgName"/>
+        <result column="theme" property="theme"/>
+        <result column="event_time" property="eventTime"/>
+        <result column="type" property="type"/>
+    </resultMap>
+
+    <select id="getMonthStatisticsOrgEvent" resultMap="MonthStatisticsBaseResultMap">
+        SELECT
+        id,org_id,org_name,theme,TYPE,event_time
+        FROM
+        dj_org_event
+        WHERE
+        deleted = 0
+        AND org_id = #{orgEvent.orgId}
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(orgEvent.orgName)">
+            and org_name like CONCAT('%',#{orgEvent.orgName},'%')
+        </if>
+    </select>
+
+    <select id="selectLists" resultType="com.sjz.partbuilding.model.vo.OrgEvenVo">
+        select
+        a.id,
+        a.theme,
+        a.notes_ids,
+        a.num
+        from
+        dj_org_event a
+        where a.deleted = 0
+        <if test="orgEvent.type != null and orgEvent.type != ''">
+            and a.type =#{orgEvent.type}
+        </if>
+        <if test="orgEvent.orgId != null and orgEvent.orgId != ''">
+            and a.org_id =#{orgEvent.orgId}
+        </if>
+        <if test="orgEvent.year != null and orgEvent.year != ''">
+            and DATE_FORMAT(event_time,"%Y") = #{orgEvent.year}
+        </if>
+        order by a.event_time desc, a.create_time desc
+    </select>
+
+    <select id="findTypeMap" resultType="com.sjz.partbuilding.model.vo.OrgEventsVo">
+                SELECT a.click_month 'month',IFNULL(b.READCOUNT,0) AS zhiwei,IFNULL(c.cREADCOUNT,0) AS dangyuan,IFNULL(d.dREADCOUNT,0) AS xiaozu,IFNULL(f.fREADCOUNT,0) AS dangke
+FROM (
+    SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 5 MONTH),'%Y-%m') AS click_month
+    UNION ALL
+    SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 4 MONTH),'%Y-%m') AS click_month
+    UNION ALL
+    SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH),'%Y-%m') AS click_month
+    UNION ALL
+    SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH),'%Y-%m') AS click_month
+    UNION ALL
+    SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%Y-%m') AS click_month
+    UNION ALL
+    SELECT DATE_FORMAT(CURDATE(),'%Y-%m') AS click_month
+    ) a LEFT JOIN (
+    SELECT DATE_FORMAT(event_time,'%Y-%m') AS DATETIME, SUM(1) AS READCOUNT
+    FROM dj_org_event
+    WHERE 1=1 and type=1
+    GROUP BY DATE_FORMAT(event_time,'%Y-%m')
+) b ON a.click_month = b.DATETIME
+
+LEFT JOIN (
+    SELECT DATE_FORMAT(event_time,'%Y-%m') AS cDATETIME, SUM(1) AS cREADCOUNT
+    FROM dj_org_event
+    WHERE 1=1 and type=0
+    GROUP BY DATE_FORMAT(event_time,'%Y-%m')
+) c ON a.click_month = c.cDATETIME
+
+LEFT JOIN (
+    SELECT DATE_FORMAT(event_time,'%Y-%m') AS dDATETIME, SUM(1) AS dREADCOUNT
+    FROM dj_org_event
+    WHERE 1=1 and type=2
+    GROUP BY DATE_FORMAT(event_time,'%Y-%m')
+) d ON a.click_month = d.dDATETIME
+
+LEFT JOIN (
+    SELECT DATE_FORMAT(event_time,'%Y-%m') AS fDATETIME, SUM(1) AS fREADCOUNT
+    FROM dj_org_event
+    WHERE 1=1 and type=3
+    GROUP BY DATE_FORMAT(event_time,'%Y-%m')
+) f ON a.click_month = f.fDATETIME
+ORDER BY a.click_month
+
+    </select>
+
+    <select id="getParticipationRate" resultType="com.sjz.partbuilding.model.dto.StatisticsDTO">
+        select event_time as time,(1-(absence_count/(present_count+attend_count+absence_count))) as rate
+        from (select id,org_id,event_time,present_count,(case when attend_count is null then '0' else attend_count end)attend_count,absence_count,deleted from dj_org_event where deleted='0' and org_id= #{orgId} and absence_count is not null) p
+        where deleted = 0 and org_id= #{orgId} and present_count is not null
+    </select>
+
+</mapper>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.partbuilding.mapper.WorkFeedbackMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.sjz.partbuilding.model.entity.WorkFeedback">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="version" property="version"/>
+        <result column="deleted" property="deleted"/>
+        <result column="task_id" property="taskId"/>
+        <result column="task_name" property="taskName"/>
+        <result column="feedback_content" property="feedbackContent"/>
+        <result column="org_id" property="orgId"/>
+        <result column="complete_time" property="completeTime"/>
+        <result column="attachments" property="attachments"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                create_by,
+                create_time,
+                update_by,
+                update_time,
+                version,
+                deleted,
+            id, task_id, task_name, feedback_content, org_id, complete_time, attachments
+        </sql>
+
+
+    <!--真实删除-->
+    <delete id="realDelete">
+        DELETE FROM dj_work_feedback WHERE id = #{id}
+    </delete>
+
+    <!-- 根据taskId获取提报情况查询映射结果 -->
+    <resultMap id="WorkReportingSituationResultMap" type="com.sjz.partbuilding.model.vo.WorkFeedBackVo">
+        <id column="id" property="id"/>
+        <result column="task_id" property="taskId"/>
+        <result column="task_name" property="taskName"/>
+        <result column="feedback_content" property="feedbackContent"/>
+        <result column="org_id" property="orgId"/>
+        <result column="org_name" property="orgName"/>
+        <result column="complete_time" property="completeTime"/>
+        <result column="close_time" property="closeTime"/>
+        <result column="attachments" property="attachments"/>
+    </resultMap>
+
+    <!--根据taskId获取提报情况-->
+    <select id="getWorkReportingSituation" resultMap="WorkReportingSituationResultMap">
+        SELECT
+        tf.`id`,tf.`task_id`,tf.`task_name`,tf.`feedback_content`,tf.`complete_time`,tf.`attachments`,
+        tf.`org_id`,tg.`name` AS org_name,td.`close_time`
+        FROM
+        dj_work_feedback tf
+        LEFT JOIN dj_sys_org tg ON tf.`org_id` = tg.`id`
+        JOIN dj_work_deploy td ON tf.`task_id` = td.`id`
+        WHERE tf.`deleted` = 0
+        AND tg.`deleted` = 0
+        AND td.`deleted` = 0
+        AND tf.`task_id` = #{workFeedBackVo.taskId}
+         <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(workFeedBackVo.orgName)">
+             AND tg.`name` =  #{workFeedBackVo.orgName}
+         </if>
+    </select>
+
+
+    <!-- 根据org_id和12月前的月份查询出所有工作反馈查询映射结果 -->
+    <resultMap id="StatisticsOfWorkFeedbackResultMap" type="com.sjz.partbuilding.model.vo.WorkFeedBackVo">
+        <id column="id" property="id"/>
+        <result column="task_id" property="taskId"/>
+        <result column="task_name" property="taskName"/>
+        <result column="org_id" property="orgId"/>
+        <result column="complete_time" property="completeTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="close_time" property="closeTime"/>
+    </resultMap>
+
+    <!-- 根据org_id和12月前的月份查询出所有工作反馈查询映射结果 -->
+    <select id="getStatisticsOfWorkFeedback" resultMap="StatisticsOfWorkFeedbackResultMap">
+        SELECT
+        tf.`id`,tf.`task_id`,tf.`task_name`,tf.`org_id`,tf.`complete_time`,tf.`create_time`,td.`close_time`
+        FROM
+        dj_work_feedback tf
+        LEFT JOIN dj_work_deploy td ON tf.`task_id` = td.`id`
+        WHERE tf.`deleted` = 0
+        AND td.`deleted` = 0
+        and td.`type` = '1'
+        AND tf.`org_id` = #{orgId}
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(monthArray)">
+            AND tf.`create_time` &gt;= #{monthArray}
+        </if>
+    </select>
+
+
+    <!-- 获取数据统计工作督办查询映射结果 -->
+    <resultMap id="DataStatisticsWorkSupervisionResultMap" type="com.sjz.partbuilding.model.vo.WorkFeedBackVo">
+        <id column="id" property="id"/>
+        <result column="task_id" property="taskId"/>
+        <result column="task_name" property="taskName"/>
+        <result column="complete_time" property="completeTime"/>
+        <result column="org_id" property="orgId"/>
+        <result column="org_name" property="orgName"/>
+        <result column="close_time" property="closeTime"/>
+    </resultMap>
+
+    <!--获取数据统计工作督办-->
+    <select id="getDataStatisticsWorkSupervision" resultMap="DataStatisticsWorkSupervisionResultMap">
+        SELECT
+        tf.`id`,tf.`task_id`,tf.`task_name`,tf.`complete_time`,tf.`org_id`,tg.`name` as org_name,td.`close_time`
+        FROM
+        dj_work_feedback tf
+        LEFT JOIN dj_sys_org tg ON tf.`org_id` = tg.`id`
+        JOIN dj_work_deploy td ON tf.`task_id` = td.`id`
+        WHERE tf.`deleted` = 0
+        AND tg.`deleted` = 0
+        AND td.`deleted` = 0
+        and td.`type` = '1'
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(workFeedBackVo.orgId)">
+            AND tf.`org_id` = #{workFeedBackVo.orgId}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(workFeedBackVo.orgName)">
+            AND tg.`name` like CONCAT('%',#{workFeedBackVo.orgName},'%')
+        </if>
+    </select>
+
+    <!--获取数据统计工作督办列表-->
+    <select id="getDataStatisticsWorkSupervisionList" resultMap="DataStatisticsWorkSupervisionResultMap">
+        SELECT
+        tf.`id`,tf.`task_id`,tf.`task_name`,tf.`complete_time`,tf.`org_id`,tg.`name` as org_name,td.`close_time`
+        FROM
+        dj_work_feedback tf
+        LEFT JOIN dj_sys_org tg ON tf.`org_id` = tg.`id`
+        JOIN dj_work_deploy td ON tf.`task_id` = td.`id`
+        WHERE tf.`deleted` = 0
+        AND tg.`deleted` = 0
+        AND td.`deleted` = 0
+        and td.`type` = '1'
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(workFeedBackVo.orgId)">
+            AND tf.`org_id` = #{workFeedBackVo.orgId}
+        </if>
+    </select>
+
+
+</mapper>

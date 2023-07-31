@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.bpm.mapper.ApplyMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.crcm.bpm.domain.entity.ApplyDO">
+            <id column="id" property="id"/>
+            <result column="create_by" property="createBy"/>
+            <result column="create_time" property="createTime"/>
+            <result column="update_by" property="updateBy"/>
+            <result column="update_time" property="updateTime"/>
+            <result column="apply_sn" property="applySn"/>
+            <result column="proc_inst_id" property="procInstId"/>
+            <result column="apply_title" property="applyTitle"/>
+            <result column="apply_user_id" property="applyUserId"/>
+            <result column="apply_real_name" property="applyRealName"/>
+            <result column="apply_dept_id" property="applyDeptId"/>
+            <result column="apply_company_id" property="applyCompanyId"/>
+            <result column="apply_dept_code" property="applyDeptCode"/>
+            <result column="apply_dept_name" property="applyDeptName"/>
+            <result column="apply_company_code" property="applyCompanyCode"/>
+            <result column="apply_conpany_name" property="applyConpanyName"/>
+            <result column="tenant_id" property="tenantId"/>
+            <result column="process_id" property="processId"/>
+            <result column="process_key" property="processKey"/>
+            <result column="process_name" property="processName"/>
+            <result column="definition_id" property="definitionId"/>
+            <result column="form_key" property="formKey"/>
+            <result column="system" property="system"/>
+            <result column="platform" property="platform"/>
+            <result column="parent_apply_id" property="parentApplyId"/>
+            <result column="apply_status" property="applyStatus"/>
+            <result column="remarks" property="remarks"/>
+            <result column="complete_time" property="completeTime"/>
+            <result column="deleted" property="deleted"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                create_by,
+                create_time,
+                update_by,
+                update_time,
+            id, apply_sn, proc_inst_id, apply_title, apply_user_id, apply_real_name, apply_dept_id, apply_company_id, apply_dept_code, apply_dept_name, apply_company_code, apply_conpany_name, tenant_id, process_id, process_key, process_name, definition_id, form_key, system, platform, parent_apply_id, apply_status, remarks, complete_time, deleted
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM bpm_apply WHERE id = #{id}
+    </delete>
+
+</mapper>

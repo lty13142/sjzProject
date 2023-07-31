@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.yearPlan.YearPlanWasteGenerationOverviewMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.yearPlan.YearPlanWasteGenerationOverview"
+               id="YearPlanWasteGenerationOverviewResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="mlnf" column="MLNF"/>
+        <result property="fwdldm" column="FWDLDM"/>
+        <result property="fwdlmc" column="FWDLMC"/>
+        <result property="fwxldm" column="FWXLDM"/>
+        <result property="fwxlmc" column="FWXLMC"/>
+        <result property="fwxxmc" column="FWXXMC"/>
+        <result property="fwtx" column="FWTX"/>
+        <result property="fwxz" column="FWXZ"/>
+        <result property="yhwz" column="YHWZ"/>
+        <result property="bndjhcsl" column="BNDJHCSL"/>
+        <result property="sndsjcsl" column="SNDSJCSL"/>
+        <result property="bndsjwtl" column="BNDSJWTL"/>
+        <result property="jldw" column="JLDW"/>
+        <result property="jhzypc" column="JHZYPC"/>
+        <result property="jhzypcdw" column="JHZYPCDW"/>
+        <result property="zcyy" column="ZCYY"/>
+        <result property="remark" column="REMARK"/>
+        <result property="sssheng" column="SSSHENG"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectYearPlanWasteGenerationOverviewVo">
+        select ID,
+               MAINID,
+               MLNF,
+               FWDLDM,
+               FWDLMC,
+               FWXLDM,
+               FWXLMC,
+               FWXXMC,
+               FWTX,
+               FWXZ,
+               YHWZ,
+               BNDJHCSL,
+               SNDSJCSL,
+               BNDSJWTL,
+               JLDW,
+               JHZYPC,
+               JHZYPCDW,
+               ZCYY,
+               REMARK,
+               SSSHENG,
+               SSSHI,
+               SSQU,
+               MODIFYRQ,
+        from pp_wxfw_year_plan_waste_generation_overview
+    </sql>
+
+</mapper>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.businessReport.BusinessDayReportWasteMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.businessReport.BusinessDayReportWaste"
+               id="BusinessDayReportWasteResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="sslx" column="SSLX"/>
+        <result property="czssmc" column="CZSSMC"/>
+        <result property="czfsdl" column="CZFSDL"/>
+        <result property="czfsxl" column="CZFSXL"/>
+        <result property="mlnf" column="MLNF"/>
+        <result property="fwdlbh" column="FWDLBH"/>
+        <result property="fwdlmc" column="FWDLMC"/>
+        <result property="fwxlbh" column="FWXLBH"/>
+        <result property="fwxlmc" column="FWXLMC"/>
+        <result property="lyczsl" column="LYCZSL"/>
+        <result property="jsl" column="JSL"/>
+        <result property="eczy" column="ECZY"/>
+        <result property="sldw" column="SLDW"/>
+        <result property="state" column="STATE"/>
+        <result property="bz" column="BZ"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectBusinessDayReportWasteVo">
+        select ID,
+               MAINID,
+               SSLX,
+               CZSSMC,
+               CZFSDL,
+               CZFSXL,
+               MLNF,
+               FWDLBH,
+               FWDLMC,
+               FWXLBH,
+               FWXLMC,
+               LYCZSL,
+               JSL,
+               ECZY,
+               SLDW,
+               STATE,
+               BZ,
+               SSSHI,
+               SSQU,
+               MODIFYRQ,
+        from pp_wxfw_business_day_report_waste
+    </sql>
+
+</mapper>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.bpm.mapper.FormDataMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.crcm.bpm.domain.entity.FormDataDO">
+                    <id column="id" property="id"/>
+                <result column="create_by" property="createBy"/>
+                <result column="update_by" property="updateBy"/>
+                <result column="create_time" property="createTime"/>
+                <result column="update_time" property="updateTime"/>
+                    <result column="data_key" property="dataKey"/>
+                    <result column="data_name" property="dataName"/>
+                    <result column="string_value" property="stringValue"/>
+                    <result column="boolean_value" property="booleanValue"/>
+                    <result column="number_value" property="numberValue"/>
+                    <result column="number_format" property="numberFormat"/>
+                    <result column="date_value" property="dateValue"/>
+                    <result column="date_pattern" property="datePattern"/>
+                    <result column="select_value" property="selectValue"/>
+                    <result column="select_item" property="selectItem"/>
+                    <result column="text_value" property="textValue"/>
+                    <result column="data_type" property="dataType"/>
+                    <result column="form_id" property="formId"/>
+                    <result column="form_key" property="formKey"/>
+                    <result column="tenant_id" property="tenantId"/>
+                    <result column="process_id" property="processId"/>
+                    <result column="apply_id" property="applyId"/>
+                    <result column="proc_inst_id" property="procInstId"/>
+                    <result column="task_id" property="taskId"/>
+                    <result column="deleted" property="deleted"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                create_by,
+                update_by,
+                create_time,
+                update_time,
+            id, data_key, data_name, string_value, boolean_value, number_value, number_format, date_value, date_pattern, select_value, select_item, text_value, data_type, form_id, form_key, tenant_id, process_id, apply_id, proc_inst_id, task_id, deleted
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM bpm_form_data WHERE id = #{id}
+    </delete>
+
+
+    <!-- MybatisPlus update PAI无法满足业务需求, 自定义""或null值更新的sql -->
+    <update id = "updateCustomIfNullById" parameterType="com.crcm.bpm.domain.entity.FormDataDO">
+        update bpm_form_data
+        <set>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(dataKey)">
+                        data_key = #{dataKey},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(dataName)">
+                        data_name = #{dataName},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(stringValue)">
+                        string_value = #{stringValue},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(booleanValue)">
+                        boolean_value = #{booleanValue},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(numberValue)">
+                        number_value = #{numberValue},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(numberFormat)">
+                        number_format = #{numberFormat},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(dateValue)">
+                        date_value = #{dateValue},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(datePattern)">
+                        date_pattern = #{datePattern},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(selectValue)">
+                        select_value = #{selectValue},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(selectItem)">
+                        select_item = #{selectItem},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(textValue)">
+                        text_value = #{textValue},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(dataType)">
+                        data_type = #{dataType},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(formId)">
+                        form_id = #{formId},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(formKey)">
+                        form_key = #{formKey},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(tenantId)">
+                        tenant_id = #{tenantId},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(processId)">
+                        process_id = #{processId},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(applyId)">
+                        apply_id = #{applyId},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(procInstId)">
+                        proc_inst_id = #{procInstId},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(taskId)">
+                        task_id = #{taskId},
+                    </if>
+                    <if test="@org.apache.commons.lang3.StringUtils@isBlank(deleted)">
+                        deleted = #{deleted},
+                    </if>
+        </set>
+        where
+        id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.partbuilding.mapper.UserDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.sjz.partbuilding.model.entity.UserDetail">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="version" property="version"/>
+        <result column="deleted" property="deleted"/>
+        <result column="name" property="name"/>
+        <result column="sex" property="sex"/>
+        <result column="id_card" property="idCard"/>
+        <result column="id_card_pic" property="idCardPic"/>
+        <result column="school" property="school"/>
+        <result column="education" property="education"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="address" property="address"/>
+        <result column="comments" property="comments"/>
+        <result column="person_no" property="personNo"/>
+        <result column="face_pic" property="facePic"/>
+        <result column="current_address" property="currentAddress"/>
+        <result column="native_place" property="nativePlace"/>
+        <result column="nation" property="nation"/>
+        <result column="birthday" property="birthday"/>
+        <result column="user_id" property="userId"/>
+        <result column="party_type" property="partyType"/>
+        <result column="marital_status" property="maritalStatus"/>
+        <result column="enter_party_time" property="enterPartyTime"/>
+        <result column="work_time" property="workTime"/>
+        <result column="party_branch" property="partyBranch"/>
+        <result column="enter_party_name" property="enterPartyName"/>
+        <result column="turn_party_name" property="turnPartyName"/>
+        <result column="party_posts" property="partyPosts"/>
+        <result column="occupation_type" property="occupationType"/>
+        <result column="other" property="other"/>
+        <result column="job_duties" property="jobDuties"/>
+        <result column="qq_or_wechat" property="qqOrWechat"/>
+        <result column="party_create_time" property="partyCreateTime"/>
+        <result column="party_deleted" property="partyDeleted"/>
+        <result column="shift_party_time" property="shiftPartyTime"/>
+        <result column="major" property="major"/>
+        <result column="joining_time" property="joiningTime"/>
+        <result column="application_time" property="applicationTime"/>
+        <result column="application_form" property="applicationForm"/>
+        <result column="determine_time" property="determineTime"/>
+        <result column="punishment" property="punishment"/>
+        <result column="resume" property="resume"/>
+        <result column="enter_party_post" property="enterPartyPost"/>
+        <!--<result column="party_org_id" property="partyOrgId"/>
+        <result column="role_org_id" property="roleOrgId"/>-->
+        <result column="record_pic_base64" property="recordPicBase64"/>
+        <result column="r_meet_time" property="rMeetTime"/>
+        <result column="r_join_person" property="rJoinPerson"/>
+        <result column="r_yj_result" property="rYjResult"/>
+        <result column="r_name" property="rName"/>
+        <result column="r_name1" property="rName1"/>
+        <result column="r_ba_time" property="rBaTime"/>
+        <result column="r_qd_time" property="rQdTime"/>
+        <result column="r_px_time" property="rPxTime"/>
+        <result column="r_px_mode" property="rPxMode"/>
+        <result column="r_px_record" property="rPxRecord"/>
+        <result column="f_meet_time" property="fMeetTime"/>
+        <result column="f_meet_person" property="fMeetPerson"/>
+        <result column="f_yj_result" property="fYjResult"/>
+        <result column="f_ba_time" property="fBaTime"/>
+        <result column="f_sc_time" property="fScTime"/>
+        <result column="f_zs_situation" property="fZsSituation"/>
+        <result column="f_zs_sign" property="fZsSign"/>
+        <result column="f_px_time" property="fPxTime"/>
+        <result column="f_px_record" property="fPxRecord"/>
+        <result column="f_rdjsr_name" property="fRdjsrName"/>
+        <result column="f_rdjsr_name1" property="fRdjsrName1"/>
+        <result column="y1_meet_tine" property="y1MeetTine"/>
+        <result column="y1_join_person" property="y1JoinPerson"/>
+        <result column="y1_yj_result" property="y1YjResult"/>
+        <result column="y1_ys_time" property="y1YsTime"/>
+        <result column="y1_ys_result" property="y1YsResult"/>
+        <result column="y1_sh_time" property="y1ShTime"/>
+        <result column="y1_sh_result" property="y1ShResult"/>
+        <result column="y1_gs_time" property="y1GsTime"/>
+        <result column="y1_gs_result" property="y1GsResult"/>
+        <result column="y1_meet_time1" property="y1MeetTime1"/>
+        <result column="y1_yd_count" property="y1YdCount"/>
+        <result column="y1_sd_count" property="y1SdCount"/>
+        <result column="y1_bj_mode" property="y1BjMode"/>
+        <result column="y1_ty_count" property="y1TyCount"/>
+        <result column="y1_fd_count" property="y1FdCount"/>
+        <result column="y1_qq_count" property="y1QqCount"/>
+        <result column="y1_meet_result" property="y1MeetResult"/>
+        <result column="y1_dagou" property="y1Dagou"/>
+        <result column="y1_dyw_sy" property="y1DywSy"/>
+        <result column="y1_yj_time" property="y1YjTime"/>
+        <result column="y1_sp_time" property="y1SpTime"/>
+        <result column="y2_xs_time" property="y2XsTime"/>
+        <result column="y2_xs_address" property="y2XsAddress"/>
+        <result column="y2_zz_time" property="y2ZzTime"/>
+        <result column="y2_gs_time" property="y2GsTime"/>
+        <result column="y2_gs_result" property="y2GsResult"/>
+        <result column="y2_meet_time" property="y2MeetTime"/>
+        <result column="y2_join_person" property="y2JoinPerson"/>
+        <result column="y2_yj_result" property="y2YjResult"/>
+        <result column="y2_ys_time" property="y2YsTime"/>
+        <result column="y2_ys_result" property="y2YsResult"/>
+        <result column="y2_meet_time1" property="y2MeetTime1"/>
+        <result column="y2_yd_count" property="y2YdCount"/>
+        <result column="y2_sd_count" property="y2SdCount"/>
+        <result column="y2_bj_mode" property="y2BjMode"/>
+        <result column="y2_ty_count" property="y2TyCount"/>
+        <result column="y2_fd_count" property="y2FdCount"/>
+        <result column="y2_qq_count" property="y2QqCount"/>
+        <result column="y2_meet_result" property="y2MeetResult"/>
+        <result column="y2_dagou" property="y2Dagou"/>
+        <result column="y2_dw_sy" property="y2DwSy"/>
+        <result column="y2_yj_time" property="y2YjTime"/>
+        <result column="y2_sp_time" property="y2SpTime"/>
+        <result column="import_situation" property="importSituation"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                create_by,
+                create_time,
+                update_by,
+                update_time,
+                version,
+                deleted,
+            id, user_id, name, sex, id_card, id_card_pic, school, education, phone, email, address, comments, person_no, face_pic, current_address, native_place, nation, birthday, party_type, marital_status, enter_party_time, correction_time, work_time, party_branch, enter_party_name, turn_party_name, party_posts, occupation_type, other, job_duties, qq_or_wechat, party_create_time, party_deleted, shift_party_time, major, joining_time, application_time, application_form, determine_time, punishment, resume, enter_party_post, record_pic_base64, r_meet_time, r_join_person, r_yj_result, r_name, r_name1, r_ba_time, r_qd_time, r_px_time, r_px_mode, r_px_record, f_meet_time, f_meet_person, f_yj_result, f_ba_time, f_sc_time, f_zs_situation, f_zs_sign, f_px_time, f_px_record, f_rdjsr_name, f_rdjsr_name1, y1_meet_tine, y1_join_person, y1_yj_result, y1_ys_time, y1_ys_result, y1_sh_time, y1_sh_result, y1_gs_time, y1_gs_result, y1_meet_time1, y1_yd_count, y1_sd_count, y1_bj_mode, y1_ty_count, y1_fd_count, y1_qq_count, y1_meet_result, y1_dagou, y1_dyw_sy, y1_yj_time, y1_sp_time, y2_xs_time, y2_xs_address, y2_zz_time, y2_gs_time, y2_gs_result, y2_meet_time, y2_join_person, y2_yj_result, y2_ys_time, y2_ys_result, y2_meet_time1, y2_yd_count, y2_sd_count, y2_bj_mode, y2_ty_count, y2_fd_count, y2_qq_count, y2_meet_result, y2_dagou, y2_dw_sy, y2_yj_time, y2_sp_time, import_situation
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM dj_sys_user_detail WHERE id = #{id}
+    </delete>
+
+    <select id="selectPersonByOrgIds" resultType="com.sjz.partbuilding.model.vo.UserDetailVo">
+        SELECT
+        td.id,td.name,td.person_no,tu.org_id,td.user_id
+        FROM dj_sys_user_detail td
+        JOIN dj_sys_user tu ON tu.id=td.user_id
+        WHERE td.deleted = 0 and org_id in
+        <foreach collection="orgIds" index="index" item="orgId" open="(" separator="," close=")">
+            #{orgId}
+        </foreach>
+        AND user_id &lt;&gt; #{userId}
+        AND NAME IS NOT NULL
+    </select>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="getPersonManagementPageResultMap" type="com.sjz.partbuilding.model.entity.UserDetail">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="sex" property="sex"/>
+        <result column="nation" property="nation"/>
+        <result column="birthday" property="birthday"/>
+        <result column="address" property="address"/>
+        <result column="enter_party_time" property="enterPartyTime"/>
+        <result column="party_posts" property="partyPosts"/>
+        <result column="job_duties" property="jobDuties"/>
+        <result column="party_type" property="partyType"/>
+        <result column="phone" property="phone"/>
+        <result column="user_id" property="userId"/>
+        <result column="determine_time" property="determineTime"/>
+    </resultMap>
+
+    <select id="getPersonManagementPage" resultMap="getPersonManagementPageResultMap">
+        SELECT
+        td.id, td.user_id, td.name, td.sex, td.id_card, td.id_card_pic, td.school, td.education, td.phone, td.email, td.address,
+        td.comments, td.person_no, td.face_pic, td.current_address, td.native_place, td.nation, td.birthday, td.party_type,
+        td.marital_status, td.enter_party_time, td.correction_time, td.work_time, td.party_branch, td.enter_party_name,
+        td.turn_party_name, td.party_posts, td.occupation_type, td.other, td.job_duties, td.qq_or_wechat, td.party_create_time,
+        td.party_deleted, td.shift_party_time, td.major, td.joining_time, td.application_time, td.application_form,
+        td.determine_time, td.punishment, td.resume, td.enter_party_post, td.record_pic_base64, td.r_meet_time, td.r_join_person,
+        td.r_yj_result, td.r_name, td.r_name1, td.r_ba_time, td.r_qd_time, td.r_px_time, td.r_px_mode, td.r_px_record, td.f_meet_time, td.f_meet_person,
+        td.f_yj_result, td.f_ba_time, td.f_sc_time, td.f_zs_situation, td.f_zs_sign, td.f_px_time, td.f_px_record, td.f_rdjsr_name, td.f_rdjsr_name1, td.y1_meet_tine,
+        td.y1_join_person, td.y1_yj_result, td.y1_ys_time, td.y1_ys_result, td.y1_sh_time, td.y1_sh_result, td.y1_gs_time,
+        td.y1_gs_result, td.y1_meet_time1, td.y1_yd_count, td.y1_sd_count, td.y1_bj_mode, td.y1_ty_count, td.y1_fd_count,
+        td.y1_qq_count, td.y1_meet_result, td.y1_dagou, td.y1_dyw_sy, td.y1_yj_time, td.y1_sp_time, td.y2_xs_time,
+        td.y2_xs_address, td.y2_zz_time, td.y2_gs_time, td.y2_gs_result, td.y2_meet_time, td.y2_join_person, td.y2_yj_result,
+        td.y2_ys_time, td.y2_ys_result, td.y2_meet_time1, td.y2_yd_count, td.y2_sd_count, td.y2_bj_mode, td.y2_ty_count,
+        td.y2_fd_count, td.y2_qq_count, td.y2_meet_result, td.y2_dagou, td.y2_dw_sy, td.y2_yj_time, td.y2_sp_time,
+        td.import_situation,td.create_time
+
+        FROM
+        dj_sys_user_detail td
+        WHERE td.deleted = 0
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userDetail.partyType)">
+            and td.party_type = #{userDetail.partyType}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userDetail.name)">
+            and td.name like CONCAT('%',#{userDetail.name},'%')
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userDetail.orgId)">
+            and td.org_id = #{userDetail.orgId}
+        </if>
+        order by td.party_posts asc, td.create_time desc
+    </select>
+
+    <select id="getStatisticsPersonManagementPage" resultMap="BaseResultMap">
+        SELECT
+        td.*
+        FROM
+        dj_sys_user_detail td
+        WHERE td.deleted = 0 AND td.org_id = #{userDetail.orgId}
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userDetail.partyType)">
+            and td.party_type = #{userDetail.partyType}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userDetail.name)">
+            and td.name like CONCAT('%',#{userDetail.name},'%')
+        </if>
+    </select>
+
+
+    <select id="findListByOrgId" resultType="com.sjz.partbuilding.model.entity.UserDetail">
+        select d.* from dj_sys_user u join dj_sys_user_detail d on u.id=d.user_id where u.org_id=#{orgId} and u.deleted=0 and d.deleted=0
+    </select>
+
+    <select id="findPersonNum" resultType="com.sjz.partbuilding.model.dto.NumDTO">
+        select count(d.id) as num, d.education from dj_sys_user u join dj_sys_user_detail d on u.id=d.user_id where
+        1=1 and
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(orgId)">
+            and u.org_id =#{orgId}
+        </if>
+     AND d.party_type = '0' and u.deleted=0 and d.deleted=0 GROUP BY education
+    </select>
+
+    <select id="findAgeByOrgId" resultType="com.sjz.partbuilding.model.entity.UserDetail">
+        SELECT u.id,NAME,TIMESTAMPDIFF(YEAR,birthday, CURDATE()) AS age FROM dj_sys_user_detail d join dj_sys_user u on d.user_id=u.id
+        WHERE d.deleted = 0 and u.deleted = 0 and u.org_id=#{orgId}
+    </select>
+
+    <select id="getDetail" resultType="com.sjz.partbuilding.model.entity.UserDetail">
+        SELECT
+        td.id, td.user_id, td.name, td.sex, td.id_card, td.id_card_pic, td.school, td.education, td.phone, td.email, td.address,
+        td.comments, td.person_no, td.face_pic, td.current_address, td.native_place, td.nation, td.birthday, td.party_type,
+        td.marital_status, td.enter_party_time, td.correction_time, td.work_time, td.party_branch, td.enter_party_name,
+        td.turn_party_name, td.party_posts, td.occupation_type, td.other, td.job_duties, td.qq_or_wechat, td.party_create_time,
+        td.party_deleted, td.shift_party_time, td.major, td.joining_time, td.application_time, td.application_form,
+        td.determine_time, td.punishment, td.resume, td.enter_party_post, td.record_pic_base64, td.r_meet_time, td.r_join_person,
+        td.r_yj_result, td.r_name, td.r_name1, td.r_ba_time, td.r_qd_time, td.r_px_time, td.r_px_mode, td.r_px_record, td.f_meet_time, td.f_meet_person,
+        td.f_yj_result, td.f_ba_time, td.f_sc_time, td.f_zs_situation, td.f_zs_sign, td.f_px_time, td.f_px_record, td.f_rdjsr_name, td.f_rdjsr_name1, td.y1_meet_tine,
+        td.y1_join_person, td.y1_yj_result, td.y1_ys_time, td.y1_ys_result, td.y1_sh_time, td.y1_sh_result, td.y1_gs_time,
+        td.y1_gs_result, td.y1_meet_time1, td.y1_yd_count, td.y1_sd_count, td.y1_bj_mode, td.y1_ty_count, td.y1_fd_count,
+        td.y1_qq_count, td.y1_meet_result, td.y1_dagou, td.y1_dyw_sy, td.y1_yj_time, td.y1_sp_time, td.y2_xs_time,
+        td.y2_xs_address, td.y2_zz_time, td.y2_gs_time, td.y2_gs_result, td.y2_meet_time, td.y2_join_person, td.y2_yj_result,
+        td.y2_ys_time, td.y2_ys_result, td.y2_meet_time1, td.y2_yd_count, td.y2_sd_count, td.y2_bj_mode, td.y2_ty_count,
+        td.y2_fd_count, td.y2_qq_count, td.y2_meet_result, td.y2_dagou, td.y2_dw_sy, td.y2_yj_time, td.y2_sp_time,
+        td.import_situation
+        FROM
+        dj_sys_user_detail td
+        WHERE td.deleted = 0 AND td.user_id = #{userId}
+    </select>
+
+    <!--获取首页党员类别统计图-->
+    <select id="getLoginPartyType" resultType="java.util.Map">
+        SELECT
+        party_type,COUNT(party_type) AS party_type_count
+        FROM
+        dj_sys_user_detail d
+        WHERE
+        d.deleted = 0
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(orgId)">
+            and d.org_id =#{orgId}
+        </if>
+        AND d.party_type IS NOT NULL
+        GROUP BY party_type
+    </select>
+
+    <!--获取首页党员学历占比统计图-->
+    <select id="getLoginEducation" resultType="java.util.Map">
+        SELECT
+        education,COUNT(education) AS education_count
+        FROM
+        dj_sys_user_detail
+        WHERE
+        deleted = 0
+        AND party_type = '0'
+        GROUP BY education
+    </select>
+
+    <!--获取首页党员学历占比统计图-->
+    <select id="getEducationByOrgId" resultType="java.util.Map">
+        SELECT
+        education,COUNT(education) AS education_count
+        FROM
+        dj_sys_user_detail d
+        WHERE
+        d.deleted = 0
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(orgId)">
+            and u.org_id =#{orgId}
+        </if>
+        AND party_type = '0' and education is not null
+        GROUP BY education
+    </select>
+
+    <!--获取人员性别占比列表-->
+    <select id="getLoginSex" resultType="java.util.Map">
+        SELECT
+        ud.sex,COUNT(ud.sex) AS sex_count
+        FROM
+        dj_sys_user_detail ud
+        WHERE
+        ud.deleted = 0
+        AND ud.party_type = '0'
+<!--        and u.org_id in-->
+<!--        <foreach collection="ids" index="index" item="id" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+        GROUP BY ud.sex
+        ORDER BY ud.sex DESC
+    </select>
+
+
+    <!-- 年龄分布通用查询映射结果 -->
+    <resultMap id="ageDistributionPageResultMap" type="com.sjz.partbuilding.model.entity.UserDetail">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="age" property="age"/>
+    </resultMap>
+
+    <!--获取男年龄分布列表-->
+    <select id="getLoginAge" resultMap="ageDistributionPageResultMap">
+        SELECT
+        id,name,TIMESTAMPDIFF(YEAR,birthday, CURDATE()) AS age
+        FROM dj_sys_user_detail
+        WHERE deleted = 0
+        AND party_type = '0'
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(sexStr)">
+            AND sex = #{sexStr}
+        </if>
+    </select>
+
+        <!--获取党龄分布列表-->
+    <select id="getLoginPartyAge" resultMap="ageDistributionPageResultMap">
+        SELECT
+        ud.id,ud.name,TIMESTAMPDIFF(YEAR,ud.enter_party_time, CURDATE()) AS age
+        FROM dj_sys_user_detail ud
+        WHERE ud.deleted = 0
+        AND ud.party_type = '0'
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(sexStr)">
+            and ud.sex = #{sexStr}
+        </if>
+<!--        <if test="ids!=null">-->
+<!--            and u.org_id in-->
+<!--            <foreach collection="ids" index="index" item="id" open="(" separator="," close=")">-->
+<!--                #{id}-->
+<!--            </foreach>-->
+<!--        </if>-->
+    </select>
+
+    <select id="getPersonByOrgId" resultMap="getPersonManagementPageResultMap">
+        SELECT
+        td.id,td.name,td.sex,td.nation,td.birthday,td.address,td.enter_party_time,td.party_posts,td.job_duties,td.phone,td.user_id, td.party_type
+        FROM
+        dj_sys_user_detail td
+        WHERE td.deleted = 0 and td.name is not null
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userDetail.partyType)">
+            and td.party_type = #{userDetail.partyType}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userDetail.name)">
+            and td.name like CONCAT('%',#{userDetail.name},'%')
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userDetail.orgId)">
+            and td.org_id = #{userDetail.orgId}
+        </if>
+    </select>
+
+    <!--获取入党积极分子信息-->
+    <select id="getPartyActivistsDetail" resultType="com.sjz.partbuilding.model.entity.UserDetail">
+        SELECT td.*,tu.org_id FROM dj_sys_user_detail td
+        LEFT JOIN dj_sys_user tu ON td.user_id = tu.id
+        WHERE td.deleted = 0
+        AND tu.deleted = 0
+        AND td.user_id = #{userId}
+    </select>
+    <!--查询党员，入党积极分子，预备党员-->
+    <select id="getLogOrg" resultType="java.util.HashMap">
+        select '党员' as totalNumber, count(*) count from dj_sys_user_detail tsud
+				where tsud.party_type='0' and tsud.deleted=0 and tsud.org_id= #{orgId} union all
+        select '预备党员' as zhishuNumber,  count(*) count from dj_sys_user_detail tsud
+				where party_type='1' and tsud.deleted=0  and tsud.org_id= #{orgId} union all
+        select '入党积极分子' as dishuNumber, count(*) count from dj_sys_user_detail tsud
+				where party_type='2' and tsud.deleted=0  and tsud.org_id= #{orgId}
+    </select>
+
+    <!--查询党委一张图党员，入党积极分子，预备党员-->
+    <select id="getLogPartyCount" resultType="java.util.HashMap">
+        select '党员' as totalNumber, count(1) count from dj_sys_user_detail tsud
+				where tsud.party_type=0 and tsud.deleted=0
+<!--				and tsud.org_id in-->
+<!--        <foreach collection="ids" index="index" item="id" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+		union all
+        select '预备党员' as zhishuNumber,  count(1) count from dj_sys_user_detail tsud
+				where party_type=1 and tsud.deleted=0
+<!--				and tsud.org_id in-->
+<!--        <foreach collection="ids" index="index" item="id" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+		union all
+        select '入党积极分子' as dishuNumber, count(1) count from dj_sys_user_detail tsud
+				where party_type=2 and tsud.deleted=0
+<!--				and tsud.org_id in-->
+<!--        <foreach collection="ids" index="index" item="id" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+    </select>
+
+    <!-- 获取人员管理列表查询 -->
+    <select id="getStatisticsPersonManagementList" resultMap="BaseResultMap">
+        SELECT
+        td.*
+        FROM
+        dj_sys_user_detail td
+        LEFT JOIN dj_sys_user tu ON td.user_id = tu.id
+        WHERE td.deleted = 0
+        AND tu.deleted = 0
+        AND tu.org_id = #{userDetail.orgId}
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userDetail.partyType)">
+            and td.party_type = #{userDetail.partyType}
+        </if>
+    </select>
+
+    <select id="getPersonManagementDowload" resultMap="getPersonManagementPageResultMap">
+        SELECT
+        td.id,td.name,(case when td.sex = 0 then '男' when td.sex = 1 then '女' end ) as sex ,td.nation,td.birthday,td.address,td.enter_party_time,td.party_posts,td.job_duties,td.phone,td.user_id,td.determine_time,
+        td.school,td.native_place,td.education,td.current_address,td.correction_time,td.work_time,td.party_branch,
+        td.enter_party_name
+
+        FROM
+        dj_sys_user_detail td
+        LEFT JOIN dj_sys_user tu ON td.user_id = tu.id
+        WHERE td.deleted = 0
+        AND tu.deleted = 0
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userDetail.partyType)">
+            and td.party_type = #{userDetail.partyType}
+        </if>
+        AND tu.org_id = #{userDetail.orgId}
+    </select>
+    <select id="findUsersByOrgId" resultType="com.crcm.core.dto.TreeView">
+        select ud.id,ud.name as label,ud.org_id as pid from  dj_sys_user_detail ud
+        where ud.deleted = '0'
+        and ud.org_id = #{orgId}
+    </select>
+    <select id="findByUserId" resultType="com.sjz.partbuilding.model.entity.UserDetail">
+        select * from dj_sys_user_detail
+        where user_id = #{userId}
+    </select>
+    <select id="findUsersByOrgId2" resultType="com.sjz.partbuilding.model.vo.TreeViewVo">
+        select ud.id userId, ud.name as label,ud.org_id as pid from dj_sys_user_detail ud
+        where ud.deleted = 0
+        and ud.org_id = #{orgId}
+        order by ud.create_time ASC
+    </select>
+</mapper>

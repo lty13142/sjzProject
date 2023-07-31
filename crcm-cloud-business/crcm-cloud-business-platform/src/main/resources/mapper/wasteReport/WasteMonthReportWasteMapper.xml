@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.wasteReport.WasteMonthReportWasteMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.wasteReport.WasteMonthReportWaste" id="WasteMonthReportWasteResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="state" column="STATE"/>
+        <result property="mlnf" column="MLNF"/>
+        <result property="fwdlmc" column="FWDLMC"/>
+        <result property="fwdldm" column="FWDLDM"/>
+        <result property="fwxlmc" column="FWXLMC"/>
+        <result property="fwxldm" column="FWXLDM"/>
+        <result property="fwxxmc" column="FWXXMC"/>
+        <result property="wlxz" column="WLXZ"/>
+        <result property="rqsl" column="RQSL"/>
+        <result property="jldw" column="JLDW"/>
+        <result property="csl" column="CSL"/>
+        <result property="xzz" column="XZZ"/>
+        <result property="sumLjzcl" column="SUM_LJZCL"/>
+        <result property="qtl" column="QTL"/>
+        <result property="csljldw" column="CSLJLDW"/>
+        <result property="remark" column="REMARK"/>
+        <result property="sndkcl" column="SNDKCL"/>
+        <result property="sumSyjcl" column="SUM_SYJCL"/>
+        <result property="syzclZhz" column="SYZCL_ZHZ"/>
+        <result property="sumDnbycsl" column="SUM_DNBYCSL"/>
+        <result property="sumDnqtl" column="SUM_DNQTL"/>
+        <result property="sumDnzxczl" column="SUM_DNZXCZL"/>
+        <result property="sumDnwtczl" column="SUM_DNWTCZL"/>
+        <result property="sumZxczl" column="SUM_ZXCZL"/>
+        <result property="sumWtczl" column="SUM_WTCZL"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectWasteMonthReportWasteVo">
+        select ID,
+               MAINID,
+               STATE,
+               MLNF,
+               FWDLMC,
+               FWDLDM,
+               FWXLMC,
+               FWXLDM,
+               FWXXMC,
+               WLXZ,
+               RQSL,
+               JLDW,
+               CSL,
+               XZZ,
+               SUM_LJZCL,
+               QTL,
+               CSLJLDW,
+               REMARK,
+               SNDKCL,
+               SUM_SYJCL,
+               SYZCL_ZHZ,
+               SUM_DNBYCSL,
+               SUM_DNQTL,
+               SUM_DNZXCZL,
+               SUM_DNWTCZL,
+               SUM_ZXCZL,
+               SUM_WTCZL,
+               SSSHI,
+               SSQU,
+               MODIFYRQ,
+        from pp_wxfw_waste_month_report_waste
+    </sql>
+
+</mapper>

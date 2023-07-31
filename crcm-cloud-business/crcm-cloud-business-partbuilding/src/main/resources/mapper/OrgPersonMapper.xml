@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.partbuilding.mapper.OrgPersonMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.sjz.partbuilding.model.entity.OrgPerson">
+                    <id column="id" property="id"/>
+                <result column="create_by" property="createBy"/>
+                <result column="create_time" property="createTime"/>
+                <result column="update_by" property="updateBy"/>
+                <result column="update_time" property="updateTime"/>
+                <result column="version" property="version"/>
+                <result column="deleted" property="deleted"/>
+                    <result column="org_id" property="orgId"/>
+                    <result column="org_name" property="orgName"/>
+                    <result column="user_id" property="userId"/>
+                    <result column="user_name" property="userName"/>
+                    <result column="pid" property="pid"/>
+                    <result column="p_name" property="pName"/>
+            <result column="type" property="type"/>
+            <result column="group_type" property="groupType"/>
+            <result column="sort" property="sort"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                create_by,
+                create_time,
+                update_by,
+                update_time,
+                version,
+                deleted,
+            id, org_id, org_name, user_id, user_name, pid, p_name, type, group_type,name,sort
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM dj_org_person WHERE id = #{id}
+    </delete>
+    <select id="findPage" resultType="com.sjz.partbuilding.model.entity.OrgPerson">
+        select op.id,op.org_id,op.org_name,op.user_id,op.user_name,op.pid,op.p_name,op.create_time,op.name,op.type,op.group_type,op.sort
+        from dj_org_person op where op.deleted = 0
+        <if test="t.userName != null and t.userName != '' ">
+            and op.name like concat('%',#{t.userName},'%')
+        </if>
+        <if test="t.orgId != null and t.orgId != '' ">
+            and org_id in
+            <foreach collection="t.orgId.split(',')" index="index" item="orgId" open="(" separator="," close=")">
+                #{orgId}
+            </foreach>
+        </if>
+        order by op.create_time desc
+    </select>
+<!--    <if test="t.orgId != null and t.orgId != '' ">-->
+<!--        and op.org_id = #{t.orgId}-->
+<!--    </if>-->
+
+    <select id="selectTree" resultType="com.crcm.core.dto.TreeView">
+        select id, op.name as label, op.pid, op.user_id, op.type from dj_org_person op
+        where op.deleted = 0
+        and op.org_id = #{orgId}
+    </select>
+
+    <select id="selectTreeView" resultType="com.sjz.partbuilding.model.vo.TreeViewVo">
+        select id, op.name as label, op.pid, op.user_id, op.type from dj_org_person op
+        where op.deleted = 0
+        and op.org_id = #{orgId}
+        ORDER BY op.type ASC, op.sort ASC
+    </select>
+
+    <select id="getPartyGroup" resultType="com.sjz.partbuilding.model.entity.OrgPerson">
+        select <include refid="Base_Column_List"></include> from dj_org_person
+        where deleted = 0
+        and type = 0
+        and org_id = #{orgId}
+        ORDER BY create_time ASC
+    </select>
+
+    <select id="getPartyGroupUsers" resultType="com.crcm.core.dto.TreeView">
+        select top.user_id as id,top.name as label,top.org_id as pid,top.id as icon from dj_org_person top
+        where top.deleted = '0'
+        and top.org_id = #{orgId}
+        and top.pid = #{id}
+    </select>
+</mapper>

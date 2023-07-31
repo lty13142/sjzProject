@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.bpm.mapper.SendDuplicateMapper">
+  <resultMap id="BaseResultMap" type="com.crcm.bpm.domain.vo.SendDuplicateVo">
+    <!--@mbg.generated-->
+    <!--@Table bpm_send_duplicate-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="apply_id" jdbcType="BIGINT" property="applyId" />
+    <result column="process_id" jdbcType="BIGINT" property="processId" />
+    <result column="proc_inst_id" jdbcType="VARCHAR" property="procInstId" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="task_node_code" jdbcType="VARCHAR" property="taskNodeCode" />
+    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+    <result column="task_assignee_user_id" jdbcType="VARCHAR" property="taskAssigneeUserId" />
+    <result column="task_assignee_real_name" jdbcType="VARCHAR" property="taskAssigneeRealName" />
+    <result column="task_status" jdbcType="INTEGER" property="taskStatus" />
+    <result column="form_key" jdbcType="VARCHAR" property="formKey" />
+    <result column="claim_time" jdbcType="TIMESTAMP" property="claimTime" />
+    <result column="form_edit_field" jdbcType="VARCHAR" property="formEditField" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="deleted" jdbcType="TINYINT" property="deleted" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="version" jdbcType="TINYINT" property="version" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, apply_id, process_id, proc_inst_id, task_id, task_node_code, create_user_id, 
+    task_assignee_user_id, task_assignee_real_name, task_status, form_key, claim_time, form_edit_field,
+    create_time, update_time, deleted, create_by, update_by, version
+  </sql>
+
+  <select id="selectCopyToBYApplyId" resultType="java.lang.String">
+    select task_assignee_user_id from bpm_send_duplicate where apply_id = #{applyId}
+  </select>
+
+  <select id="selectSendDuplicatePage" resultType="com.crcm.bpm.domain.dto.response.SendDuplicateDTO">
+    select
+        s.id, s.apply_id, s.process_id, s.proc_inst_id, s.task_id, s.task_node_code, s.create_user_id, s.task_assignee_user_id,
+        s.task_assignee_real_name, s.task_status, s.form_key, s.claim_time, s.create_time, s.create_by, s.form_edit_field,
+        a.apply_title, a.apply_status, a.apply_company_name, a.model_id, a.process_name, a.apply_dept_name, a.create_time as apply_date,
+        m.form_id, m.form_type, m.form_code
+    from
+        bpm_send_duplicate s,
+        bpm_apply a,
+        bpm_model m
+    where a.id = s.apply_id and a.model_id = m.id and s.deleted = 0 and a.deleted = 0
+    <if test="sendDuplicate.taskAssigneeUserId != null and sendDuplicate.taskAssigneeUserId != ''">
+        and s.task_assignee_user_id = #{sendDuplicate.taskAssigneeUserId}
+    </if>
+    <if test="sendDuplicate.createUserId != null and sendDuplicate.createUserId != ''">
+        and s.create_user_id = #{sendDuplicate.createUserId}
+    </if>
+    <if test="sendDuplicate.applyId != null">
+        and s.apply_id = #{sendDuplicate.applyId}
+    </if>
+    <if test="sendDuplicate.applyTitle != null and sendDuplicate.applyTitle != ''">
+        and a.apply_title like concat('%', #{sendDuplicate.applyTitle}, '%')
+    </if>
+    <if test="sendDuplicate.appParam != null and sendDuplicate.appParam != ''">
+            and (
+                a.id = #{sendDuplicate.appParam}
+                or a.apply_title like CONCAT('%',#{sendDuplicate.appParam},'%')
+                or a.process_name like CONCAT('%',#{sendDuplicate.appParam},'%')
+                or a.apply_real_name like CONCAT('%',#{sendDuplicate.appParam},'%')
+            )
+        </if>
+    order by s.create_time desc
+  </select>
+</mapper>

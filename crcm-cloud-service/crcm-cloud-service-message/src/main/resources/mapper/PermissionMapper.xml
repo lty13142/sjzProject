@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.SysOrg//DTD Mapper 3.0//EN" "http://mybatis.SysOrg/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.admin.mapper.PermissionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.crcm.admin.model.entity.SysPermission">
+    </resultMap>
+
+    <select id="selectPermissionRole" resultType="com.crcm.admin.model.vo.SysRolePermissionVO">
+        SELECT
+        r.id role_id,
+        r.NAME role_name,
+        r.`value`,
+        r.organize,
+        p.permission_id,
+        p.type
+        FROM
+        sys_permission p
+        INNER JOIN sys_role r ON p.role_id = r.id
+        WHERE
+        p.permission_id = #{vo.permissionId}
+        <if test="vo.type != null">
+            AND p.type = #{vo.type}
+        </if>
+    </select>
+    <select id="selectWithoutPermissionRole" resultType="com.crcm.admin.model.vo.SysRolePermissionVO">
+        SELECT
+        r.id role_id,
+        r.NAME role_name,
+        r.`value`,
+        r.organize
+        FROM
+        sys_role r
+        WHERE r.deleted = 0 and r.enabled = 1
+        <if test="roleIds != null and roleIds.size() > 0">
+            AND r.id not in
+            <foreach collection="roleIds" index="index" item="roleId" open="(" separator="," close=")">
+                #{roleId}
+            </foreach>
+        </if>
+        ORDER BY r.id
+    </select>
+
+</mapper>

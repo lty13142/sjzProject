@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.bpm.mapper.CounterSignMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.crcm.bpm.domain.entity.CounterSignDO">
+                    <id column="id" property="id"/>
+                <result column="create_time" property="createTime"/>
+                <result column="update_time" property="updateTime"/>
+                <result column="create_by" property="createBy"/>
+                <result column="update_by" property="updateBy"/>
+                    <result column="assignee" property="assignee"/>
+                    <result column="assignee_name" property="assigneeName"/>
+                    <result column="approve_result" property="approveResult"/>
+                    <result column="approve_option" property="approveOption"/>
+                    <result column="approve_time" property="approveTime"/>
+                    <result column="status" property="status"/>
+                    <result column="version" property="version"/>
+                    <result column="deleted" property="deleted"/>
+                    <result column="process_id" property="processId"/>
+                    <result column="apply_id" property="applyId"/>
+                    <result column="proc_inst_id" property="procInstId"/>
+                    <result column="task_id" property="taskId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                create_time,
+                update_time,
+                create_by,
+                update_by,
+            id, assignee, assignee_name, approve_result, approve_option, approve_time, status, version, deleted, process_id, apply_id, proc_inst_id, task_id
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM bpm_counter_sign WHERE id = #{id}
+    </delete>
+
+</mapper>

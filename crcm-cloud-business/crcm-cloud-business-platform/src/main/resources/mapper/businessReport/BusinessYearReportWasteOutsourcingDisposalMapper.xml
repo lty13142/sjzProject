@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.businessReport.BusinessYearReportWasteOutsourcingDisposalMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.businessReport.BusinessYearReportWasteOutsourcingDisposal"
+               id="BusinessYearReportWasteOutsourcingDisposalResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="childid" column="CHILDID"/>
+        <result property="dwid" column="DWID"/>
+        <result property="xkzbh" column="XKZBH"/>
+        <result property="sheng" column="SHENG"/>
+        <result property="jsdwid" column="JSDWID"/>
+        <result property="dwmc" column="DWMC"/>
+        <result property="jsl" column="JSL"/>
+        <result property="zcfs" column="ZCFS"/>
+        <result property="lxr" column="LXR"/>
+        <result property="lxdh" column="LXDH"/>
+        <result property="sssheng" column="SSSHENG"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectBusinessYearReportWasteOutsourcingDisposalVo">
+        select ID,
+               MAINID,
+               CHILDID,
+               DWID,
+               XKZBH,
+               SHENG,
+               JSDWID,
+               DWMC,
+               JSL,
+               ZCFS,
+               LXR,
+               LXDH,
+               SSSHENG,
+               SSSHI,
+               SSQU,
+               MODIFYRQ,
+        from pp_wxfw_business_year_report_waste_outsourcing_disposal
+    </sql>
+
+</mapper>

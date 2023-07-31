@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+    <modules>
+        <module>crcm-cloud-starter</module>
+        <module>crcm-cloud-register</module>
+        <module>crcm-cloud-gateway</module>
+        <module>crcm-cloud-visual</module>
+        <module>crcm-cloud-business</module>
+        <module>crcm-cloud-service</module>
+        <module>crcm-cloud-service-api</module>
+        <module>crcm-cloud-develop</module>
+        <module>crcm-cloud-business-api</module>
+    </modules>
+    <groupId>com.crcm</groupId>
+    <artifactId>crcm-cloud</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <description>crcm-cloud微服务框架</description>
+    <properties>
+        <spring-boot.version>2.6.3</spring-boot.version>
+        <spring-cloud.version>2021.0.1</spring-cloud.version>
+        <spring-cloud-alibaba.version>2021.0.1.0</spring-cloud-alibaba.version>
+        <oauth2.version>2.2.0.RELEASE</oauth2.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <spring-boot-admin.version>2.6.3</spring-boot-admin.version>
+        <hutool.version>5.5.7</hutool.version>
+        <mybatis-plus.version>3.4.2</mybatis-plus.version>
+        <dynamic-ds.version>3.5.0</dynamic-ds.version>
+        <druid.version>1.2.6</druid.version>
+        <easy-captcha.version>1.6.2</easy-captcha.version>
+        <velocity.version>1.7</velocity.version>
+        <jasypt.version>2.1.0</jasypt.version>
+        <swagger.fox.version>2.9.2</swagger.fox.version>
+        <knife4j.version>4.0.0</knife4j.version>
+        <xxl-job.version>2.3.1</xxl-job.version>
+        <fastjson.version>1.2.75</fastjson.version>
+        <commons.fileupload.version>1.4</commons.fileupload.version>
+        <mica-ip2region.version>2.5.3</mica-ip2region.version>
+        <transmittable-thread-local.version>2.12.0</transmittable-thread-local.version>
+        <jackson.version>2.13.2</jackson.version>
+        <nacos.version>2.1.0</nacos.version>
+
+        <!-- 复制jar包到指定路径-->
+        <project.jar.output.directory>../build</project.jar.output.directory>
+
+        <!-- docker容器部署配置 -->
+        <docker.plugin.version>0.32.0</docker.plugin.version>
+        <!-- jib-maven-plugin插件版本，代码打包docker -->
+        <jib.maven.plugin.version>3.1.4</jib.maven.plugin.version>
+
+        <!--        <docker.plugin.version>0.32.0</docker.plugin.version>-->
+        <!--        <docker.host>http://10.150.1.27:2375</docker.host>-->
+        <!--        <docker.registry>183.66.214.218:10800</docker.registry>-->
+        <!--        <docker.namespace>test</docker.namespace>-->
+        <!--        <docker.username>test</docker.username>-->
+        <!--        <docker.password>test@123</docker.password>-->
+    </properties>
+    <dependencies>
+        <!--bootstrap 启动器-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+        <!--配置文件处理器-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!--配置文件加解密-->
+        <dependency>
+            <groupId>com.github.ulisesbocchio</groupId>
+            <artifactId>jasypt-spring-boot-starter</artifactId>
+            <version>${jasypt.version}</version>
+        </dependency>
+        <!--监控-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!--监控客户端-->
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+            <version>${spring-boot-admin.version}</version>
+        </dependency>
+        <!--Lombok-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!--测试依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-bom</artifactId>
+                <version>1.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- spring boot 依赖 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- spring cloud 依赖 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- spring cloud alibaba 依赖 -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-oauth2</artifactId>
+                <version>${oauth2.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <!--swagger 依赖-->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-dependencies</artifactId>
+                <version>${knife4j.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--hutool-->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <!--Apache lang3工具包 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.11</version>
+            </dependency>
+            <!-- 文件上传工具类 -->
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>${commons.fileupload.version}</version>
+            </dependency>
+            <!-- transmittable-thread-local 线程 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>transmittable-thread-local</artifactId>
+                <version>${transmittable-thread-local.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <name>nexus repository</name>
+            <url>http://183.66.214.218:8081/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>nexus</id>
+            <name>nexus repository</name>
+            <url>http://183.66.214.218:8081/repository/maven-public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <build>
+        <finalName>${project.name}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                    <configuration>
+                        <finalName>${project.build.finalName}</finalName>
+                        <layers>
+                            <enabled>true</enabled>
+                        </layers>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.8</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>  <!-- 在maven进行package的时候执行-->
+                            <configuration>
+                                <target>
+                                    <!--复制jar包到指定位置 -->
+                                    <copy todir="${project.jar.output.directory}">
+                                        <fileset dir="${project.build.directory}">
+                                            <include name="*.jar"/>
+                                        </fileset>
+                                    </copy>
+                                </target>
+                            </configuration>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <!-- 默认环境 -->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!-- 环境标识，需要与配置文件的名称相对应 -->
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <!-- 环境标识，需要与配置文件的名称相对应 -->
+                <spring.profiles.active>prod</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <!-- 环境标识，需要与配置文件的名称相对应 -->
+                <spring.profiles.active>test</spring.profiles.active>
+<!--                &lt;!&ndash; docker镜像打包发布配置 &ndash;&gt;-->
+<!--                <docker.harbor.addr>10.150.1.34:1080</docker.harbor.addr>-->
+<!--                <docker.harbor.project>test</docker.harbor.project>-->
+<!--                <docker.harbor.username>test</docker.harbor.username>-->
+<!--                <docker.harbor.password>Test@123</docker.harbor.password>-->
+<!--                &lt;!&ndash; 镜像构建平台  X86(amd64) ARM(arm64)&ndash;&gt;-->
+<!--                <docker.image.platform>amd64</docker.image.platform>-->
+            </properties>
+        </profile>
+    </profiles>
+</project>

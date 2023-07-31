@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.partbuilding.mapper.AttachmentsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.sjz.partbuilding.model.entity.Attachments">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="file_name" property="fileName"/>
+        <result column="size" property="size"/>
+        <result column="path" property="path"/>
+        <result column="file_type" property="fileType"/>
+        <result column="ext" property="ext"/>
+        <result column="minio_path" property="minioPath"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        version,
+        deleted,
+        id, business_id, user_id, file_name, size, path, file_type, ext, code,minio_path
+    </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM dj_attachments WHERE id = #{id}
+    </delete>
+
+    <select id="selectCustomBatchByIds" resultType="com.sjz.partbuilding.model.entity.Attachments">
+        select
+        id,
+        file_name,
+        file_full_name,
+        `size`,
+        `path`,
+        file_type,
+        ext,
+        save_name,
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        version,
+        deleted,
+        upload_mode
+        from
+        dj_sys_attachments
+        where id in (
+        <foreach collection="ids" index="index" item="id" open="" close="" separator=",">
+            #{id}
+        </foreach>
+        )
+    </select>
+</mapper>

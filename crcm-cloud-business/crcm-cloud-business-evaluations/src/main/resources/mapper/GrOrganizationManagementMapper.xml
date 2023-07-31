@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.evaluations.mapper.GrOrganizationManagementMapper">
+    
+    <resultMap type="com.sjz.evaluations.model.entity.GrOrganizationManagement" id="GrOrganizationManagementResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+        <result property="village"    column="village"    />
+        <result property="contacts"    column="contacts"    />
+        <result property="contactInformation"    column="contact_information"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="pid"    column="pid"    />
+        <result property="remarks"    column="remarks"    />
+    </resultMap>
+
+    <sql id="selectGrOrganizationManagementVo">
+        select id, name, code, village, contacts, contact_information, longitude, latitude, pid, remarks, from gr_organization_management
+    </sql>
+    <select id="findGrOrganizationManagementPage"
+            resultType="com.sjz.evaluations.model.entity.GrOrganizationManagement">
+        select d.name as dName,o.* from gr_organization_management o  join gr_district d on d.id=o.pid where d.deleted=0 and o.deleted=0
+        <where>
+            <if test="orgMent.pid!=null and orgMent.pid!=''">
+                and o.pid =#{orgMent.pid}
+            </if>
+            <if test="orgMent.name!=null and orgMent.name!=''">
+                and o.name like like concat('%', #{orgMent.name}, '%')
+            </if>
+        </where>
+
+    </select>
+
+</mapper>

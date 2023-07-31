@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.company.HazardousChemicalsMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.company.HazardousChemicals" id="HazardousChemicalsResult">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="recordDate" column="record_date"/>
+        <result property="limitDate" column="limit_date"/>
+        <result property="wasteName" column="waste_name"/>
+        <result property="wasteType" column="waste_type"/>
+        <result property="wasteTypeName" column="waste_type_name"/>
+        <result property="wasteCode" column="waste_code"/>
+        <result property="wasteCodeName" column="waste_code_name"/>
+        <result property="dangerousType" column="dangerous_type"/>
+        <result property="component" column="component"/>
+        <result property="careful" column="careful"/>
+        <result property="shape" column="shape"/>
+        <result property="smell" column="smell"/>
+        <result property="color" column="color"/>
+        <result property="origin" column="origin"/>
+        <result property="toWhere" column="to_where"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectHazardousChemicalsVo">
+        select id,
+               company_id,
+               record_date,
+               limit_date,
+               waste_name,
+               waste_type,
+               waste_type_name,
+               waste_code,
+               waste_code_name,
+               dangerous_type,
+               component,
+               careful,
+               shape,
+               smell,
+               color,
+               origin,
+               to_where,
+               deleted
+        from tbl_hazardous_chemicals
+    </sql>
+
+</mapper>

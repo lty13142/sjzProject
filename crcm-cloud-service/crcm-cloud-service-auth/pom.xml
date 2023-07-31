@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>crcm-cloud-service</artifactId>
+        <groupId>com.crcm</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>crcm-cloud-service-auth</artifactId>
+    <packaging>jar</packaging>
+    <description>认证授权中心，基于 spring security oAuth2</description>
+    <properties>
+        <!-- 复制jar包到指定路径-->
+        <project.jar.output.directory>../../build/jar</project.jar.output.directory>
+    </properties>
+    <dependencies>
+        <!--注册中心客户端-->
+        <!-- nacos start -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>nacos-client</artifactId>
+                    <groupId>com.alibaba.nacos</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--配置中心客户端-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>nacos-client</artifactId>
+                    <groupId>com.alibaba.nacos</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+            <version>${nacos.version}</version>
+        </dependency>
+        <!-- nacos end -->
+        <!--freemarker-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <!--undertow容器-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- 公共核心包 -->
+        <dependency>
+            <groupId>com.crcm</groupId>
+            <artifactId>crcm-cloud-starter-core</artifactId>
+        </dependency>
+        <!-- 公共权限管理包 -->
+        <dependency>
+            <groupId>com.crcm</groupId>
+            <artifactId>crcm-cloud-starter-auth</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.crcm</groupId>
+            <artifactId>crcm-cloud-starter-data</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.crcm</groupId>
+            <artifactId>crcm-cloud-starter-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.crcm</groupId>
+            <artifactId>crcm-cloud-starter-swagger</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.whvcse</groupId>
+            <artifactId>easy-captcha</artifactId>
+            <version>${easy-captcha.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.crcm</groupId>
+            <artifactId>crcm-cloud-service-admin-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.crcm</groupId>
+            <artifactId>crcm-cloud-starter-log</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <finalName>${project.name}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

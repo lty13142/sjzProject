@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.admin.mapper.AgreementMapper">
+    
+    <resultMap type="com.crcm.admin.model.entity.Agreement" id="AgreementResult">
+        <result property="id"    column="id"    />
+        <result property="agreementType"    column="agreement_type"    />
+        <result property="content"    column="content"    />
+        <result property="deleted"    column="deleted"    />
+    </resultMap>
+
+    <sql id="selectAgreementVo">
+        select id, agreement_type, content, deleted from sys_agreement
+    </sql>
+
+    <select id="getLastByType" resultType="com.crcm.admin.model.entity.Agreement">
+        select * from sys_agreement
+        <where>
+            deleted = 0
+            <if test="agreementType != null and agreementType != ''">
+                and agreement_type = #{agreementType}
+            </if>
+        </where>
+        order by update_time DESC
+        limit 1
+    </select>
+
+    <select id="getListByType" resultType="com.crcm.admin.model.entity.Agreement">
+        select * from sys_agreement
+        where deleted = 0
+        group by agreement_type
+    </select>
+
+</mapper>

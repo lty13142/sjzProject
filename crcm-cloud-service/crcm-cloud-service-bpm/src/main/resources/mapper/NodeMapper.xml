@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.bpm.mapper.NodeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.crcm.bpm.domain.entity.NodeDO">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="node_id" property="nodeId"/>
+        <result column="node_name" property="nodeName"/>
+        <result column="definition_id" property="definitionId"/>
+        <result column="model_id" property="modelId"/>
+        <result column="process_key" property="processKey"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="node_type" property="nodeType"/>
+        <result column="priority" property="priority"/>
+        <result column="form_key" property="formKey"/>
+        <result column="user_id_list" property="userIdList"/>
+        <result column="user_name_list" property="userNameList"/>
+        <result column="role_group_code" property="roleGroupCode"/>
+        <result column="role_group_name" property="roleGroupName"/>
+        <result column="role_list" property="roleList"/>
+        <result column="role_name_list" property="roleNameList"/>
+        <result column="find_user_type" property="findUserType"/>
+        <result column="combine_type" property="combineType"/>
+        <result column="assignee_field" property="assigneeField"/>
+        <result column="select_path" property="selectPath"/>
+        <result column="handler_strategy" property="handlerStrategy"/>
+        <result column="relation_node_id" property="relationNodeId"/>
+        <result column="action_list" property="actionList"/>
+        <result column="skip_expression" property="skipExpression"/>
+        <result column="expression" property="expression"/>
+        <result column="source_ref" property="sourceRef"/>
+        <result column="target_ref" property="targetRef"/>
+        <result column="sequential" property="sequential"/>
+        <result column="proportion" property="proportion"/>
+        <result column="remarks" property="remarks"/>
+        <result column="valid_state" property="validState"/>
+        <result column="user_selector" property="userSelector"/>
+        <result column="deleted" property="deleted"/>
+        <result column="post_id" property="postId"/>
+        <result column="post_name" property="postName"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                create_by,
+                update_by,
+                create_time,
+                update_time,
+            id, node_id, node_name, definition_id, process_id, process_key, tenant_id, node_type,
+            priority, form_key, user_id_list, user_name_list, role_group_code, role_group_name,
+            role_list, role_name_list, find_user_type, combine_type, assignee_field, select_path,
+            handler_strategy, relation_node_id, action_list, skip_expression, expression, source_ref,
+            target_ref, sequential, proportion, remarks, valid_state, deleted, post_id, post_name
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM bpm_node WHERE id = #{id}
+    </delete>
+
+</mapper>

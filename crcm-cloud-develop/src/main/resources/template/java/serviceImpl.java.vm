@@ -1,0 +1,91 @@
+package ${packageName}.service.impl.${moduleName};
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.crcm.cloud.start.data.mybatis.bean.PageT;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.List;
+import org.springframework.stereotype.Service;
+import ${packageName}.mapper.${moduleName}.${ClassName}Mapper;
+import ${packageName}.model.entity.${moduleName}.${ClassName};
+import ${packageName}.service.${moduleName}.${ClassName}Service;
+
+/**
+ * ${functionName}Service业务层处理
+ * 
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Service
+public class ${ClassName}ServiceImpl extends ServiceImpl<${ClassName}Mapper, ${ClassName}> implements ${ClassName}Service {
+
+    
+
+    /**
+     * 新增${functionName}
+     * 
+     * @param ${className} ${functionName}
+     * @return 结果
+     */
+    @Override
+    public boolean save${ClassName}(${ClassName} ${className}) {
+        return this.save(${className});
+    }
+
+    /**
+     * 修改${functionName}
+     * 
+     * @param ${className} ${functionName}
+     * @return 结果
+     */
+    @Override
+    public boolean update${ClassName}(${ClassName} ${className}) {
+        return this.updateById(${className});
+    }
+
+    /**
+     * 删除${functionName}信息
+     * 
+     * @param ${pkColumn.javaField} ${functionName}ID
+     * @return 结果
+     */
+    @Override
+    public boolean delete${ClassName}(${pkColumn.javaType} ${pkColumn.javaField}) {
+        return this.removeById(${pkColumn.javaField});
+    }
+
+    /**
+     * 查询${functionName}
+     *
+     * @param ${pkColumn.javaField} ${functionName}ID
+     * @return ${functionName}
+     */
+    @Override
+    public ${ClassName} find${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField}) {
+        return this.baseMapper.selectById(${pkColumn.javaField});
+    }
+
+    /**
+     * 查询${functionName}列表
+     *
+     * @param ${className} ${functionName}
+     * @return ${functionName}
+     */
+    @Override
+    public List<${ClassName}> find${ClassName}List(${ClassName} ${className}) {
+        LambdaQueryWrapper<${ClassName}> queryWrapper = new LambdaQueryWrapper<>();
+        return this.baseMapper.selectList(queryWrapper);
+    }
+
+    /**
+     * 分页查询${functionName}
+     *
+     * @param page 分页参数
+     * @param ${className} ${functionName}
+     * @return ${functionName}
+     */
+    @Override
+    public PageT<${ClassName}> find${ClassName}Page(PageT<${ClassName}> page, ${ClassName} ${className}) {
+        LambdaQueryWrapper<${ClassName}> queryWrapper = new LambdaQueryWrapper<>();
+        return this.page(page, queryWrapper);
+    }
+}

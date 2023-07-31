@@ -1,0 +1,105 @@
+package ${packageName}.controller.${moduleName};
+
+import java.util.List;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import com.crcm.cloud.start.data.mybatis.bean.PageT;
+import com.crcm.cloud.start.log.annation.SysLog;
+import com.crcm.core.constant.ServiceNameConstants;
+import com.crcm.core.constant.enums.BusinessType;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import ${packageName}.model.entity.${moduleName}.${ClassName};
+import ${packageName}.service.${moduleName}.${ClassName}Service;
+import ${baseControllerClass};
+import ${resultClass};
+
+/**
+ * ${functionName}Controller
+ * 
+ * @author ${author}
+ * @date ${datetime}
+ */
+@RestController
+@AllArgsConstructor
+@RequestMapping("/${businessName}")
+@Api(tags = "${functionName}")
+public class ${ClassName}Controller extends BaseController {
+
+
+    private final ${ClassName}Service ${className}Service;
+
+    /**
+     * 新增${functionName}
+     */
+    @PostMapping("/save")
+    @ApiOperation(value = "新增${functionName}")
+    @SysLog(title = "新增${functionName}", serviceId = ServiceNameConstants.PLATFORM_SERVICE, businessType = BusinessType.INSERT)
+    public RestResult<Boolean> add(@Validated @RequestBody ${ClassName} ${className}) {
+        return RestResult.succeed(${className}Service.save${ClassName}(${className}));
+    }
+
+    /**
+     * 修改${functionName}
+     */
+    @PostMapping("/edit")
+    @ApiOperation(value = "修改${functionName}")
+    @SysLog(title = "修改${functionName}", serviceId = ServiceNameConstants.PLATFORM_SERVICE, businessType = BusinessType.UPDATE)
+    public RestResult<Boolean> edit(@Validated @RequestBody ${ClassName} ${className}) {
+        return RestResult.succeed(${className}Service.update${ClassName}(${className}));
+    }
+
+    /**
+     * 删除${functionName}
+     */
+    @PostMapping("/delete/{${pkColumn.javaField}}")
+    @ApiOperation(value = "删除${functionName}")
+    @SysLog(title = "删除${functionName}", serviceId = ServiceNameConstants.PLATFORM_SERVICE, businessType = BusinessType.DELETE)
+    public RestResult<Boolean> delete(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField}) {
+        return RestResult.succeed(${className}Service.delete${ClassName}(${pkColumn.javaField}));
+    }
+
+
+    /**
+     * 分页查询${functionName}
+     */
+    @GetMapping("/page")
+    @ApiOperation(value = "分页查询${functionName}")
+    public RestResult<PageT<${ClassName}>> getPage(PageT<${ClassName}> page, ${ClassName} ${className}) {
+        return RestResult.succeed(${className}Service.find${ClassName}Page(page, ${className}));
+    }
+
+    /**
+     * 查询${functionName}列表
+     */
+    @GetMapping("/list")
+    #if($table.crud)
+    @ApiOperation(value = "查询${functionName}列表")
+    public RestResult<List<${ClassName}>> getList(${ClassName} ${className}) {
+        return RestResult.succeed(${className}Service.find${ClassName}List(${className}));
+    }
+    #elseif($table.tree)
+    public RestResult list(${ClassName} ${className}) {
+        return RestResult.succeed(${className}Service.find${ClassName}List(${className}));
+    }
+    #end
+
+    /**
+     * 获取${functionName}详细信息
+     */
+    @GetMapping(value = "/get/{${pkColumn.javaField}}")
+    @ApiOperation(value = "获取${functionName}详细信息")
+    public RestResult<${ClassName}> getInfo(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField}) {
+        return RestResult.succeed(${className}Service.find${ClassName}ById(${pkColumn.javaField}));
+    }
+}

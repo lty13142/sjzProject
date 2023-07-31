@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.yearPlan.YearPlanInstitutionalConstructionRulesMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.yearPlan.YearPlanInstitutionalConstructionRules"
+               id="YearPlanInstitutionalConstructionRulesResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="glzd" column="GLZD"/>
+        <result property="gwzrzd" column="GWZRZD"/>
+        <result property="aqczlc" column="AQCZLC"/>
+        <result property="gltz" column="GLTZ"/>
+        <result property="pxzd" column="PXZD"/>
+        <result property="ywff" column="YWFF"/>
+        <result property="sssheng" column="SSSHENG"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="xgsj" column="XGSJ"/>
+    </resultMap>
+
+    <sql id="selectYearPlanInstitutionalConstructionRulesVo">
+        select ID,
+               MAINID,
+               GLZD,
+               GWZRZD,
+               AQCZLC,
+               GLTZ,
+               PXZD,
+               YWFF,
+               SSSHENG,
+               SSSHI,
+               SSQU,
+               XGSJ,
+        from pp_wxfw_year_plan_institutional_construction_rules
+    </sql>
+
+</mapper>

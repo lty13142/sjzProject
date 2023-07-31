@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  admin-ui:
+    container_name: cloud-admin-ui
+    image: 183.66.214.218:10800/test/cloud-admin-ui:latest
+    ports:
+      - "9527:80"
+    networks:
+      - cloud-net
+
+# 使用创建环境时配置的网络
+networks:
+  cloud-net:
+    external: true
+    name: crcm-cloud-net

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.bill.BillWasteMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.bill.BillWaste" id="BillWasteResult">
+        <result property="id" column="id"/>
+        <result property="billId" column="bill_id"/>
+        <result property="directoryVersion" column="directory_version"/>
+        <result property="wasteName" column="waste_name"/>
+        <result property="wasteType" column="waste_type"/>
+        <result property="wasteTypeName" column="waste_type_name"/>
+        <result property="wasteCode" column="waste_code"/>
+        <result property="wasteCodeName" column="waste_code_name"/>
+        <result property="hazards" column="hazards"/>
+        <result property="component" column="component"/>
+        <result property="shape" column="shape"/>
+        <result property="origin" column="origin"/>
+        <result property="careful" column="careful"/>
+        <result property="disposalMajor" column="disposal_major"/>
+        <result property="disposalSmall" column="disposal_small"/>
+        <result property="dangerousType" column="dangerous_type"/>
+        <result property="dataSource" column="data_source"/>
+        <result property="planTransferWeight" column="plan_transfer_weight"/>
+        <result property="transferWeight" column="transfer_weight"/>
+        <result property="unit" column="unit"/>
+        <result property="packageType" column="package_type"/>
+        <result property="bucNum" column="buc_num"/>
+        <result property="packageTypeIntroduce" column="package_type_introduce"/>
+        <result property="outTransportPurpose" column="out_transport_purpose"/>
+        <result property="confirmWeight" column="confirm_weight"/>
+        <result property="handleOpinion" column="handle_opinion"/>
+        <result property="significantDifferences" column="significant_differences"/>
+        <result property="significantDifferencesResume" column="significant_differences_resume"/>
+        <result property="produceCompanyRemark" column="produce_company_remark"/>
+        <result property="receiveCompanyRemark" column="receive_company_remark"/>
+        <result property="dataFlag" column="data_flag"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectBillWasteVo">
+        select id,
+               bill_id,
+               directory_version,
+               waste_name,
+               waste_type,
+               waste_type_name,
+               waste_code,
+               waste_code_name,
+               hazards,
+               component,
+               shape,
+               origin,
+               careful,
+               disposal_major,
+               disposal_small,
+               dangerous_type,
+               data_source,
+               plan_transfer_weight,
+               transfer_weight,
+               unit,
+               package_type,
+               buc_num,
+               package_type_introduce,
+               out_transport_purpose,
+               confirm_weight,
+               handle_opinion,
+               significant_differences,
+               significant_differences_resume,
+               produce_company_remark,
+               receive_company_remark,
+               data_flag,
+               deleted,
+        from tbl_bill_waste
+    </sql>
+
+</mapper>

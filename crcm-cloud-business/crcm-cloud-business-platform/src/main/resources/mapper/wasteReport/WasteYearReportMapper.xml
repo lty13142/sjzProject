@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.wasteReport.WasteYearReportMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.wasteReport.WasteYearReport" id="WasteYearReportResult">
+        <result property="id" column="ID"/>
+        <result property="dwid" column="DWID"/>
+        <result property="djnf" column="DJNF"/>
+        <result property="txsj" column="TXSJ"/>
+        <result property="bz" column="BZ"/>
+        <result property="txr" column="TXR"/>
+        <result property="state" column="STATE"/>
+        <result property="zcz" column="ZCZ"/>
+        <result property="csgmdm" column="CSGMDM"/>
+        <result property="zxqk" column="ZXQK"/>
+        <result property="yaqk" column="YAQK"/>
+        <result property="zdqk" column="ZDQK"/>
+        <result property="clqk" column="CLQK"/>
+        <result property="lxr" column="LXR"/>
+        <result property="dzyx" column="DZYX"/>
+        <result property="dw" column="DW"/>
+        <result property="cz" column="CZ"/>
+        <result property="sj" column="SJ"/>
+        <result property="cslsfwl" column="CSLSFWL"/>
+        <result property="sbsftc" column="SBSFTC"/>
+        <result property="tcsj" column="TCSJ"/>
+        <result property="tcyy" column="TCYY"/>
+        <result property="sssheng" column="SSSHENG"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectWasteYearReportVo">
+        select ID,
+               DWID,
+               DJNF,
+               TXSJ,
+               BZ,
+               TXR,
+               STATE,
+               ZCZ,
+               CSGMDM,
+               ZXQK,
+               YAQK,
+               ZDQK,
+               CLQK,
+               LXR,
+               DZYX,
+               DW,
+               CZ,
+               SJ,
+               CSLSFWL,
+               SBSFTC,
+               TCSJ,
+               TCYY,
+               SSSHENG,
+               SSSHI,
+               SSQU,
+               MODIFYRQ,
+        from pp_wxfw_waste_year_report
+    </sql>
+
+</mapper>

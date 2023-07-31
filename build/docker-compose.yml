@@ -1,0 +1,142 @@
+version : '3.8'
+services:
+  gateway:
+    container_name: cloud-gateway
+    image: 183.66.214.218:10800/test/cloud-gateway:latest
+    build:
+      context: .
+      args:
+        - PORT=8850
+        - JAR_PATH=./jar/crcm-cloud-gateway.jar
+    privileged: true
+    ports:
+      - "8850:8850"
+    environment:
+      - TZ=Asia/Shanghai
+      - NACOS_HOST=cloud-nacos
+      - NACOS_PORT=8848
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms1024m -Xmx1024m -Xmn256m -Xss256k -XX:SurvivorRatio=8 -XX:+UseConcMarkSweepGC
+      - JAVA_TOOL_OPTIONS="-XX:+UseContainerSupport -Dfile.encoding=UTF-8"
+    volumes:
+      - ./wait-for-it.sh:/wait-for-it.sh
+    # 配置等待nacos服务启动后再运行
+    entrypoint: /wait-for-it.sh nacos:8848 -- java -jar app.jar
+    restart: always
+    depends_on:
+      - admin
+    networks:
+      - cloud-net
+
+
+  auth:
+    container_name: cloud-auth
+    image: 183.66.214.218:10800/test/cloud-auth:latest
+    build:
+      context: .
+      args:
+        - PORT=8868
+        - JAR_PATH=./jar/crcm-cloud-service-auth.jar
+    ports:
+      - "8868:8868"
+    environment:
+      - TZ=Asia/Shanghai
+      - NACOS_HOST=cloud-nacos
+      - NACOS_PORT=8848
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms1024m -Xmx1024m -Xmn256m -Xss256k -XX:SurvivorRatio=8 -XX:+UseConcMarkSweepGC
+      - JAVA_TOOL_OPTIONS="-XX:+UseContainerSupport -Dfile.encoding=UTF-8"
+    depends_on:
+      - admin
+    networks:
+      - cloud-net
+
+  admin:
+    container_name: cloud-admin
+    image: 183.66.214.218:10800/test/cloud-admin:latest
+    build:
+      context: .
+      args:
+        - PORT=8898
+        - JAR_PATH=./jar/crcm-cloud-service-admin.jar
+    ports:
+      - "8898:8898"
+    environment:
+      - TZ=Asia/Shanghai
+      - NACOS_HOST=cloud-nacos
+      - NACOS_PORT=8848
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms1024m -Xmx1024m -Xmn256m -Xss256k -XX:SurvivorRatio=8 -XX:+UseConcMarkSweepGC
+      - JAVA_TOOL_OPTIONS="-XX:+UseContainerSupport -Dfile.encoding=UTF-8"
+    networks:
+      - cloud-net
+
+  file:
+    container_name: cloud-file
+    image: 183.66.214.218:10800/test/cloud-file:latest
+    build:
+      context: .
+      args:
+        - PORT=8920
+        - JAR_PATH=./jar/crcm-cloud-service-file.jar
+    ports:
+      - "8920:8920"
+    environment:
+      - TZ=Asia/Shanghai
+      - NACOS_HOST=cloud-nacos
+      - NACOS_PORT=8848
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms1024m -Xmx1024m -Xmn256m -Xss256k -XX:SurvivorRatio=8 -XX:+UseConcMarkSweepGC
+      - JAVA_TOOL_OPTIONS="-XX:+UseContainerSupport -Dfile.encoding=UTF-8"
+    networks:
+      - cloud-net
+
+  monitor:
+    container_name: cloud-monitor
+    image: 183.66.214.218:10800/test/cloud-monitor:latest
+    build:
+      context: .
+      args:
+        - PORT=8899
+        - JAR_PATH=./jar/crcm-cloud-monitor.jar
+    ports:
+      - "8899:8899"
+    environment:
+      - TZ=Asia/Shanghai
+      - NACOS_HOST=cloud-nacos
+      - NACOS_PORT=8848
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms1024m -Xmx1024m -Xmn256m -Xss256k -XX:SurvivorRatio=8 -XX:+UseConcMarkSweepGC
+      - JAVA_TOOL_OPTIONS="-XX:+UseContainerSupport -Dfile.encoding=UTF-8"
+    networks:
+      - cloud-net
+
+  xxl-job:
+    container_name: xxl-job-admin
+    image: 183.66.214.218:10800/test/xxl-job-admin:latest
+    build:
+      context: .
+      args:
+        - PORT=8222
+        - JAR_PATH=./jar/crcm-cloud-xxl-job-admin.jar
+    ports:
+      - "8222:8222"
+    environment:
+      - TZ=Asia/Shanghai
+      - NACOS_HOST=cloud-nacos
+      - NACOS_PORT=8848
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms1024m -Xmx1024m -Xmn256m -Xss256k -XX:SurvivorRatio=8 -XX:+UseConcMarkSweepGC
+      - JAVA_TOOL_OPTIONS="-XX:+UseContainerSupport -Dfile.encoding=UTF-8"
+    networks:
+      - cloud-net
+
+  admin-ui:
+    container_name: cloud-admin-ui
+    image: 183.66.214.218:10800/test/cloud-admin-ui:latest
+    build:
+      context: ./ui/cloud-admin-ui
+    ports:
+      - "9527:80"
+    networks:
+      - cloud-net
+
+# 使用创建环境时配置的网络
+networks:
+  cloud-net:
+    external: true
+    name: crcm-cloud-net

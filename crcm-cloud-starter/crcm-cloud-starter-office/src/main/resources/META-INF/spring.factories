@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.crcm.cloud.start.office.easyexcel.CustomerDefaultConverterLoader

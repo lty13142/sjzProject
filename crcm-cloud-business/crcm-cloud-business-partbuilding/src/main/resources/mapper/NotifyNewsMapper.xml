@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.partbuilding.mapper.NotifyNewsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.sjz.partbuilding.model.entity.NotifyNews">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="version" property="version"/>
+        <result column="deleted" property="deleted"/>
+        <result column="title_name" property="titleName"/>
+        <result column="type" property="type"/>
+        <result column="news_type" property="newsType"/>
+        <result column="keywords" property="keywords"/>
+        <result column="accept_id" property="acceptId"/>
+        <result column="accept_name" property="acceptName"/>
+        <result column="content" property="content"/>
+        <result column="cover" property="cover"/>
+        <result column="publish_type" property="publishType"/>
+        <result column="publish_time" property="publishTime"/>
+        <result column="org_id" property="orgId"/>
+        <result column="attachment" property="attachment"/>
+        <result column="news_flag" property="newsFlag"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                create_by,
+                create_time,
+                update_by,
+                update_time,
+                version,
+                deleted,
+            id, title_name, type, news_type, keywords, accept_id, accept_name, content, cover, publish_type, org_id,attachment,publish_time,news_flag
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM dj_notify_news WHERE id = #{id}
+    </delete>
+
+    <select id="getNotifyNewsPage" resultType="com.sjz.partbuilding.model.vo.NotifyNewsVo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        dj_notify_news
+        WHERE
+        deleted = 0
+        AND type = #{notifyNewsVo.type}
+        and org_id = #{notifyNewsVo.orgId}
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(notifyNewsVo.titleName)">
+            AND title_name LIKE CONCAT('%',#{notifyNewsVo.titleName},'%')
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(notifyNewsVo.acceptId)">
+            AND accept_id LIKE CONCAT('%',#{notifyNewsVo.acceptId},'%')
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(notifyNewsVo.publishType)">
+            AND publish_type = #{notifyNewsVo.publishType}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(notifyNewsVo.newsFlag)">
+            AND news_flag = #{notifyNewsVo.newsFlag}
+        </if>
+        ORDER BY publish_type,publish_time DESC,create_time DESC
+    </select>
+
+    <select id="getNotifyNewsVo" resultType="com.sjz.partbuilding.model.vo.NotifyNewsVo">
+        select
+        <include refid="Base_Column_List"/>
+        FROM
+        dj_notify_news
+        WHERE
+        deleted = 0
+        AND id = #{id}
+    </select>
+
+    <select id="findLoginNewsPage" resultType="com.sjz.partbuilding.model.vo.NotifyNewsVo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        dj_notify_news
+        WHERE deleted = 0
+        AND org_id = #{notifyNews.orgId}
+        AND TYPE = 1
+        AND news_flag = 1
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="getAcceptNotifyNewsPage" resultType="com.sjz.partbuilding.model.vo.NotifyNewsVo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        dj_notify_news
+        WHERE
+        deleted = 0
+        AND type = #{notifyNewsVo.type}
+        and FIND_IN_SET( #{notifyNewsVo.orgId},accept_id) &gt; 0
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(notifyNewsVo.titleName)">
+            AND title_name LIKE CONCAT('%',#{notifyNewsVo.titleName},'%')
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(notifyNewsVo.acceptId)">
+            AND accept_id LIKE CONCAT('%',#{notifyNewsVo.acceptId},'%')
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(notifyNewsVo.publishType)">
+            AND publish_type = #{notifyNewsVo.publishType}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="getCoverNewsPage" resultType="com.sjz.partbuilding.model.vo.NotifyNewsVo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        dj_notify_news
+        WHERE
+        deleted = 0
+        AND type = #{notifyNewsVo.type}
+        and org_id = #{notifyNewsVo.orgId}
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(notifyNewsVo.newsFlag)">
+            AND news_flag = #{notifyNewsVo.newsFlag}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(notifyNewsVo.acceptId)">
+            AND accept_id LIKE CONCAT('%',#{notifyNewsVo.acceptId},'%')
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(notifyNewsVo.publishType)">
+            AND publish_type = #{notifyNewsVo.publishType}
+        </if>
+        ORDER BY publish_time DESC
+    </select>
+
+</mapper>

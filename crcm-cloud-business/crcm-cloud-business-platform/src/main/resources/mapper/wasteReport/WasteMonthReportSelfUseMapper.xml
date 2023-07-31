@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.wasteReport.WasteMonthReportSelfUseMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.wasteReport.WasteMonthReportSelfUse"
+               id="WasteMonthReportSelfUseResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="childid" column="CHILDID"/>
+        <result property="ssbm" column="SSBM"/>
+        <result property="ssmc" column="SSMC"/>
+        <result property="xzz" column="XZZ"/>
+        <result property="jldw" column="JLDW"/>
+        <result property="rqgs" column="RQGS"/>
+        <result property="sslx" column="SSLX"/>
+        <result property="sjrl" column="SJRL"/>
+        <result property="sjcznl" column="SJCZNL"/>
+        <result property="sjcznljldw" column="SJCZNLJLDW"/>
+        <result property="lyczdl" column="LYCZDL"/>
+        <result property="lyczxl" column="LYCZXL"/>
+        <result property="lyczl" column="LYCZL"/>
+        <result property="lyczljldw" column="LYCZLJLDW"/>
+        <result property="ytrl" column="YTRL"/>
+        <result property="ytzl" column="YTZL"/>
+        <result property="dqtml" column="DQTML"/>
+        <result property="ljytrla" column="LJYTRLA"/>
+        <result property="ljytrlb" column="LJYTRLB"/>
+        <result property="sfcs" column="SFCS"/>
+        <result property="remark" column="REMARK"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectWasteMonthReportSelfUseVo">
+        select ID,
+               MAINID,
+               CHILDID,
+               SSBM,
+               SSMC,
+               XZZ,
+               JLDW,
+               RQGS,
+               SSLX,
+               SJRL,
+               SJCZNL,
+               SJCZNLJLDW,
+               LYCZDL,
+               LYCZXL,
+               LYCZL,
+               LYCZLJLDW,
+               YTRL,
+               YTZL,
+               DQTML,
+               LJYTRLA,
+               LJYTRLB,
+               SFCS,
+               REMARK,
+               MODIFYRQ,
+        from pp_wxfw_waste_month_report_self_use
+    </sql>
+
+</mapper>

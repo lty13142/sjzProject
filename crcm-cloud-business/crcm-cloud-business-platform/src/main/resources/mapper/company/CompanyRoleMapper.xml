@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.company.CompanyRoleMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.company.CompanyRole" id="CompanyRoleResult">
+        <result property="id" column="ID"/>
+        <result property="dwid" column="DWID"/>
+        <result property="jsid" column="JSID"/>
+        <result property="jsmc" column="JSMC"/>
+        <result property="jslx" column="JSLX"/>
+        <result property="jsxh" column="JSXH"/>
+        <result property="create_time" column="createTime"/>
+        <result property="update_time" column="updateTime"/>
+    </resultMap>
+
+    <sql id="selectCompanyRoleVo">
+        select ID,
+               DWID,
+               JSID,
+               JSMC,
+               JSLX,
+               JSXH,
+               create_time,
+               update_time,
+        from pp_company_role
+    </sql>
+
+</mapper>

@@ -1,0 +1,56 @@
+server:
+  port: 8848
+  tomcat:
+    basedir: logs
+
+db:
+  num: 1
+  user: root
+  password: zzyt@123
+#  password: GUKJG4YH13jAGsn
+  url:
+#    0: jdbc:mysql://${MYSQL_HOST:cloud-mysql}:${MYSQL_PORT:3306}/${MYSQL_DB:nacos_conf}?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+    0: jdbc:mysql://10.150.1.15:3306/sjz_nacos?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+#    0: jdbc:mysql://10.2.112.87:3306/sjz_nacos?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+
+nacos:
+  core:
+    auth:
+      plugin.nacos.token.secret.key: SecretKey012345678901234567890123456789012345678901234567890123456789
+      enabled: false
+      system.type: nacos
+  security:
+    ignore:
+      urls: /,/error,/**/*.css,/**/*.js,/**/*.html,/**/*.map,/**/*.svg,/**/*.png,/**/*.ico,/console-fe/public/**,/v1/auth/**,/v1/console/health/**,/actuator/**,/v1/console/server/**
+
+spring:
+  datasource:
+    platform: mysql  #这个过期属性不能修改，nacos 代码对此有硬编码
+  security:
+    enabled: true
+  boot:  # 接入 spring boot admin
+    admin:
+      client:
+        url: http://crcm-monitor:5001
+        username: admin
+        password: zziy@123
+        instance:
+          service-host-type: ip
+  application:
+    name: @project.artifactId@
+  main:
+    allow-circular-references: true
+
+useAddressServer: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    export:
+      influx:
+        enabled: false
+      elastic:
+        enabled: false

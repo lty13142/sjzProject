@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.company.CompanyMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.company.Company" id="CompanyResult">
+        <result property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="companyName" column="company_name"/>
+        <result property="usedName" column="used_name"/>
+        <result property="companyType" column="company_type"/>
+        <result property="companyLabel" column="company_label"/>
+        <result property="unitCertificateType" column="unit_certificate_type"/>
+        <result property="unitCertificateCode" column="unit_certificate_code"/>
+        <result property="provincialCode" column="provincial_code"/>
+        <result property="cityCode" column="city_code"/>
+        <result property="zoneCode" column="zone_code"/>
+        <result property="streetCode" column="street_code"/>
+        <result property="detailAddress" column="detail_address"/>
+        <result property="companyScale" column="company_scale"/>
+        <result property="runStatus" column="run_status"/>
+        <result property="industryType" column="industry_type"/>
+        <result property="registerType" column="register_type"/>
+        <result property="environmentalProtectionSubordination" column="environmental_protection_subordination"/>
+        <result property="productionDate" column="production_date"/>
+        <result property="legalRepresentativeName" column="legal_representative_name"/>
+        <result property="legalRepresentativeCardType" column="legal_representative_card_type"/>
+        <result property="legalRepresentativeValidIdNo" column="legal_representative_valid_id_no"/>
+        <result property="environmentalProtectionDepartment" column="environmental_protection_department"/>
+        <result property="contactsName" column="contacts_name"/>
+        <result property="contactsCardType" column="contacts_card_type"/>
+        <result property="contactsCardNo" column="contacts_card_no"/>
+        <result property="contactsMobile" column="contacts_mobile"/>
+        <result property="contactsPhone" column="contacts_phone"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="companyWebsite" column="company_website"/>
+        <result property="remark" column="remark"/>
+        <result property="fillStatus" column="fill_status"/>
+        <result property="registerDate" column="register_date"/>
+        <result property="dataFlag" column="data_flag"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectCompanyVo">
+        select id,
+               username,
+               password,
+               company_name,
+               used_name,
+               company_type,
+               company_label,
+               unit_certificate_type,
+               unit_certificate_code,
+               provincial_code,
+               city_code,
+               zone_code,
+               street_code,
+               detail_address,
+               company_scale,
+               run_status,
+               industry_type,
+               register_type,
+               environmental_protection_subordination,
+               production_date,
+               legal_representative_name,
+               legal_representative_card_type,
+               legal_representative_valid_id_no,
+               environmental_protection_department,
+               contacts_name,
+               contacts_card_type,
+               contacts_card_no,
+               contacts_mobile,
+               contacts_phone,
+               longitude,
+               latitude,
+               company_website,
+               remark,
+               fill_status,
+               register_date,
+               data_flag,
+               deleted,
+        from tbl_company
+    </sql>
+    <select id="getSelectList" resultType="com.zsgf.platform.vo.company.CompanySelectVo">
+        select id, company_name
+        from tbl_company
+        where deleted = 0
+          and company_label = #{companyLabel}
+    </select>
+
+</mapper>

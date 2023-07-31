@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.wasteReport.WasteYearReportWasteGenerationMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.wasteReport.WasteYearReportWasteGeneration"
+               id="WasteYearReportWasteGenerationResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="dwid" column="DWID"/>
+        <result property="mlnf" column="MLNF"/>
+        <result property="fwdlbh" column="FWDLBH"/>
+        <result property="fwdlmc" column="FWDLMC"/>
+        <result property="fwxlbh" column="FWXLBH"/>
+        <result property="fwxlmc" column="FWXLMC"/>
+        <result property="fwxxmc" column="FWXXMC"/>
+        <result property="fwxt" column="FWXT"/>
+        <result property="fwms" column="FWMS"/>
+        <result property="cssl" column="CSSL"/>
+        <result property="qtl" column="QTL"/>
+        <result property="snzcl" column="SNZCL"/>
+        <result property="sldw" column="SLDW"/>
+        <result property="bz" column="BZ"/>
+        <result property="sssheng" column="SSSHENG"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectWasteYearReportWasteGenerationVo">
+        select ID,
+               MAINID,
+               DWID,
+               MLNF,
+               FWDLBH,
+               FWDLMC,
+               FWXLBH,
+               FWXLMC,
+               FWXXMC,
+               FWXT,
+               FWMS,
+               CSSL,
+               QTL,
+               SNZCL,
+               SLDW,
+               BZ,
+               SSSHENG,
+               SSSHI,
+               SSQU,
+               MODIFYRQ,
+        from pp_wxfw_waste_year_report_waste_generation
+    </sql>
+
+</mapper>

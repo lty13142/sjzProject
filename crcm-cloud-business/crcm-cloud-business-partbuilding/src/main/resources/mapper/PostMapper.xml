@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.partbuilding.mapper.PostMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.sjz.partbuilding.model.entity.Post">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="version" property="version"/>
+        <result column="deleted" property="deleted"/>
+        <result column="post_name" property="postName"/>
+        <result column="pid" property="pid"/>
+        <result column="sort" property="sort"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                create_by,
+                create_time,
+                update_by,
+                update_time,
+                version,
+                deleted,
+            id, post_name, pid,sort
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM dj_post WHERE id = #{id}
+    </delete>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="postTreeListBaseResultMap" type="com.sjz.partbuilding.model.vo.PostTreeVo">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="post_name" property="postName"/>
+        <result column="pid" property="pid"/>
+        <result column="face_pic" property="facePic"/>
+    </resultMap>
+
+    <select id="findPostTreeList" resultMap="postTreeListBaseResultMap">
+        SELECT
+        tp.`id`,td.`name`,tp.`post_name`,tp.`pid`,td.`face_pic`
+        FROM
+        dj_sys_user tu
+        JOIN dj_sys_user_detail td ON tu.`id` = td.`user_id`
+        JOIN dj_post tp ON tp.`id` = td.`party_posts`
+        WHERE tu.`deleted` = 0
+        AND td.`deleted` = 0
+        AND tp.`deleted` = 0
+        AND tu.`org_id` = #{orgId}
+    </select>
+
+</mapper>

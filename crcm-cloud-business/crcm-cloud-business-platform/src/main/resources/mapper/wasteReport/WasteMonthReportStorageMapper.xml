@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.wasteReport.WasteMonthReportStorageMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.wasteReport.WasteMonthReportStorage"
+               id="WasteMonthReportStorageResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="childid" column="CHILDID"/>
+        <result property="ssmc" column="SSMC"/>
+        <result property="ssbh" column="SSBH"/>
+        <result property="rqsl" column="RQSL"/>
+        <result property="rqsljldw" column="RQSLJLDW"/>
+        <result property="kcjs" column="KCJS"/>
+        <result property="rkzcl" column="RKZCL"/>
+        <result property="zcnl" column="ZCNL"/>
+        <result property="zcczfsdl" column="ZCCZFSDL"/>
+        <result property="sslx" column="SSLX"/>
+        <result property="sndzclzhz" column="SNDZCLZHZ"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectWasteMonthReportStorageVo">
+        select ID,
+               MAINID,
+               CHILDID,
+               SSMC,
+               SSBH,
+               RQSL,
+               RQSLJLDW,
+               KCJS,
+               RKZCL,
+               ZCNL,
+               ZCCZFSDL,
+               SSLX,
+               SNDZCLZHZ,
+               MODIFYRQ,
+        from pp_wxfw_waste_month_report_storage
+    </sql>
+
+</mapper>

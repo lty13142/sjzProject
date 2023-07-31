@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.standardize.WasteStandardizedAssessmentItemDetailMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.standardize.WasteStandardizedAssessmentItemDetail"
+               id="WasteStandardizedAssessmentItemDetailResult">
+        <result property="id" column="id"/>
+        <result property="item_sort" column="itemSort"/>
+        <result property="itemId" column="item_id"/>
+        <result property="title" column="title"/>
+        <result property="standard" column="standard"/>
+        <result property="checkWay" column="check_way"/>
+        <result property="remark" column="remark"/>
+        <result property="detailRule" column="detail_rule"/>
+        <result property="totalScore" column="total_score"/>
+        <result property="isVeto" column="is_veto"/>
+        <result property="order_no" column="orderNo"/>
+        <result property="attNes" column="att_nes"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectItemDetailVo">
+        select id,
+               item_sort,
+               item_id,
+               title,
+               standard,
+               check_way,
+               remark,
+               detail_rule,
+               total_score,
+               is_veto,
+               order_no,
+               att_nes,
+               deleted
+        from tbl_waste_standardized_assessment_item_detail
+        where deleted = 0
+    </sql>
+
+    <sql id="selectItemDetailWhere">
+        <where>
+            <if test="queryDTO.itemSort != null and queryDTO.itemSort != '' ">
+                and item_sort = #{queryDTO.itemSort}
+            </if>
+            <if test="queryDTO.itemId != null and queryDTO.itemId != '' ">
+                and item_id = #{queryDTO.itemId}
+            </if>
+            <if test="queryDTO.title != null and queryDTO.title != ''">
+                and nick_name like CONCAT('%',#{queryDTO.nickName},'%')
+            </if>
+            <if test="queryDTO.itemName != '' and queryDTO.itemName != null">
+                and nick_name like CONCAT('%',#{queryDTO.itemName},'%')
+            </if>
+        </where>
+    </sql>
+
+    <select id="getMaxOrderByItemSort" resultType="int">
+        select max(order_no)
+        from tbl_waste_standardized_assessment_item_detail
+        where deleted = 0
+        and item_sort = #{itemSort}
+    </select>
+
+    <select id="getItemDetailList"
+            resultType="com.zsgf.platform.vo.standardize.WasteStandardizedAssessmentItemDetailVo">
+        <include refid="selectItemDetailVo"/>
+        <if test="queryDTO.itemSort != null and queryDTO.itemSort != '' ">
+            and item_sort = #{queryDTO.itemSort}
+        </if>
+        <if test="queryDTO.itemId != null and queryDTO.itemId != '' ">
+            and item_id = #{queryDTO.itemId}
+        </if>
+        <if test="queryDTO.title != null and queryDTO.title != ''">
+            and title like CONCAT('%',#{queryDTO.title},'%')
+        </if>
+        order by order_no
+    </select>
+
+    <select id="getItemDetailPage"
+            resultType="com.zsgf.platform.vo.standardize.WasteStandardizedAssessmentItemDetailVo">
+        select td.id,
+        td.item_sort,
+        td.item_id,
+        td.title,
+        td.standard,
+        td.check_way,
+        td.remark,
+        td.detail_rule,
+        td.total_score,
+        td.is_veto,
+        td.order_no, td.att_nes,
+        ti.name as itemName
+        from tbl_waste_standardized_assessment_item_detail td
+        inner join tbl_waste_standardized_assessment_item ti
+        on td.item_id = ti.id
+        where td.deleted = 0
+        and ti.deleted = 0
+        <if test="queryDTO.itemSort != null and queryDTO.itemSort != '' ">
+            and td.item_sort = #{queryDTO.itemSort}
+        </if>
+        <if test="queryDTO.itemId != null and queryDTO.itemId != '' ">
+            and td.item_id = #{queryDTO.itemId}
+        </if>
+        <if test="queryDTO.title != null and queryDTO.title != ''">
+            and td.title like CONCAT('%',#{queryDTO.title},'%')
+        </if>
+        <if test="queryDTO.itemName != null and queryDTO.itemName != ''">
+            and ti.name like CONCAT('%',#{queryDTO.itemName},'%')
+        </if>
+        order by td.item_sort, ti.order_no, td.order_no
+    </select>
+
+    <update id="deletedByItemId">
+        update tbl_waste_standardized_assessment_item_detail
+        set deleted = 1, update_time = #{updateTime}
+        where item_id = #{itemId}
+    </update>
+
+</mapper>

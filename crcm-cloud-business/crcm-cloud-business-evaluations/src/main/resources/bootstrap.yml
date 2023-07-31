@@ -1,0 +1,24 @@
+server:
+  port: 24703
+
+spring:
+  application:
+    name: @artifactId@
+  cloud:
+    nacos:
+      discovery:
+        # 运行环境选择
+        namespace: ${spring.profiles.active}
+        server-addr: ${NACOS_HOST:localhost}:${NACOS_PORT:8848}
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        # 运行环境选择
+        namespace: ${spring.profiles.active}
+        group: ${NACOS_GROUP:DEFAULT_GROUP}
+        file-extension: yml
+        prefix: ${spring.application.name}-${spring.profiles.active}
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
+  profiles:
+    active: @spring.profiles.active@
+

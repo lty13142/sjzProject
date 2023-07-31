@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.crcm.core.utils.SpringContextHolder,\
+com.crcm.core.extend.snowflake.SnowflakeConfig,\
+com.crcm.core.extend.jackson.JacksonConfig,\
+com.crcm.core.extend.http.httpClient.HttpClientConfig

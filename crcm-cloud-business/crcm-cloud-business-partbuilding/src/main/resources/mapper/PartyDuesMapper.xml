@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.partbuilding.mapper.PartyDuesMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.sjz.partbuilding.model.entity.PartyDues">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="version" property="version"/>
+        <result column="deleted" property="deleted"/>
+        <result column="name" property="name"/>
+        <result column="payable" property="payable"/>
+        <result column="paid_in" property="paidIn"/>
+        <result column="payment_time" property="paymentTime"/>
+        <result column="remarks" property="remarks"/>
+        <result column="party_org_id" property="partyOrgId"></result>
+        <result column="template_id" property="templateId"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        version,
+        deleted,
+        id, name, payable, paid_in, payment_time, remarks,party_org_id
+    </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM dj_party_dues WHERE id = #{id}
+    </delete>
+
+    <select id="getMonthAndMoney" resultType="java.util.Map">
+        SELECT
+        LEFT(MONTH,7) AS month,SUM(CONVERT(paid_in,DECIMAL(15,2))) AS money
+        FROM
+        dj_party_dues
+        WHERE
+        deleted = 0
+        AND month &gt; #{month}
+        GROUP BY month
+    </select>
+
+    <select id="findDuesPerson" resultType="com.sjz.partbuilding.model.entity.PartyDues">
+        select pd.name from dj_party_dues pd where pd.deleted = 0
+        <if test="year !=null and year != ''">
+            and YEAR(pd.month) = #{year}
+        </if>
+        <if test="year ==null or year == ''">
+            and YEAR(pd.month)=YEAR(now())
+        </if>
+        <if test="name !=null and name != ''">
+            and pd.name = #{name}
+        </if>
+        <if test="partyOrgId != null and partyOrgId != ''">
+            and pd.party_org_id = #{partyOrgId}
+        </if>
+        <if test="orgId != null and orgId != ''">
+            and pd.org_id = #{orgId}
+        </if>
+        GROUP BY pd.name
+    </select>
+
+    <select id="findMonthMoney" resultType="com.sjz.partbuilding.model.vo.PartyDuesExportVo">
+        select t1.name,
+        sum(case when t1.month=1 then t1.money ELSE 0 end ) as 'january',
+        sum(case when t1.month=2 then t1.money ELSE 0 end ) as 'february',
+        sum(case when t1.month=3 then t1.money ELSE 0 end ) as 'march',
+        sum(case when t1.month=4 then t1.money ELSE 0 end ) as 'april',
+        sum(case when t1.month=5 then t1.money ELSE 0 end ) as 'may',
+        sum(case when t1.month=6 then t1.money ELSE 0 end ) as 'june',
+        sum(case when t1.month=7 then t1.money ELSE 0 end ) as 'july',
+        sum(case when t1.month=8 then t1.money ELSE 0 end ) as 'august',
+        sum(case when t1.month=9 then t1.money ELSE 0 end ) as 'september',
+        sum(case when t1.month=10 then t1.money ELSE 0 end ) as 'october',
+        sum(case when t1.month=11 then t1.money ELSE 0 end ) as 'november',
+        sum(case when t1.month=12 then t1.money ELSE 0 end ) as 'december',
+        sum(t1.money ) as 'total'
+        from
+        (SELECT b.name, a.month , ifnull(b.money, 0) money FROM
+        (SELECT 1 month UNION ALL SELECT 2 month UNION ALL SELECT 3 month UNION ALL SELECT 4 month
+        UNION ALL SELECT 5 month UNION ALL SELECT 6 month UNION ALL SELECT 7 month UNION ALL
+        SELECT 8 month UNION ALL SELECT 9 month UNION ALL SELECT 10 month UNION ALL SELECT 11 month
+        UNION ALL SELECT 12 month ) a
+        left join
+        (select name,MONTH(`month`) month,sum(paid_in) as money from dj_party_dues where deleted = 0
+        and YEAR(month)=YEAR(now())
+        <if test="name != null and name != '' ">
+            and name = #{name}
+        </if>
+        <if test="partyOrgId != null and partyOrgId != '' ">
+            and party_org_id = #{partyOrgId}
+        </if>
+        GROUP BY MONTH(`month`)) b on a.month = b.month
+        ORDER BY a.month) t1
+    </select>
+    <select id="findMoneyYear" resultType="decimal">
+        select ifnull(sum(paid_in),0) as money from dj_party_dues where deleted = 0
+        <choose>
+            <when test="year != null and year !=''">
+                and YEAR(month)=YEAR(#{year})
+            </when>
+            <otherwise>
+                and YEAR(month)=YEAR(now())
+            </otherwise>
+        </choose>
+        <if test="partyOrgId != null and partyOrgId != '' ">
+            and party_org_id = #{partyOrgId}
+        </if>
+        <if test="orgId != null and orgId != '' ">
+            and org_id = #{orgId}
+        </if>
+        <if test="name != null and name != '' ">
+            and name = #{name}
+        </if>
+    </select>
+
+    <select id="getDuesByMonth" resultType="map">
+        SELECT concat(a.month,'月') as month , ifnull(b.money, 0) partyMoney FROM
+        (SELECT 1 month UNION ALL SELECT 2 month UNION ALL SELECT 3 month UNION ALL SELECT 4 month
+        UNION ALL SELECT 5 month UNION ALL SELECT 6 month UNION ALL SELECT 7 month UNION ALL
+        SELECT 8 month UNION ALL SELECT 9 month UNION ALL SELECT 10 month UNION ALL SELECT 11 month
+        UNION ALL SELECT 12 month ) a
+        left join
+        (select name,MONTH(`month`) month,sum(paid_in) as money from dj_party_dues where deleted = 0
+        and YEAR(month)=YEAR(now())
+        <if test="partyOrgId != null and partyOrgId != '' ">
+            and party_org_id = #{partyOrgId}
+        </if>
+        <if test="orgId != null and orgId != '' ">
+            and org_id = #{orgId}
+        </if>
+        GROUP BY MONTH(`month`)) b on a.month = b.month
+        ORDER BY a.month
+    </select>
+
+    <select id="findMonthMoney2" resultType="com.sjz.partbuilding.model.vo.PartyDuesExportVo">
+        select t1.name,
+        sum(case when t1.month=1 then t1.money ELSE 0 end ) as 'january',
+        sum(case when t1.month=2 then t1.money ELSE 0 end ) as 'february',
+        sum(case when t1.month=3 then t1.money ELSE 0 end ) as 'march',
+        sum(case when t1.month=4 then t1.money ELSE 0 end ) as 'april',
+        sum(case when t1.month=5 then t1.money ELSE 0 end ) as 'may',
+        sum(case when t1.month=6 then t1.money ELSE 0 end ) as 'june',
+        sum(case when t1.month=7 then t1.money ELSE 0 end ) as 'july',
+        sum(case when t1.month=8 then t1.money ELSE 0 end ) as 'august',
+        sum(case when t1.month=9 then t1.money ELSE 0 end ) as 'september',
+        sum(case when t1.month=10 then t1.money ELSE 0 end ) as 'october',
+        sum(case when t1.month=11 then t1.money ELSE 0 end ) as 'november',
+        sum(case when t1.month=12 then t1.money ELSE 0 end ) as 'december',
+        sum(t1.money ) as 'total'
+        from
+        (SELECT b.name, a.month , ifnull(b.money, 0) money FROM
+        (SELECT 1 month UNION ALL SELECT 2 month UNION ALL SELECT 3 month UNION ALL SELECT 4 month
+        UNION ALL SELECT 5 month UNION ALL SELECT 6 month UNION ALL SELECT 7 month UNION ALL
+        SELECT 8 month UNION ALL SELECT 9 month UNION ALL SELECT 10 month UNION ALL SELECT 11 month
+        UNION ALL SELECT 12 month ) a
+        left join
+        (select name,MONTH(`month`) month,sum(paid_in) as money from dj_party_dues where deleted = 0
+        <if test="years !=null and years != ''">
+            and YEAR(month) = #{years}
+        </if>
+        <if test="years ==null or  years == ''">
+            and YEAR(month)=YEAR(now())
+        </if>
+        <if test="partyDues.name != null and partyDues.name != '' ">
+            and name = #{partyDues.name}
+        </if>
+        <if test="partyDues.orgId != null and partyDues.orgId != '' ">
+            and org_id = #{partyDues.orgId}
+        </if>
+        GROUP BY MONTH(`month`)) b on a.month = b.month
+        ORDER BY a.month) t1
+    </select>
+
+    <select id="findPartyDuesByYear" resultType="com.sjz.partbuilding.model.entity.PartyDues">
+        select id,name,payable,paid_in,org_id,month,payment_time,remarks,DATE_FORMAT(payment_time,'%y-%m-%d') p_time from dj_party_dues
+        where deleted='0'
+		and name = #{name}
+		and year(month)= #{year}
+		and org_id= #{orgId}
+		order by p_time ASC
+    </select>
+
+    <!--  分页条件查询  -->
+    <select id="findPage" resultType="com.sjz.partbuilding.model.entity.PartyDues">
+        select
+        id,name,payable,paid_in,org_id,org_name,month,payment_time,remarks,create_by,create_time,update_by,update_time,DATE_FORMAT(payment_time,'%y-%m-%d')
+        p_time from dj_party_dues
+        where deleted='0'
+        <if test="partyDues.name != null and partyDues.name != '' ">
+            and name like CONCAT('%',#{partyDues.name},'%')
+        </if>
+        <if test="partyDues.monthStr != null and partyDues.monthStr != '' ">
+            and month like CONCAT(#{partyDues.monthStr},'%')
+        </if>
+        <if test="partyDues.orgId != null and partyDues.orgId != '' ">
+            and org_id = #{partyDues.orgId}
+        </if>
+        order by p_time DESC
+    </select>
+
+    <!--  分页条件查询  -->
+    <select id="findPartyDuesList" resultType="com.sjz.partbuilding.model.entity.PartyDues">
+        select
+        id,name,payable,paid_in,org_id,org_name,month,payment_time,remarks,create_by,create_time,update_by,update_time,DATE_FORMAT(payment_time,'%y-%m-%d')
+        p_time from dj_party_dues
+        where deleted='0'
+        <if test="partyDues.name != null and partyDues.name != '' ">
+            and name like CONCAT('%',#{partyDues.name},'%')
+        </if>
+        <if test="partyDues.monthStr != null and partyDues.monthStr != '' ">
+            and month like CONCAT(#{partyDues.monthStr},'%')
+        </if>
+        <if test="partyDues.orgId != null and partyDues.orgId != '' ">
+            and org_id = #{partyDues.orgId}
+        </if>
+        order by p_time DESC
+    </select>
+</mapper>

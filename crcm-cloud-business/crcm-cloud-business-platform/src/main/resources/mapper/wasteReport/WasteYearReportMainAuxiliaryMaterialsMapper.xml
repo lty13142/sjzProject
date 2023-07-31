@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.wasteReport.WasteYearReportMainAuxiliaryMaterialsMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.wasteReport.WasteYearReportMainAuxiliaryMaterials"
+               id="WasteYearReportMainAuxiliaryMaterialsResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="dwid" column="DWID"/>
+        <result property="kind" column="KIND"/>
+        <result property="name" column="NAME"/>
+        <result property="number" column="NUMBER"/>
+        <result property="consumption" column="CONSUMPTION"/>
+        <result property="jldw" column="JLDW"/>
+        <result property="sssheng" column="SSSHENG"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectWasteYearReportMainAuxiliaryMaterialsVo">
+        select ID,
+               MAINID,
+               DWID,
+               KIND,
+               NAME,
+               NUMBER,
+               CONSUMPTION,
+               JLDW,
+               SSSHENG,
+               SSSHI,
+               SSQU,
+               MODIFYRQ,
+        from pp_wxfw_waste_year_report_main_auxiliary_materials
+    </sql>
+
+</mapper>

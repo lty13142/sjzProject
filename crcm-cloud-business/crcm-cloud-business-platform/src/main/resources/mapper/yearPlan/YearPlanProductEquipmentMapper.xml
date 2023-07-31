@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.yearPlan.YearPlanProductEquipmentMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.yearPlan.YearPlanProductEquipment"
+               id="YearPlanProductEquipmentResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="scsbbh" column="SCSBBH"/>
+        <result property="sbmc" column="SBMC"/>
+        <result property="snsssl" column="SNSSSL"/>
+        <result property="bnsssl" column="BNSSSL"/>
+        <result property="sssheng" column="SSSHENG"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="xgsj" column="XGSJ"/>
+    </resultMap>
+
+    <sql id="selectYearPlanProductEquipmentVo">
+        select ID,
+               MAINID,
+               SCSBBH,
+               SBMC,
+               SNSSSL,
+               BNSSSL,
+               SSSHENG,
+               SSSHI,
+               SSQU,
+               XGSJ,
+        from pp_wxfw_year_plan_product_equipment
+    </sql>
+
+</mapper>

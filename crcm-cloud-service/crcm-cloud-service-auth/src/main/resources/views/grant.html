@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>授权</title>
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.4.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="#" />
+</head>
+<style>
+    .container {
+        text-align: center;
+        width: 600px;
+        height: 236px;
+        margin: auto;
+    }
+
+    .btn {
+        border-color: #656b6d;
+        border-top-width: 1px;
+        margin: 17px auto;
+    }
+</style>
+
+<body>
+<nav class="navbar navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand">SURGE登录</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">SURGE登录</a></li>
+                <li class="active"><a href="#">授权管理</a></li>
+                <li class="active"><a href="#">申请介入</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container panel panel-primary"
+     style="text-align: center; padding-right: 0px;padding-left: 0px; border-color: #ece8e8 ">
+
+    <div class="panel-head panel-heading" style=" background-color: #333;border-color: #656b6d;">
+        <h3 class="panel-title" th:text="'您是否授权'+${clientId}+' 访问您的受保护资源？'"></h3>
+    </div>
+    <div class="panel-body" >
+        <p>获得您的受保护资源</p>
+        授权后表明你已同意 <a href="#" style="color: #177928">SURGE登录服务协议</a>
+        <form method="post" action="/oauth/authorize">
+            <input type="hidden" name="user_oauth_approval" value="true">
+            <input type="hidden" name="_csrf" th:value="${_csrf.getToken()}"/>
+
+            <div th:each="item:${scopes}" style="margin-top: 10px;">
+                <nav class="navbar-expand-sm bg-light">
+                <ul class="navbar-nav" style="width: 517px;">
+                    <div>
+                        <p style="display: inline-block" th:text="'scope.'+${item}"></p>
+                        <li style="display: inline-block" class="nav-item">
+                            <label>
+                                <input type="radio" th:name="'scope.'+${item}" value="true" checked="checked">批准</input>
+                            </label>
+                            <label>
+                                <input type="radio" th:name="'scope.'+${item}" value="false"/>否决</input>
+                            </label>
+                        </li>
+                    </div>
+                </ul>
+                </nav>
+            </div>
+            <button type="submit" class="btn btn-default">授权</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

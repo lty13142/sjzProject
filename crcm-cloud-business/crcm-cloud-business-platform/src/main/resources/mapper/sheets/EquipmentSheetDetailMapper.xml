@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.sheets.EquipmentSheetDetailMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.sheets.EquipmentSheetDetail" id="EquipmentSheetDetailResult">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="companyName" column="company_name"/>
+        <result property="equipmentName" column="equipment_name"/>
+        <result property="brandModel" column="brand_model"/>
+        <result property="equipmentNumber" column="equipment_number"/>
+        <result property="unit" column="unit"/>
+        <result property="serialNumber" column="serial_number"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectEquipmentSheetDetailVo">
+        select id,
+               company_id,
+               company_name,
+               equipment_name,
+               brand_model,
+               equipment_number,
+               unit,
+               serial_number,
+               deleted
+        from tbl_equipment_sheet_detail
+    </sql>
+
+</mapper>

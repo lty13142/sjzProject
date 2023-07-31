@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.waste.WasteDisposalWayMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.waste.WasteDisposalWay" id="WasteDisposalWayResult">
+        <result property="id" column="id"/>
+        <result property="disposalWayType" column="disposal_way_type"/>
+        <result property="disposalWayName" column="disposal_way_name"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectWasteDisposalWayVo">
+        select id, disposal_way_type, disposal_way_name, parent_id, deleted
+        from tbl_waste_disposal_way
+    </sql>
+
+    <select id="findWasteDisposalWayPage" resultType="com.zsgf.platform.vo.waste.WasteDisposalWayVo">
+        select id, disposal_way_type, disposal_way_name, parent_id, create_time, update_time
+        from tbl_waste_disposal_way
+        where deleted = 0
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.disposalWayType)">
+            and disposal_way_type = #{dto.disposalWayType}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.parentId)">
+            and parent_id = #{dto.parentId}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.disposalWayName)">
+            and disposal_way_name like CONCAT('%', #{dto.disposalWayName}, '%')
+        </if>
+        order by disposal_way_type,create_time
+    </select>
+
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.bpm.mapper.HistoryMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.crcm.bpm.domain.entity.HistoryDO">
+                    <id column="id" property="id"/>
+                <result column="create_by" property="createBy"/>
+                <result column="update_by" property="updateBy"/>
+                <result column="create_time" property="createTime"/>
+                <result column="update_time" property="updateTime"/>
+                    <result column="apply_id" property="applyId"/>
+                    <result column="task_id" property="taskId"/>
+                    <result column="task_name" property="taskName"/>
+                    <result column="tenant_id" property="tenantId"/>
+                    <result column="system" property="system"/>
+                    <result column="platform" property="platform"/>
+                    <result column="approve_action_code" property="approveActionCode"/>
+                    <result column="approve_action_name" property="approveActionName"/>
+                    <result column="approve_option" property="approveOption"/>
+                    <result column="approve_user_id" property="approveUserId"/>
+                    <result column="approve_user_name" property="approveUserName"/>
+                    <result column="remarks" property="remarks"/>
+                    <result column="deleted" property="deleted"/>
+                    <result column="form_edit_field" property="formEditField"/>
+                    <result column="apply_node" property="applyNode"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                bpm_history.id, bpm_history.act_task_id, bpm_history.apply_id, bpm_history.process_id, bpm_history.proc_inst_id, bpm_history.tenant_id, bpm_history.task_name, bpm_history.task_type, bpm_history.task_node_code,
+                bpm_history.parent_task_id, bpm_history.task_status, bpm_history.candidate_user_list, bpm_history.candidate_user_name_list, bpm_history.task_owner_user_id,
+                bpm_history.task_owner_real_name, bpm_history.task_assignee_user_id, bpm_history.task_assignee_real_name, bpm_history.task_priority, bpm_history.form_key,
+                bpm_history.claim_time, bpm_history.due_time, bpm_history.approve_time, bpm_history.remarks, bpm_history.create_time, bpm_history.update_time, bpm_history.create_by, bpm_history.update_by,
+                bpm_history.version, bpm_history.deleted, bpm_history.model_id, bpm_history.approve_opinion, bpm_history.approve_result, bpm_history.approve_action, bpm_history.form_edit_field
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM bpm_history WHERE id = #{id}
+    </delete>
+    <select id="getCanReturnList" resultType="com.crcm.bpm.domain.entity.HistoryDO">
+        select <include refid="Base_Column_List"/>, MIN(bpm_history.id) as minId
+        from bpm_history
+        right join bpm_node a on a.id &lt; (select MAX(b.id) from bpm_node b
+        left join bpm_user_task c on c.apply_id = #{applyId}
+        where b.node_id = c.task_node_code and b.model_id = c.model_id)
+        and a.node_id = bpm_history.task_node_code and a.model_id = bpm_history.model_id
+        where bpm_history.apply_id = #{applyId}
+        group by bpm_history.task_node_code
+        order by minId asc
+    </select>
+
+</mapper>

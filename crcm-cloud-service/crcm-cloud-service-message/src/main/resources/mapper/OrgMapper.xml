@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.SysOrg//DTD Mapper 3.0//EN" "http://mybatis.SysOrg/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.admin.mapper.OrgMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.crcm.admin.model.entity.SysOrg">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="pid" property="pid"/>
+        <result column="number" property="number"/>
+        <result column="comments" property="comments"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        version,
+        deleted,
+        id, name, code, pid, number, comments
+    </sql>
+
+    <select id="findTree" resultType="com.crcm.core.dto.TreeView">
+        select id,name as label,pid,icon from sys_org where deleted = 0
+        <if test="type != null and type != '' ">
+            and type = #{type}
+        </if>
+        <if test="code != null and code != '' ">
+            and code = #{code}
+        </if>
+        <if test="name != null and name != '' ">
+            and name like CONCAT(CONCAT('%',#{name},'%'))
+        </if>
+        <if test="number != null and number != ''">
+            and number = #{number}
+        </if>
+        order by number
+    </select>
+
+    <select id="findOrgs" resultType="com.crcm.admin.model.vo.OrgPersonVO">
+        select o.id,o.name,o.code,o.pid,o.icon,o.type,o.number from sys_org o
+        where o.deleted = 0
+        <if test="type != null and type != '' ">
+            and o.type = #{type}
+        </if>
+        <if test="code != null and code != '' ">
+            and o.code = #{code}
+        </if>
+        <if test="name != null and name != '' ">
+            and o.name like CONCAT(CONCAT('%',#{name},'%'))
+        </if>
+        <if test="number != null and number != ''">
+            and o.number = #{number}
+        </if>
+        <if test="pid != null and pid != ''">
+            and o.pid = #{pid}
+        </if>
+        order by o.number
+    </select>
+
+    <select id="selectChildren" resultType="com.crcm.admin.model.vo.OrgPersonVO">
+        select o.id,o.name,o.code,o.pid,o.icon,o.type,o.number from sys_org o
+        where o.deleted = 0
+        and o.id not in
+        <foreach collection="parentIds" index="index" item="pid" open="(" separator="," close=")">
+            #{pid}
+        </foreach>
+        and o.pid in
+        <foreach collection="parentIds" index="index" item="pid" open="(" separator="," close=")">
+            #{pid}
+        </foreach>
+        order by o.number
+    </select>
+</mapper>

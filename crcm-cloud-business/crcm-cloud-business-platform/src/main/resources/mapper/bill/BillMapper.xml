@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.bill.BillMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.bill.Bill" id="BillResult">
+        <result property="id" column="id"/>
+        <result property="planId" column="plan_id"/>
+        <result property="billCode" column="bill_code"/>
+        <result property="govCode" column="gov_code"/>
+        <result property="productCompanyId" column="product_company_id"/>
+        <result property="productCompanyName" column="product_company_name"/>
+        <result property="receiveCompanyId" column="receive_company_id"/>
+        <result property="receiveCompanyName" column="receive_company_name"/>
+        <result property="licenseId" column="license_id"/>
+        <result property="licenseCode" column="license_code"/>
+        <result property="licenseBindingId" column="license_binding_id"/>
+        <result property="transportNo" column="transport_no"/>
+        <result property="transportCompanyId" column="transport_company_id"/>
+        <result property="transportCompanyName" column="transport_company_name"/>
+        <result property="planTransferDate" column="plan_transfer_date"/>
+        <result property="productCompanyHandleTime" column="product_company_handle_time"/>
+        <result property="shipper" column="shipper"/>
+        <result property="shipperPhone" column="shipper_phone"/>
+        <result property="emergencyPhone" column="emergency_phone"/>
+        <result property="cancelFlag" column="cancel_flag"/>
+        <result property="cancelReason" column="cancel_reason"/>
+        <result property="billStatus" column="bill_status"/>
+        <result property="endFlag" column="end_flag"/>
+        <result property="billType" column="bill_type"/>
+        <result property="receiveCompanyHandleTime" column="receive_company_handle_time"/>
+        <result property="productCompanyReturnTime" column="product_company_return_time"/>
+        <result property="receivePerson" column="receive_person"/>
+        <result property="receiveTime" column="receive_time"/>
+        <result property="transportStartTime" column="transport_start_time"/>
+        <result property="transportEndTime" column="transport_end_time"/>
+        <result property="wasteCategory" column="waste_category"/>
+        <result property="dataFlag" column="data_flag"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectBillVo">
+        select id,
+               plan_id,
+               bill_code,
+               gov_code,
+               product_company_id,
+               product_company_name,
+               receive_company_id,
+               receive_company_name,
+               license_id,
+               license_code,
+               license_binding_id,
+               transport_no,
+               transport_company_id,
+               transport_company_name,
+               plan_transfer_date,
+               product_company_handle_time,
+               shipper,
+               shipper_phone,
+               emergency_phone,
+               cancel_flag,
+               cancel_reason,
+               bill_status,
+               end_flag,
+               bill_type,
+               receive_company_handle_time,
+               product_company_return_time,
+               receive_person,
+               receive_time,
+               transport_start_time,
+               transport_end_time,
+               waste_category,
+               data_flag,
+               deleted,
+        from tbl_bill
+    </sql>
+
+</mapper>

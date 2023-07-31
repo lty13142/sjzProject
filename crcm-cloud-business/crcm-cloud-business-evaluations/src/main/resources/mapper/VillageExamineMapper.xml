@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.evaluations.mapper.VillageExamineMapper">
+
+    <resultMap type="com.sjz.evaluations.model.entity.VillageExamine" id="VillageExamineResult">
+        <result property="id" column="id"/>
+        <result property="indicatorsId" column="indicators_id"/>
+        <result property="regionExamineId" column="region_examine_id"/>
+        <result property="villageAreaCode" column="village_area_code"/>
+        <result property="villageAreaName" column="village_area_name"/>
+        <result property="target" column="target"/>
+        <result property="unit" column="unit"/>
+        <result property="completeStatus" column="complete_status"/>
+        <result property="completeValue" column="complete_value"/>
+        <result property="feedbackContent" column="feedback_content"/>
+        <result property="feedbackAttr" column="feedback_attr"/>
+        <result property="feedbackAttrName" column="feedback_attr_name"/>
+        <result property="score" column="score"/>
+        <result property="scoreContent" column="score_content"/>
+        <result property="verifyCompleteStatus" column="verify_complete_status"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <sql id="selectVillageExamineVo">
+        select id, indicators_id, region_examine_id, village_area_code, village_area_name, target, unit, complete_status, complete_value, feedback_content,
+         feedback_attr,feedback_attr_name , score, score_content, verify_complete_status, status from kh_village_examine
+    </sql>
+
+    <!--根据id查询村级考核扩展类-->
+    <select id="findVillageExamineById" resultType="com.sjz.evaluations.model.vo.VillageIndicatorsVO">
+        <include refid="selectVillageExamineVo"/>
+        where deleted = 0
+        and id = #{id}
+    </select>
+
+    <select id="getAllVillageExamine" resultType="com.sjz.evaluations.model.entity.VillageExamine">
+        select *
+        from
+            kh_village_examine
+        where
+            YEAR(create_time) = #{theYear}
+        and
+            deleted = 0
+    </select>
+
+</mapper>

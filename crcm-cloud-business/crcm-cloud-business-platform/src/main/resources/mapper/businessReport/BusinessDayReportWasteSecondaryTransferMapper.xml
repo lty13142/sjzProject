@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.businessReport.BusinessDayReportWasteSecondaryTransferMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.businessReport.BusinessDayReportWasteSecondaryTransfer"
+               id="BusinessDayReportWasteSecondaryTransferResult">
+        <result property="id" column="ID"/>
+        <result property="childid" column="CHILDID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="czdwmc" column="CZDWMC"/>
+        <result property="xkzbh" column="XKZBH"/>
+        <result property="zyldbh" column="ZYLDBH"/>
+        <result property="fwsl" column="FWSL"/>
+        <result property="sldw" column="SLDW"/>
+        <result property="bzfs" column="BZFS"/>
+        <result property="czfs" column="CZFS"/>
+        <result property="czfsxl" column="CZFSXL"/>
+        <result property="bz" column="BZ"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectBusinessDayReportWasteSecondaryTransferVo">
+        select ID,
+               CHILDID,
+               MAINID,
+               CZDWMC,
+               XKZBH,
+               ZYLDBH,
+               FWSL,
+               SLDW,
+               BZFS,
+               CZFS,
+               CZFSXL,
+               BZ,
+               MODIFYRQ,
+        from pp_wxfw_business_day_report_waste_secondary_transfer
+    </sql>
+
+</mapper>

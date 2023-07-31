@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.businessReport.BusinessYearReportMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.businessReport.BusinessYearReport" id="BusinessYearReportResult">
+        <result property="id" column="ID"/>
+        <result property="nf" column="NF"/>
+        <result property="dwid" column="DWID"/>
+        <result property="state" column="STATE"/>
+        <result property="zcz" column="ZCZ"/>
+        <result property="zgzrs" column="ZGZRS"/>
+        <result property="lxr" column="LXR"/>
+        <result property="dzyx" column="DZYX"/>
+        <result property="gddh" column="GDDH"/>
+        <result property="cz" column="CZ"/>
+        <result property="phone" column="PHONE"/>
+        <result property="qylx" column="QYLX"/>
+        <result property="qtqylx" column="QTQYLX"/>
+        <result property="yearnote" column="YEARNOTE"/>
+        <result property="sbrq" column="SBRQ"/>
+        <result property="yjya" column="YJYA"/>
+        <result property="ylqk" column="YLQK"/>
+        <result property="jlqk" column="JLQK"/>
+        <result property="sgfscs" column="SGFSCS"/>
+        <result property="sjyjgm" column="SJYJGM"/>
+        <result property="tmcrl" column="TMCRL"/>
+        <result property="ytmrl" column="YTMRL"/>
+        <result property="xkzbh" column="XKZBH"/>
+        <result property="jydwlx" column="JYDWLX"/>
+        <result property="xkzlx" column="XKZLX"/>
+        <result property="shr" column="SHR"/>
+        <result property="jyxkzbh" column="JYXKZBH"/>
+        <result property="xkzSubmitTime" column="XKZ_SUBMIT_TIME"/>
+        <result property="xkzBid" column="XKZ_BID"/>
+        <result property="xkzFzjg" column="XKZ_FZJG"/>
+        <result property="xkzFzrq" column="XKZ_FZRQ"/>
+        <result property="xkzYxsjSta" column="XKZ_YXSJ_STA"/>
+        <result property="xkzYxsjEnd" column="XKZ_YXSJ_END"/>
+        <result property="xkzHzjyfs" column="XKZ_HZJYFS"/>
+        <result property="xkzState" column="XKZ_STATE"/>
+        <result property="xkzSftm" column="XKZ_SFTM"/>
+        <result property="sssheng" column="SSSHENG"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectBusinessYearReportVo">
+        select ID,
+               NF,
+               DWID,
+               STATE,
+               ZCZ,
+               ZGZRS,
+               LXR,
+               DZYX,
+               GDDH,
+               CZ,
+               PHONE,
+               QYLX,
+               QTQYLX,
+               YEARNOTE,
+               SBRQ,
+               YJYA,
+               YLQK,
+               JLQK,
+               SGFSCS,
+               SJYJGM,
+               TMCRL,
+               YTMRL,
+               XKZBH,
+               JYDWLX,
+               XKZLX,
+               SHR,
+               JYXKZBH,
+               XKZ_SUBMIT_TIME,
+               XKZ_BID,
+               XKZ_FZJG,
+               XKZ_FZRQ,
+               XKZ_YXSJ_STA,
+               XKZ_YXSJ_END,
+               XKZ_HZJYFS,
+               XKZ_STATE,
+               XKZ_SFTM,
+               SSSHENG,
+               SSSHI,
+               SSQU,
+               MODIFYRQ,
+        from pp_wxfw_business_year_report
+    </sql>
+
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.businessReport.BusinessYearReportNewWasteSelfDisposalMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.businessReport.BusinessYearReportNewWasteSelfDisposal"
+               id="BusinessYearReportNewWasteSelfDisposalResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="childid" column="CHILDID"/>
+        <result property="dwid" column="DWID"/>
+        <result property="czfsdl" column="CZFSDL"/>
+        <result property="czfsxl" column="CZFSXL"/>
+        <result property="sl" column="SL"/>
+        <result property="sssheng" column="SSSHENG"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectBusinessYearReportNewWasteSelfDisposalVo">
+        select ID,
+               MAINID,
+               CHILDID,
+               DWID,
+               CZFSDL,
+               CZFSXL,
+               SL,
+               SSSHENG,
+               SSSHI,
+               SSQU,
+               MODIFYRQ,
+        from pp_wxfw_business_year_report_new_waste_self_disposal
+    </sql>
+
+</mapper>

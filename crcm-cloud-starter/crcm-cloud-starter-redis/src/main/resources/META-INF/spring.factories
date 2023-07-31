@@ -1,0 +1,5 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.crcm.cloud.start.redis.config.LettuceRedisAutoConfigure,\
+  com.crcm.cloud.start.redis.service.RedisService,\
+  com.crcm.cloud.start.redis.config.RedissonConfig

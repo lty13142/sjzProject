@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.SysOrg//DTD Mapper 3.0//EN" "http://mybatis.SysOrg/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.admin.mapper.UserDetailMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.crcm.admin.model.entity.SysUserDetail">
+                    <id column="id" property="id"/>
+                <result column="create_by" property="createBy"/>
+                <result column="create_time" property="createTime"/>
+                <result column="update_by" property="updateBy"/>
+                <result column="update_time" property="updateTime"/>
+                <result column="version" property="version"/>
+                <result column="deleted" property="deleted"/>
+                    <result column="name" property="name"/>
+                    <result column="sex" property="sex"/>
+                    <result column="id_card" property="idCard"/>
+                    <result column="id_card_pic" property="idCardPic"/>
+                    <result column="school" property="school"/>
+                    <result column="education" property="education"/>
+                    <result column="phone" property="phone"/>
+                    <result column="email" property="email"/>
+                    <result column="address" property="address"/>
+                    <result column="comments" property="comments"/>
+                    <result column="person_no" property="personNo"/>
+                    <result column="face_pic" property="facePic"/>
+                    <result column="current_address" property="currentAddress"/>
+                    <result column="native_place" property="nativePlace"/>
+                    <result column="nation" property="nation"/>
+                    <result column="birthday" property="birthday"/>
+                    <result column="sort_order" property="sortOrder"/>
+                    <result column="user_id" property="userId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                create_by,
+                create_time,
+                update_by,
+                update_time,
+                version,
+                deleted,
+            id, name, sex, id_card, id_card_pic, school, education, phone, email, address, comments, person_no, face_pic, current_address, native_place, nation, birthday, org_id, enabled, sort_order, user_id
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM sys_user_detail WHERE id = #{id}
+    </delete>
+
+</mapper>

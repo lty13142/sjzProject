@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.standardize.WasteStandardizedAssessmentItemMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.standardize.WasteStandardizedAssessmentItem"
+               id="WasteStandardizedAssessmentItemResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="itemSort" column="item_sort"/>
+        <result property="order_no" column="orderNo"/>
+        <result property="facilityStatus" column="facility_status"/>
+        <result property="isOld" column="is_old"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectWasteStandardizedAssessmentItemVo">
+        select id, name, item_sort,
+               order_no, facility_status, is_old, deleted
+        from tbl_waste_standardized_assessment_item
+        where deleted = 0
+    </sql>
+
+    <select id="getMaxOrderByItemSort" resultType="int">
+        select max(order_no)
+        from tbl_waste_standardized_assessment_item
+        where deleted = 0
+        and item_sort = #{itemSort}
+    </select>
+
+</mapper>

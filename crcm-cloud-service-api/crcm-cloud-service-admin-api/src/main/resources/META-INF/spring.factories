@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.crcm.admin.api.feign.factory.RemoteUserServiceFallbackFactory,\
+  com.crcm.admin.api.feign.factory.RemoteLogServiceFallbackFactory,\
+  com.crcm.admin.api.feign.factory.RemoteAreaServiceFallbackFactory

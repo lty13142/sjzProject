@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.partbuilding.mapper.HonorMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.sjz.partbuilding.model.entity.Honor">
+                    <id column="id" property="id"/>
+                <result column="create_by" property="createBy"/>
+                <result column="create_time" property="createTime"/>
+                <result column="update_by" property="updateBy"/>
+                <result column="update_time" property="updateTime"/>
+                <result column="version" property="version"/>
+                <result column="deleted" property="deleted"/>
+                    <result column="type" property="type"/>
+                    <result column="honorary" property="honorary"/>
+                    <result column="attachment_ids" property="attachmentIds"/>
+                    <result column="remark" property="remark"/>
+                    <result column="emp_by" property="empBy"/>
+                    <result column="com_by" property="comBy"/>
+            <result column="issuer" property="issuer"/>
+            <result column="time" property="time"/>
+            <result column="sort" property="sort"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                create_by,
+                create_time,
+                update_by,
+                update_time,
+                version,
+                deleted,
+            id, type, honorary, attachment_ids, remark, emp_by, com_by,issuer,time, sort
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM dj_honor WHERE id = #{id}
+    </delete>
+
+    <select id="findById" resultType="com.sjz.partbuilding.model.entity.Honor">
+        SELECT id,`type`,honorary,attachment_ids,remark,emp_by,com_by,create_time,create_by,update_time,update_by,version,deleted,sort FROM t_honor WHERE deleted=0 AND id =#{id}
+    </select>
+
+    <select id="findGroupHonorPage" resultType="com.sjz.partbuilding.model.vo.HonorVo">
+        select h.*,o.name as com_name from dj_honor h join dj_sys_org o on h.com_by=o.id where h.deleted=0 and o.deleted=0
+        and h.type=0 and h.com_by=#{honor.comBy}
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(honor.honorary)">
+        and h.honorary like CONCAT('%',#{honor.honorary},'%')
+        </if>
+        order by h.sort ASC, h.create_time DESC
+    </select>
+
+    <select id="findPersonHonorPage" resultType="com.sjz.partbuilding.model.vo.HonorVo">
+        select h.*,s.name as emp_name
+        from dj_honor h
+            join dj_sys_user_detail s on h.emp_by=s.id
+        where h.deleted=0
+        and s.deleted=0
+        and h.type=1
+        and h.com_by = #{honor.comBy}
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(honor.empName)">
+         and s.name like CONCAT('%',#{honor.empName},'%')
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(honor.honorary)">
+            and h.honorary like CONCAT('%',#{honor.honorary},'%')
+        </if>
+        order by h.sort ASC, h.create_time DESC
+    </select>
+
+</mapper>

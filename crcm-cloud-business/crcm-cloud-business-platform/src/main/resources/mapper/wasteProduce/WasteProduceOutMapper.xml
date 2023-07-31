@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.wasteProduce.WasteProduceOutMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.wasteProduce.WasteProduceOut" id="WasteProduceOutResult">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="detailBatchNo" column="detail_batch_no"/>
+        <result property="directoryVersion" column="directory_version"/>
+        <result property="wasteName" column="waste_name"/>
+        <result property="wasteCategory" column="waste_category"/>
+        <result property="wasteType" column="waste_type"/>
+        <result property="wasteTypeName" column="waste_type_name"/>
+        <result property="wasteCode" column="waste_code"/>
+        <result property="wasteCodeName" column="waste_code_name"/>
+        <result property="shape" column="shape"/>
+        <result property="outPerson" column="out_person"/>
+        <result property="weight" column="weight"/>
+        <result property="unit" column="unit"/>
+        <result property="packageType" column="package_type"/>
+        <result property="bucNum" column="buc_num"/>
+        <result property="manualInput" column="manual_input"/>
+        <result property="outType" column="out_type"/>
+        <result property="billCode" column="bill_code"/>
+        <result property="remark" column="remark"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectWasteProduceOutVo">
+        select id,
+               company_id,
+               batch_no,
+               detail_batch_no,
+               directory_version,
+               waste_name,
+               waste_category,
+               waste_type,
+               waste_type_name,
+               waste_code,
+               waste_code_name,
+               shape,
+               out_person,
+               weight,
+               unit,
+               package_type,
+               buc_num,
+               manual_input,
+               out_type,
+               bill_code,
+               remark,
+               deleted,
+        from tbl_waste_produce_out
+    </sql>
+
+</mapper>

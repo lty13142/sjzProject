@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.standardize.WasteStandardizedAssessmentHistoryMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.standardize.WasteStandardizedAssessmentHistory"
+               id="WasteStandardizedAssessmentHistoryResult">
+        <result property="id" column="id"/>
+        <result property="judgeId" column="judge_id"/>
+        <result property="itemName" column="item_name"/>
+        <result property="itemDetail" column="item_detail"/>
+        <result property="standard" column="standard"/>
+        <result property="checkWay" column="check_way"/>
+        <result property="detailRule" column="detail_rule"/>
+        <result property="totalScore" column="total_score"/>
+        <result property="isVeto" column="is_veto"/>
+        <result property="attNes" column="att_nes"/>
+        <result property="itemOrderNo" column="item_order_no"/>
+        <result property="detailOrderNo" column="detail_order_no"/>
+        <result property="checkUser" column="check_user"/>
+        <result property="checkTime" column="check_time"/>
+        <result property="lastScore" column="last_score"/>
+        <result property="remark" column="remark"/>
+        <result property="attachmentUrl" column="attachment_url"/>
+        <result property="lastResult" column="last_result"/>
+        <result property="reAssessmentScore" column="re_assessment_score"/>
+        <result property="reAssessmentRemark" column="re_assessment_remark"/>
+        <result property="reAssessmentAttachmentUrl" column="re_assessment_attachment_url"/>
+        <result property="reAssessmentLastResult" column="re_assessment_last_result"/>
+        <result property="existProblem" column="exist_problem"/>
+        <result property="status" column="status"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectWasteStandardizedAssessmentHistoryVo">
+        select id,
+               judge_id,
+               item_name,
+               item_detail,
+               standard,
+               check_way,
+               detail_rule,
+               total_score,
+               is_veto,
+               att_nes,
+               item_order_no,
+               detail_order_no,
+               check_user,
+               check_time,
+               last_score,
+               remark,
+               attachment_url,
+               last_result,
+               re_assessment_score,
+               re_assessment_remark,
+               re_assessment_attachment_url,
+               re_assessment_last_result,
+               exist_problem,
+               status,
+               deleted
+        from tbl_waste_standardized_assessment_history
+    </sql>
+
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.governance.mapper.key.KeyVehicleManagementMapper">
+    
+    <resultMap type="com.sjz.governance.model.entity.key.KeyVehicleManagement" id="KeyVehicleManagementResult">
+        <result property="id"    column="id"    />
+        <result property="vehicleBrand"    column="vehicle_brand"    />
+        <result property="color"    column="color"    />
+        <result property="plateNumber"    column="plate_number"    />
+        <result property="vehicleUrl"    column="vehicle_url"    />
+        <result property="remark"    column="remark"    />
+        <result property="deleted"    column="deleted"    />
+    </resultMap>
+
+    <sql id="selectKeyVehicleManagementVo">
+        select id, vehicle_brand, color, plate_number, vehicle_url, remark, deleted, from ct_key_vehicle_management
+    </sql>
+
+    <sql id="pageField">
+        id, vehicle_brand, color, plate_number, vehicle_url, remark, deleted
+    </sql>
+
+    <select id="findKeyVehicleManagementPage" resultType="com.sjz.governance.model.vo.key.KeyVehicleManagementVO">
+        select <include refid="pageField"/> from ct_key_vehicle_management
+        <where>
+            deleted = 0
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.vehicleBrand)">
+                and vehicle_brand like concat('%',#{dto.vehicleBrand},'%')
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.color)">
+                and color like concat('%',#{dto.color},'%')
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.plateNumber)">
+                and plate_number like concat('%',#{dto.plateNumber},'%')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.bill.BillTransferMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.bill.BillTransfer" id="BillTransferResult">
+        <result property="id" column="id"/>
+        <result property="billId" column="bill_id"/>
+        <result property="driverName" column="driver_name"/>
+        <result property="driverPhone" column="driver_phone"/>
+        <result property="carType" column="car_type"/>
+        <result property="plateNumber" column="plate_number"/>
+        <result property="transferStartPlace" column="transfer_start_place"/>
+        <result property="transferEndPlace" column="transfer_end_place"/>
+        <result property="crossPlace" column="cross_place"/>
+        <result property="roadTransferCode" column="road_transfer_code"/>
+        <result property="transferStartTime" column="transfer_start_time"/>
+        <result property="transferEndTime" column="transfer_end_time"/>
+        <result property="driverSign" column="driver_sign"/>
+        <result property="transferOrder" column="transfer_order"/>
+        <result property="dataFlag" column="data_flag"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectBillTransferVo">
+        select id,
+               bill_id,
+               driver_name,
+               driver_phone,
+               car_type,
+               plate_number,
+               transfer_start_place,
+               transfer_end_place,
+               cross_place,
+               road_transfer_code,
+               transfer_start_time,
+               transfer_end_time,
+               driver_sign,
+               transfer_order,
+               data_flag,
+               deleted,
+        from tbl_bill_transfer
+    </sql>
+
+</mapper>

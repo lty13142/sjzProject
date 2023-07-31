@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.company.CompanyInfoMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.company.CompanyInfo" id="CompanyInfoResult">
+        <result property="id" column="ID"/>
+        <result property="username" column="USERNAME"/>
+        <result property="passcode" column="PASSCODE"/>
+        <result property="entername" column="ENTERNAME"/>
+        <result property="enternameonce" column="ENTERNAMEONCE"/>
+        <result property="dwzjlx" column="DWZJLX"/>
+        <result property="entercode" column="ENTERCODE"/>
+        <result property="sssheng" column="SSSHENG"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="ssjd" column="SSJD"/>
+        <result property="address" column="ADDRESS"/>
+        <result property="scjycsdz" column="SCJYCSDZ"/>
+        <result property="qygm" column="QYGM"/>
+        <result property="qyyxzt" column="QYYXZT"/>
+        <result property="hylxtop" column="HYLXTOP"/>
+        <result property="hylxer" column="HYLXER"/>
+        <result property="hylxsan" column="HYLXSAN"/>
+        <result property="hylxcode" column="HYLXCODE"/>
+        <result property="jjlx" column="JJLX"/>
+        <result property="hblsgx" column="HBLSGX"/>
+        <result property="tcrq" column="TCRQ"/>
+        <result property="frdbname" column="FRDBNAME"/>
+        <result property="frdbzjlx" column="FRDBZJLX"/>
+        <result property="frdbyxzjh" column="FRDBYXZJH"/>
+        <result property="bdwhbbmname" column="BDWHBBMNAME"/>
+        <result property="lxrname" column="LXRNAME"/>
+        <result property="lxrzjlx" column="LXRZJLX"/>
+        <result property="lxrsfz" column="LXRSFZ"/>
+        <result property="lxrphone" column="LXRPHONE"/>
+        <result property="lxrdh" column="LXRDH"/>
+        <result property="lonD" column="LON_D"/>
+        <result property="lonF" column="LON_F"/>
+        <result property="lonM" column="LON_M"/>
+        <result property="latD" column="LAT_D"/>
+        <result property="latF" column="LAT_F"/>
+        <result property="latM" column="LAT_M"/>
+        <result property="wxfwysqyzh" column="WXFWYSQYZH"/>
+        <result property="dwwz" column="DWWZ"/>
+        <result property="remark" column="REMARK"/>
+        <result property="states" column="STATES"/>
+        <result property="zcrq" column="ZCRQ"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectCompanyInfoVo">
+        select ID,
+               USERNAME,
+               PASSCODE,
+               ENTERNAME,
+               ENTERNAMEONCE,
+               DWZJLX,
+               ENTERCODE,
+               SSSHENG,
+               SSSHI,
+               SSQU,
+               SSJD,
+               ADDRESS,
+               SCJYCSDZ,
+               QYGM,
+               QYYXZT,
+               HYLXTOP,
+               HYLXER,
+               HYLXSAN,
+               HYLXCODE,
+               JJLX,
+               HBLSGX,
+               TCRQ,
+               FRDBNAME,
+               FRDBZJLX,
+               FRDBYXZJH,
+               BDWHBBMNAME,
+               LXRNAME,
+               LXRZJLX,
+               LXRSFZ,
+               LXRPHONE,
+               LXRDH,
+               LON_D,
+               LON_F,
+               LON_M,
+               LAT_D,
+               LAT_F,
+               LAT_M,
+               WXFWYSQYZH,
+               DWWZ,
+               REMARK,
+               STATES,
+               ZCRQ,
+               MODIFYRQ,
+        from pp_company_info
+    </sql>
+
+</mapper>

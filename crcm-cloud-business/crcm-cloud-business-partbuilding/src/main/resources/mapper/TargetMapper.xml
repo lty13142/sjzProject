@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.partbuilding.mapper.TargetMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="com.sjz.partbuilding.model.entity.Target">
+                    <id column="id" property="id"/>
+                <result column="deleted" property="deleted"/>
+                <result column="create_by" property="createBy"/>
+                <result column="create_time" property="createTime"/>
+                <result column="update_by" property="updateBy"/>
+                <result column="update_time" property="updateTime"/>
+                    <result column="name" property="name"/>
+                    <result column="open_status" property="openStatus"/>
+                    <result column="desc" property="description"/>
+                    <result column="score" property="score"/>
+                    <result column="remark" property="remark"/>
+                    <result column="attachment" property="attachment"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+                deleted,
+                create_by,
+                create_time,
+                update_by,
+                update_time,
+            id, name, open_status, description, score, remark, attachment
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM dj_target WHERE id = #{id}
+    </delete>
+    <select id="selectUsedCount" resultType="int">
+        select count(*) from dj_party_member_score where deleted = 0 and target_id = #{id}
+    </select>
+</mapper>

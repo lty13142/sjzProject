@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.governance.mapper.key.KeyPersonManagementMapper">
+    
+    <resultMap type="com.sjz.governance.model.entity.key.KeyPersonManagement" id="KeyPersonManagementResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="villageId"    column="village_id"    />
+        <result property="gender"    column="gender"    />
+        <result property="age"    column="age"    />
+        <result property="keyPersonType"    column="key_person_type"    />
+        <result property="phone"    column="phone"    />
+        <result property="faceUrl"    column="face_url"    />
+        <result property="remark"    column="remark"    />
+        <result property="deleted"    column="deleted"    />
+    </resultMap>
+
+    <sql id="selectKeyPersonManagementVo">
+        select id, name, village_id, gender, age, key_person_type, phone, face_url, remark, deleted, from ct_key_person_management
+    </sql>
+
+    <sql id="pageField">
+        id, name, village_id, gender, age, key_person_type, phone, face_url, remark, deleted
+    </sql>
+
+    <select id="findKeyPersonManagementPage" resultType="com.sjz.governance.model.vo.key.KeyPersonManagementVO">
+        select <include refid="pageField"/> from ct_key_person_management
+
+        <where>
+            deleted = 0
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.name)">
+                and name like concat('%',#{dto.name},'%')
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.villageId)">
+                and village_id = #{dto.villageId}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.keyPersonType)">
+                and key_person_type = #{dto.keyPersonType}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>

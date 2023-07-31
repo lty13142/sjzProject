@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.businessReport.BusinessDayReportMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.businessReport.BusinessDayReport" id="BusinessDayReportResult">
+        <result property="id" column="ID"/>
+        <result property="dwid" column="DWID"/>
+        <result property="year" column="YEAR"/>
+        <result property="month" column="MONTH"/>
+        <result property="quarter" column="QUARTER"/>
+        <result property="sbrq" column="SBRQ"/>
+        <result property="txr" column="TXR"/>
+        <result property="txrphone" column="TXRPHONE"/>
+        <result property="drlyczss" column="DRLYCZSS"/>
+        <result property="drsfycswf" column="DRSFYCSWF"/>
+        <result property="state" column="STATE"/>
+        <result property="jslD" column="JSL_D"/>
+        <result property="jslG" column="JSL_G"/>
+        <result property="jslZ" column="JSL_Z"/>
+        <result property="csfwclD" column="CSFWCL_D"/>
+        <result property="csfwclG" column="CSFWCL_G"/>
+        <result property="csfwclZ" column="CSFWCL_Z"/>
+        <result property="czzlD" column="CZZL_D"/>
+        <result property="czzlG" column="CZZL_G"/>
+        <result property="czzlZ" column="CZZL_Z"/>
+        <result property="eczylD" column="ECZYL_D"/>
+        <result property="eczylG" column="ECZYL_G"/>
+        <result property="eczylZ" column="ECZYL_Z"/>
+        <result property="bz" column="BZ"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectBusinessDayReportVo">
+        select ID,
+               DWID, YEAR, MONTH, QUARTER, SBRQ, TXR, TXRPHONE, DRLYCZSS, DRSFYCSWF, STATE, JSL_D, JSL_G, JSL_Z, CSFWCL_D, CSFWCL_G, CSFWCL_Z, CZZL_D, CZZL_G, CZZL_Z, ECZYL_D, ECZYL_G, ECZYL_Z, BZ, SSSHI, SSQU, MODIFYRQ,
+        from pp_wxfw_business_day_report
+    </sql>
+
+</mapper>

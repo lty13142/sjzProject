@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.bpm.mapper.ProcessMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.crcm.bpm.domain.entity.ProcessDO">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="process_name" property="processName"/>
+        <result column="sub_name" property="subName"/>
+        <result column="process_key" property="processKey"/>
+        <result column="company_id" property="companyId"/>
+        <result column="company_name" property="companyName"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="sort_order" property="sortOrder"/>
+        <result column="process_status" property="processStatus"/>
+        <result column="remarks" property="remarks"/>
+        <result column="deleted" property="deleted"/>
+        <result column="model_id" property="modelId"/>
+        <result column="apply_title_rule" property="applyTitleRule"/>
+        <result column="apply_due_date" property="applyDueDate"/>
+        <result column="icon" property="icon"/>
+    </resultMap>
+
+    <resultMap id="BaseDto" extends="BaseResultMap" type="com.crcm.bpm.domain.dto.ProcessDto">
+        <result column="form_type" property="formType"></result>
+        <result column="form_id" property="formId"></result>
+        <result column="form_code" property="formCode"></result>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                bpm_process.create_by,bpm_process.update_by,bpm_process.create_time,
+                bpm_process.update_time,bpm_process.id,bpm_process. process_key,
+                bpm_process.process_name, bpm_process.sub_name, bpm_process.company_id, bpm_process.company_name,
+                bpm_process.tenant_id, bpm_process.sort_order, bpm_process.process_status,
+                bpm_process.remarks, bpm_process.deleted, bpm_process.model_id,
+                bpm_process.apply_title_rule, bpm_process.apply_due_date, bpm_process.icon
+        </sql>
+
+    <resultMap id="GetSortListResponseDto" type="com.crcm.bpm.domain.dto.response.GetSortListResponseDto">
+        <result column="flow_type" property="processTypeValue"/>
+        <collection property="processDOList" resultMap="BaseDto"/>
+    </resultMap>
+
+
+    <delete id="realDelete">
+        DELETE FROM bpm_process WHERE id = #{id}
+    </delete>
+    <select id="selectStartInfo" resultType="com.crcm.bpm.domain.dto.response.ProcessStartResDTO">
+        SELECT
+            bp.id process_id,
+            bp.process_name,
+            bp.sub_name,
+            bp.process_no,
+            bp.remarks,
+            bp.icon,
+            bp.tenant_id,
+            bm.id model_id,
+            bm.model_name,
+            bm.process_key,
+            bm.main_version,
+            bm.status model_status,
+            bm.definition_id,
+            bm.process_svg,
+            bf.id from_id,
+            bf.form_key,
+            bf.name form_name,
+            bf.json_data form_json
+        FROM
+            bpm_process bp
+            LEFT JOIN bpm_model bm
+            ON bp.process_key = bm.process_key
+            AND bm.main_version = #{process.mainVersion}
+            AND bm.deleted = '0'
+            LEFT JOIN bpm_form bf ON bm.form_id = bf.id
+            AND bf.deleted = '0'
+        WHERE
+            bp.id = #{process.processId}
+            AND bp.deleted = '0'
+    </select>
+
+    <select id="getSortList" resultMap="GetSortListResponseDto">
+        select <include refid="Base_Column_List"/>,a.flow_type,a.form_type,a.form_id,a.form_code
+        from bpm_process
+        right join bpm_model a on a.process_key = bpm_process.process_key and a.company_id=#{companyId} and a.deleted=0 and a.main_version=1
+        <if test="flowType != null and flowType != ''">
+             a.flow_type = #{flowType}
+        </if>
+        right join bpm_process_role b on b.process_id = bpm_process.id and b.company_id=#{companyId} and b.deleted=0
+        <if test="roleIds != null and roleIds.size() != 0">
+            and b.role_id in
+            <foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
+                #{roleId}
+            </foreach>
+        </if>
+        where bpm_process.deleted = 0 and bpm_process.company_id=#{companyId}
+        <if test="processName != null and processName != ''">
+            and bpm_process.process_name like CONCAT('%',#{processName},'%')
+        </if>
+        order by bpm_process.sort_order asc
+    </select>
+
+    <select id="getUsedModelIdList" resultType="java.lang.String">
+        select distinct(process_key) from bpm_process where company_id=#{companyId} and deleted=0
+    </select>
+
+    <select id="getMaxOneFormJsonByProcessId" resultType="java.lang.String">
+        select d.data_value
+        from bpm_history_form_data d
+        where d.process_id = #{processId}  and d.data_key = 'formJson'
+        and d.apply_id = (select MAX(id) from bpm_apply where bpm_apply.process_id = #{processId} and bpm_apply.apply_user_id = #{employeeId})
+    </select>
+
+    <select id="getMyCollection" resultType="com.crcm.bpm.domain.dto.ProcessDto">
+        select <include refid="Base_Column_List"/>,a.flow_type,a.form_type,a.form_id,a.form_code
+        from bpm_process_collection
+        right join bpm_process on bpm_process.id = bpm_process_collection.process_id and bpm_process.deleted = 0
+        right join bpm_model a on a.process_key = bpm_process.process_key and a.company_id=#{companyId} and a.deleted=0 and a.main_version=1
+        where bpm_process_collection.employee_id = #{employeeId} and bpm_process_collection.company_id=#{companyId}
+    </select>
+
+</mapper>

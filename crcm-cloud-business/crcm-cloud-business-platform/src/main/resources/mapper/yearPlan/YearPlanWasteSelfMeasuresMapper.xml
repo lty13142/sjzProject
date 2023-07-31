@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.yearPlan.YearPlanWasteSelfMeasuresMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.yearPlan.YearPlanWasteSelfMeasures"
+               id="YearPlanWasteSelfMeasuresResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="ssdllb" column="SSDLLB"/>
+        <result property="ssxllb" column="SSXLLB"/>
+        <result property="ssbh" column="SSBH"/>
+        <result property="ssmc" column="SSMC"/>
+        <result property="ssdz" column="SSDZ"/>
+        <result property="ztz" column="ZTZ"/>
+        <result property="sjnl" column="SJNL"/>
+        <result property="zysb" column="ZYSB"/>
+        <result property="sjsynx" column="SJSYNX"/>
+        <result property="tryxsj" column="TRYXSJ"/>
+        <result property="yxfy" column="YXFY"/>
+        <result property="wflyczxg" column="WFLYCZXG"/>
+        <result property="sfdqjcpfqk" column="SFDQJCPFQK"/>
+        <result property="wrwpfdbqk" column="WRWPFDBQK"/>
+        <result property="jldw" column="JLDW"/>
+        <result property="echjwrkzhsgyfcs" column="ECHJWRKZHSGYFCS"/>
+        <result property="gysm" column="GYSM"/>
+        <result property="sssheng" column="SSSHENG"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectYearPlanWasteSelfMeasuresVo">
+        select ID,
+               MAINID,
+               SSDLLB,
+               SSXLLB,
+               SSBH,
+               SSMC,
+               SSDZ,
+               ZTZ,
+               SJNL,
+               ZYSB,
+               SJSYNX,
+               TRYXSJ,
+               YXFY,
+               WFLYCZXG,
+               SFDQJCPFQK,
+               WRWPFDBQK,
+               JLDW,
+               ECHJWRKZHSGYFCS,
+               GYSM,
+               SSSHENG,
+               SSSHI,
+               SSQU,
+               MODIFYRQ,
+        from pp_wxfw_year_plan_waste_self_measures
+    </sql>
+
+</mapper>

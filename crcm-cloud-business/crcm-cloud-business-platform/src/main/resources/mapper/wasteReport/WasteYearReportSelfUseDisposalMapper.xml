@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.wasteReport.WasteYearReportSelfUseDisposalMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.wasteReport.WasteYearReportSelfUseDisposal"
+               id="WasteYearReportSelfUseDisposalResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="childid" column="CHILDID"/>
+        <result property="dwid" column="DWID"/>
+        <result property="ssmc" column="SSMC"/>
+        <result property="nbczfsdl" column="NBCZFSDL"/>
+        <result property="nbczfsxl" column="NBCZFSXL"/>
+        <result property="nbsl" column="NBSL"/>
+        <result property="remark" column="REMARK"/>
+        <result property="sssheng" column="SSSHENG"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectWasteYearReportSelfUseDisposalVo">
+        select ID,
+               MAINID,
+               CHILDID,
+               DWID,
+               SSMC,
+               NBCZFSDL,
+               NBCZFSXL,
+               NBSL,
+               REMARK,
+               SSSHENG,
+               SSSHI,
+               SSQU,
+               MODIFYRQ,
+        from pp_wxfw_waste_year_report_self_use_disposal
+    </sql>
+
+</mapper>

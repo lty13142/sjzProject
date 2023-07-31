@@ -1,0 +1,7 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.crcm.cloud.start.file.minio.MinioConfig,\
+  com.crcm.cloud.start.file.minio.listener.MinioDeleteListener,\
+  com.crcm.cloud.start.file.fastdfs.FastDfsConfig,\
+  com.crcm.cloud.start.file.service.FastDfsSysFileServiceImpl,\
+  com.crcm.cloud.start.file.service.LocalSysFileServiceImpl,\
+  com.crcm.cloud.start.file.service.MinioSysFileServiceImpl

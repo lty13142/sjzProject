@@ -1,0 +1,31 @@
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
+logging:
+  level:
+    com.baomidou.mybatisplus.samples: info
+
+#开放监控节点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, refresh, bus-refresh
+  endpoint:
+    health:
+      show-details: always
+
+message:
+  enable-mq: false
+
+feign:
+  httpclient:
+    enabled: true
+  sentinel:
+    enabled: true

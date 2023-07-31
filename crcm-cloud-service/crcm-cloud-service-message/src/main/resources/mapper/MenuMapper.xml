@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.SysOrg//DTD Mapper 3.0//EN" "http://mybatis.SysOrg/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.admin.mapper.MenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.crcm.admin.model.entity.SysMenu">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        version,
+        deleted,
+        id, menu_name, menu_url, menu_code, menu_parensys_id, level
+    </sql>
+
+
+    <select id="findListByRoleIds" resultType="com.crcm.admin.model.vo.MenuVO" >
+        select m.* from sys_menu m
+        INNER JOIN sys_permission p on p.permission_id = m.id and p.type = 0
+        where m.deleted = 0
+        and m.type = #{type}
+        and m.enabled= #{enabled}
+        and p.role_id in
+        <foreach collection="roleIds" index="index" item="roleId" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </select>
+
+    <select id="findTreeView" resultType="com.crcm.core.dto.TreeView">
+        select id,name as label,pid,icon,type from sys_menu where deleted = 0 and enabled = #{enabled}
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        order by code
+    </select>
+    <select id="selectAdminList" resultType="com.crcm.admin.model.vo.MenuVO">
+        select m.* from sys_menu m
+        where m.deleted = 0
+        and m.type = #{type}
+        and m.enabled= #{enabled}
+    </select>
+
+
+</mapper>

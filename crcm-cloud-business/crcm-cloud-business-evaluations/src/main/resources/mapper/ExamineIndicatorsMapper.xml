@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.evaluations.mapper.ExamineIndicatorsMapper">
+
+    <resultMap type="com.sjz.evaluations.model.entity.ExamineIndicators" id="ExamineIndicatorsResult">
+        <result property="id" column="id"/>
+        <result property="examineId" column="examine_id"/>
+        <result property="indicatorsName" column="indicators_name"/>
+        <result property="indicatorsContent" column="indicators_content"/>
+        <result property="fullMarks" column="full_marks"/>
+        <result property="attr" column="attr"/>
+        <result property="attrName" column="attr_name"/>
+        <result property="orgId" column="org_id"/>
+        <result property="orgName" column="org_name"/>
+        <result property="nikeName" column="nike_name"/>
+        <result property="type" column="type"/>
+    </resultMap>
+
+    <sql id="selectExamineIndicatorsVo">
+        select id, examine_id, indicators_name, indicators_content, full_marks, attr, attr_name, org_id, org_name, nike_name, type from kh_examine_indicators
+    </sql>
+
+    <!--分页查询管区考核指标-->
+    <select id="findRegionIndicatorsPage" resultType="com.sjz.evaluations.model.vo.RegionIndicatorsVO">
+        SELECT
+        ei.`id`,
+        ei.`indicators_name`,
+        ei.`type`,
+        ei.`indicators_content`,
+        ei.`nike_name`,
+        ei.`org_name`,
+        re.`id` as region_id,
+        re.`region_area_code`,
+        re.`region_area_name`,
+        re.`target`,
+        re.`unit`,
+        re.`status`
+        FROM
+        kh_examine_indicators ei
+        LEFT JOIN kh_region_examine re ON ei.`id` = re.`indicators_id`
+        WHERE re.deleted = 0
+        AND ei.`examine_id` = #{examineIndicators.examineId}
+        AND re.`region_area_code` = #{areaCode}
+        <if test="examineIndicators.indicatorsName != '' and examineIndicators.indicatorsName != null">
+            AND ei.`indicators_name` LIKE CONCAT('%',#{examineIndicators.indicatorsName},'%')
+        </if>
+        <if test="examineIndicators.nikeName != '' and examineIndicators.nikeName != null">
+            AND ei.`nike_name` LIKE CONCAT('%',#{examineIndicators.nikeName},'%')
+        </if>
+        <if test="examineIndicators.orgId != null">
+            AND ei.`org_id` = #{examineIndicators.orgId}
+        </if>
+        <if test="examineIndicators.type != null">
+            AND ei.`type` = #{examineIndicators.type}
+        </if>
+        ORDER BY re.`create_time` DESC
+    </select>
+
+    <!--分页查询村级考核指标-->
+    <select id="findVillageIndicatorsPage" resultType="com.sjz.evaluations.model.vo.VillageIndicatorsVO">
+        SELECT
+        ei.`id`,
+        ei.`indicators_name`,
+        ei.`type`,
+        ei.`indicators_content`,
+        ei.`nike_name`,
+        ei.`org_name`,
+        ei.`attr`,
+        ei.`attr_name`,
+        ve.`id` as village_id,
+        ve.`region_examine_id`,
+        ve.`village_area_code`,
+        ve.`village_area_name`,
+        ve.`target`,
+        ve.`unit`,
+        ve.`status`
+        FROM
+        kh_examine_indicators ei
+        LEFT JOIN kh_village_examine ve ON ei.`id` = ve.`indicators_id`
+        WHERE ve.deleted = 0
+        AND ei.`examine_id` = #{examineIndicators.examineId}
+        AND ve.`village_area_code` = #{areaCode}
+        <if test="examineIndicators.indicatorsName != '' and examineIndicators.indicatorsName != null">
+            AND ei.`indicators_name` LIKE CONCAT('%',#{examineIndicators.indicatorsName},'%')
+        </if>
+        <if test="examineIndicators.nikeName != '' and examineIndicators.nikeName != null">
+            AND ei.`nike_name` LIKE CONCAT('%',#{examineIndicators.nikeName},'%')
+        </if>
+        <if test="examineIndicators.orgId != null">
+            AND ei.`org_id` = #{examineIndicators.orgId}
+        </if>
+        <if test="examineIndicators.type != null">
+            AND ei.`type` = #{examineIndicators.type}
+        </if>
+        ORDER BY ve.`create_time` DESC
+    </select>
+
+    <!--根据id查询考核指标扩展类-->
+    <select id="findExamineIndicatorsById" resultType="com.sjz.evaluations.model.dto.ExamineIndicatorsSaveDTO">
+        <include refid="selectExamineIndicatorsVo"/>
+        where deleted = 0
+        and id = #{id}
+    </select>
+
+</mapper>

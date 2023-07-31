@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.crcm</groupId>
+    <artifactId>crcm-cloud-bom</artifactId>
+    <version>1.0.0</version>
+    <name>crcm-cloud-bom</name>
+    <description>项目统一版本管理</description>
+    <packaging>pom</packaging>
+    <dependencyManagement>
+        <dependencies>
+            <!-- ================================ 公共包 START ================================= -->
+            <!-- 通用核心技术包 -->
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-core</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <!-- feign 服务调用包 -->
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-feign</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <!-- 公共权限管理包 -->
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-auth</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <!-- 公共资源服务管理包 -->
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-auth-resource</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <!-- 公共持久层配置包 -->
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-data</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <!-- 公共redis服务包 -->
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-redis</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <!-- swagger配置 -->
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-swagger</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <!-- log配置 -->
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-log</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-websocket</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <!-- 负载均衡配置 -->
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-ribbon</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <!-- 任务调度配置 -->
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-job</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-gateway</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-file</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-office</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <!-- 单点登陆配置 -->
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-auth-sso</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <!-- elasticsearch 配置-->
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-elasticsearch</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
+            <!-- sentinel 熔断限流 配置-->
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-starter-sentinel</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
+
+            <!-- ========================== 公共包 END ======================================-->
+
+            <!-- ========================== 服务API START ==================================== -->
+
+            <!-- 系统管理服务API -->
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-service-admin-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <!-- 认证鉴权服务API -->
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-service-auth-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-service-file-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.crcm</groupId>
+                <artifactId>crcm-cloud-service-bpm-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <!-- ============================= 服务API END ===================================== -->
+        </dependencies>
+    </dependencyManagement>
+
+
+</project>

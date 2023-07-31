@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.education.mapper.EduPointsRuleMapper">
+
+    <resultMap id="BaseResultMap" type="com.sjz.education.model.entity.EduPointsRule">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="ruleName" column="rule_name" jdbcType="VARCHAR"/>
+        <result property="pid" column="pid" jdbcType="VARCHAR"/>
+        <result property="pidCollect" column="pid_collect" jdbcType="VARCHAR"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="scoringMethod" column="scoring_method" jdbcType="VARCHAR"/>
+        <result property="ruleDetail" column="rule_detail" jdbcType="VARCHAR"/>
+        <result property="earnPoints" column="earn_points" jdbcType="INTEGER"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+        <result property="version" column="version" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,rule_name,status,
+        pid,number,scoring_method,
+        rule_detail,earn_points,create_by,
+        create_time,update_by,update_time,
+        deleted,version,remark
+    </sql>
+
+    <select id="findTree" resultType="com.sjz.education.model.vo.PointsRuleTreeView">
+        select id,rule_name as label,pid,scoring_method,rule_detail,pid_collect as pids,earn_points
+        from edu_points_rule where deleted = 0
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="ruleName != null and ruleName != '' ">
+            and rule_name like CONCAT(CONCAT('%',#{ruleName},'%'))
+        </if>
+        <if test="ruleDetail != null and ruleDetail != '' ">
+            and rule_detail like CONCAT(CONCAT('%',#{ruleDetail},'%'))
+        </if>
+        <if test="scoringMethod != null and scoringMethod != '' ">
+            and scoring_method like CONCAT(CONCAT('%',#{scoringMethod},'%'))
+        </if>
+        <if test="number != null and number != ''">
+            and number = #{number}
+        </if>
+        order by number
+    </select>
+</mapper>

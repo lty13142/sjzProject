@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.businessLicense.BusinessLicenseOperatingFacilitiesMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.businessLicense.BusinessLicenseOperatingFacilities"
+               id="BusinessLicenseOperatingFacilitiesResult">
+        <result column="id" property="id"/>
+        <result column="license_id" property="licenseId"/>
+        <result column="company_id" property="companyId"/>
+        <result column="register_time" property="registerTime"/>
+        <result column="facility_name" property="facilityName"/>
+        <result column="disposal_major" property="disposalMajor"/>
+        <result column="disposal_small" property="disposalSmall"/>
+        <result column="design_capability" property="designCapability"/>
+        <result column="approved_scale" property="approvedScale"/>
+        <result column="measurement_unit" property="measurementUnit"/>
+        <result column="limit_flag" property="limitFlag"/>
+        <result column="data_source" property="dataSource"/>
+    </resultMap>
+
+    <sql id="selectBusinessLicenseOperatingFacilitiesVo">
+        select id,
+               license_id,
+               company_id,
+               register_time,
+               facility_name,
+               disposal_major,
+               disposal_small,
+               design_capability,
+               approved_scale,
+               measurement_unit,
+               limit_flag,
+               data_source,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               deleted
+        from pp_wxfw_business_license_operating_facilities
+    </sql>
+
+</mapper>

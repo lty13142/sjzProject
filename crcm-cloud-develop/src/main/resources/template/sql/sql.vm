@@ -1,0 +1,44 @@
+-- 菜单 SQL
+INSERT INTO `sys_menu` (`name`, `icon`, `code`, `component`, `pid`, `description`, `path`, `redirect`, `button_type`, `create_by`, `create_time`, `update_by`, `update_time`, `type`, `enabled`, `deleted`, `hidden`)
+VALUES ('${functionName}', 'list', NULL, '/${moduleName}/${businessName}/index', NULL, '${functionName}菜单', '/${moduleName}/${businessName}', NULL, NULL, '${createBy}', '${datetime}', '${createBy}', '${datetime}', 0, 1, 0, 0);
+
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+
+INSERT INTO `sys_menu` (`name`, `icon`, `code`, `component`, `pid`, `description`, `path`, `redirect`, `button_type`, `create_by`, `create_time`, `update_by`, `update_time`, `type`, `enabled`, `deleted`, `hidden`)
+VALUES ('查询${functionName}', 'button', 'view', NULL, @parentId, '${functionName}查询', NULL, NULL, 'view', '${createBy}', '${datetime}', '${createBy}', '${datetime}', 1, 1, 0, 0);
+
+INSERT INTO `sys_menu` (`name`, `icon`, `code`, `component`, `pid`, `description`, `path`, `redirect`, `button_type`, `create_by`, `create_time`, `update_by`, `update_time`, `type`, `enabled`, `deleted`, `hidden`)
+VALUES ('新增${functionName}', 'button', 'add', NULL, @parentId, '${functionName}新增', NULL, NULL, 'add', '${createBy}', '${datetime}', '${createBy}', '${datetime}', 1, 1, 0, 0);
+
+INSERT INTO `sys_menu` (`name`, `icon`, `code`, `component`, `pid`, `description`, `path`, `redirect`, `button_type`, `create_by`, `create_time`, `update_by`, `update_time`, `type`, `enabled`, `deleted`, `hidden`)
+VALUES ('修改${functionName}', 'button', 'edit', NULL, @parentId, '${functionName}修改', NULL, NULL, 'edit', '${createBy}', '${datetime}', '${createBy}', '${datetime}', 1, 1, 0, 0);
+
+INSERT INTO `sys_menu` (`name`, `icon`, `code`, `component`, `pid`, `description`, `path`, `redirect`, `button_type`, `create_by`, `create_time`, `update_by`, `update_time`, `type`, `enabled`, `deleted`, `hidden`)
+VALUES ('删除${functionName}', 'button', 'delete', NULL, @parentId, '${functionName}删除', NULL, NULL, 'delete', '${createBy}', '${datetime}', '${createBy}', '${datetime}', 1, 1, 0, 0);
+
+INSERT INTO `sys_menu` (`name`, `icon`, `code`, `component`, `pid`, `description`, `path`, `redirect`, `button_type`, `create_by`, `create_time`, `update_by`, `update_time`, `type`, `enabled`, `deleted`, `hidden`)
+VALUES ('导出${functionName}', 'button', 'export', NULL, @parentId, '${functionName}导出', NULL, NULL, 'export', '${createBy}', '${datetime}', '${createBy}', '${datetime}', 1, 1, 0, 0);
+
+-- 资源目录sql
+INSERT INTO `sys_resource` (`name`, `value`, `pid`, `description`, `create_by`, `create_time`, `update_by`, `update_time`, `deleted`, `type`, `enabled`, `auth_type`)
+VALUES ('${functionName}', NULL, NULL, NULL, '${createBy}', '${datetime}', '${createBy}', '${datetime}', 0, 1, NULL, NULL);
+-- 按钮父菜单ID
+SELECT @resParentId := LAST_INSERT_ID();
+
+-- 资源sql
+INSERT INTO `crcm_cloud_admin`.`sys_resource` (`name`, `value`, `pid`, `description`, `create_by`, `create_time`, `update_by`, `update_time`, `deleted`, `type`, `enabled`, `auth_type`)
+VALUES ('新增${functionName}', '${moduleName}:${businessName}:add', @resParentId, '${functionName}新增','${createBy}', '${datetime}', '${createBy}', '${datetime}', 0, 0, 1, 1);
+
+INSERT INTO `crcm_cloud_admin`.`sys_resource` (`name`, `value`, `pid`, `description`, `create_by`, `create_time`, `update_by`, `update_time`, `deleted`, `type`, `enabled`, `auth_type`)
+VALUES ('修改${functionName}', '${moduleName}:${businessName}:edit', @resParentId, '${functionName}修改','${createBy}', '${datetime}', '${createBy}', '${datetime}', 0, 0, 1, 1);
+
+INSERT INTO `crcm_cloud_admin`.`sys_resource` (`name`, `value`, `pid`, `description`, `create_by`, `create_time`, `update_by`, `update_time`, `deleted`, `type`, `enabled`, `auth_type`)
+VALUES ('删除${functionName}', '${moduleName}:${businessName}:delete', @resParentId, '${functionName}删除','${createBy}', '${datetime}', '${createBy}', '${datetime}', 0, 0, 1, 1);
+
+INSERT INTO `crcm_cloud_admin`.`sys_resource` (`name`, `value`, `pid`, `description`, `create_by`, `create_time`, `update_by`, `update_time`, `deleted`, `type`, `enabled`, `auth_type`)
+VALUES ('查询${functionName}', '${moduleName}:${businessName}:view', @resParentId, '${functionName}查询','${createBy}', '${datetime}', '${createBy}', '${datetime}', 0, 0, 1, 1);
+
+

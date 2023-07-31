@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.governance.mapper.villager.VillagerManagementMapper">
+
+    <resultMap type="com.sjz.governance.model.entity.villager.VillagerManagement" id="VillagerManagementResult">
+        <result property="id" column="id"/>
+        <result property="villagerName" column="villager_name"/>
+        <result property="birthday" column="birthday"/>
+        <result property="sex" column="sex"/>
+        <result property="type" column="type"/>
+        <result property="village" column="village"/>
+        <result property="district" column="district"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectVillagerManagementVo">
+        select id, villager_name, birthday, sex, type, village, district, phone, address, remark, deleted
+        from ct_villager_management
+    </sql>
+
+    <select id="findVillagerManagementPage" resultType="com.sjz.governance.model.vo.villager.VillagerManagementVo">
+        select id, villager_name, birthday, sex, type, village, district, phone, address, remark, id_num
+        from ct_villager_management
+        where deleted = 0
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.type)">
+            and type = #{dto.type}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.sex)">
+            and sex = #{dto.sex}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.district)">
+            and district = #{dto.district}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.village)">
+            and village = #{dto.village}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.villagerName)">
+            and villager_name like CONCAT('%', #{dto.villagerName}, '%')
+        </if>
+        order by create_time DESC
+    </select>
+
+    <select id="getExportVillagerData" resultType="com.sjz.governance.excel.model.VillagerManagementModel">
+        select id, villager_name, birthday, id_num, sex, type, village, district, phone, address, remark
+        from ct_villager_management
+        where deleted = 0
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(type)">
+            and type = #{type}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(sex)">
+            and sex = #{sex}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(village)">
+            and village = #{village}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(district)">
+            and district = #{district}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(villagerName)">
+            and villager_name like CONCAT('%', #{villagerName}, '%')
+        </if>
+        order by create_time
+    </select>
+
+    <select id="getVillagerStatisticsByArea" resultType="com.crcm.core.vo.echarts.EChartsIntegerPie">
+        select type as typeCode, count(1) as valueData
+        from ct_villager_management
+        where deleted = 0
+        and type is not null and type != ''
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(village)">
+            and village = #{village}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(district)">
+            and district = #{district}
+        </if>
+        group by type
+    </select>
+
+    <select id="getStatisticsByVillageAndType" resultType="com.crcm.core.vo.echarts.EChartsIntegerPie">
+        select village as typeCode, count(1) as valueData
+        from ct_villager_management
+        where deleted = 0
+        and village is not null and village != ''
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(type)">
+            and type = #{type}
+        </if>
+        group by village
+    </select>
+
+    <select id="getAllNum" parameterType="string" resultType="int">
+        SELECT count(id)
+        FROM sjz_business.ct_villager_management group by sex HAVING sex = #{sex} ;
+    </select>
+
+    <select id="getAllVillager" resultType="com.sjz.governance.model.vo.villager.VillagerManagementVo">
+        select *
+        from
+            ct_villager_management
+        where
+            deleted = 0
+    </select>
+
+    <select id="findVillagerManagementByIdNum"
+            resultType="com.sjz.governance.model.entity.villager.VillagerManagement">
+        select *
+        from
+            ct_villager_management
+        where
+            deleted = 0 and id_num = #{idNum}
+        limit 1
+    </select>
+
+
+</mapper>

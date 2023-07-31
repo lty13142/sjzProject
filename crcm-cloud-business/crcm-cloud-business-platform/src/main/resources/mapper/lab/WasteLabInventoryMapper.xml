@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.lab.WasteLabInventoryMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.lab.WasteLabInventory" id="WasteLabInventoryResult">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="wasteName" column="waste_name"/>
+        <result property="wasteType" column="waste_type"/>
+        <result property="wasteTypeName" column="waste_type_name"/>
+        <result property="wasteCode" column="waste_code"/>
+        <result property="wasteCodeName" column="waste_code_name"/>
+        <result property="inventoryWeight" column="inventory_weight"/>
+        <result property="unit" column="unit"/>
+        <result property="username" column="username"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectWasteLabInventoryVo">
+        select id,
+               company_id,
+               waste_name,
+               waste_type,
+               waste_type_name,
+               waste_code,
+               waste_code_name,
+               inventory_weight,
+               unit,
+               username,
+               deleted
+        from tbl_waste_lab_inventory
+    </sql>
+
+</mapper>

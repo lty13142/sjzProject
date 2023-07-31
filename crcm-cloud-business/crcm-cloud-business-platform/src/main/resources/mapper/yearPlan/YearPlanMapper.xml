@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.yearPlan.YearPlanMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.yearPlan.YearPlan" id="YearPlanResult">
+        <result property="id" column="ID"/>
+        <result property="dwid" column="DWID"/>
+        <result property="year" column="YEAR"/>
+        <result property="zdrq" column="ZDRQ"/>
+        <result property="jhqxks" column="JHQXKS"/>
+        <result property="jhqxjs" column="JHQXJS"/>
+        <result property="dwmc" column="DWMC"/>
+        <result property="dwzcadress" column="DWZCADRESS"/>
+        <result property="scssadress" column="SCSSADRESS"/>
+        <result property="dbr" column="DBR"/>
+        <result property="hylbdm" column="HYLBDM"/>
+        <result property="lxr" column="LXR"/>
+        <result property="phone" column="PHONE"/>
+        <result property="area" column="AREA"/>
+        <result property="dwurl" column="DWURL"/>
+        <result property="zgrs" column="ZGRS"/>
+        <result property="hbbmfzr" column="HBBMFZR"/>
+        <result property="cz" column="CZ"/>
+        <result property="email" column="EMAIL"/>
+        <result property="postcode" column="POSTCODE"/>
+        <result property="tzcount" column="TZCOUNT"/>
+        <result property="czcount" column="CZCOUNT"/>
+        <result property="state" column="STATE"/>
+        <result property="isnew" column="ISNEW"/>
+        <result property="baflag" column="BAFLAG"/>
+        <result property="remark" column="REMARK"/>
+        <result property="gljhtxr" column="GLJHTXR"/>
+        <result property="bmlxdh" column="BMLXDH"/>
+        <result property="bgyy" column="BGYY"/>
+        <result property="sssheng" column="SSSHENG"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectYearPlanVo">
+        select ID,
+               DWID, YEAR, ZDRQ, JHQXKS, JHQXJS, DWMC, DWZCADRESS, SCSSADRESS, DBR, HYLBDM, LXR, PHONE, AREA, DWURL, ZGRS, HBBMFZR, CZ, EMAIL, POSTCODE, TZCOUNT, CZCOUNT, STATE, ISNEW, BAFLAG, REMARK, GLJHTXR, BMLXDH, BGYY, SSSHENG, SSSHI, SSQU, MODIFYRQ,
+        from pp_wxfw_year_plan
+    </sql>
+
+</mapper>

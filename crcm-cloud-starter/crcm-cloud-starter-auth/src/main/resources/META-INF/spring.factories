@@ -1,0 +1,6 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.crcm.security.handle.SecurityHandler,\
+  com.crcm.security.handle.AuthExceptionEntryPoint,\
+  com.crcm.security.exception.GlobalControllerExceptionHandler,\
+  com.crcm.security.handle.CustomAccessDeniedHandler,\
+  com.crcm.security.gateway.CloudSecurityAutoConfigure

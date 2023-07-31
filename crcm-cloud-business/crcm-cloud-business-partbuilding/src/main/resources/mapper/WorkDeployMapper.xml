@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.partbuilding.mapper.WorkDeployMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.sjz.partbuilding.model.entity.WorkDeploy">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="version" property="version"/>
+        <result column="deleted" property="deleted"/>
+        <result column="task_name" property="taskName"/>
+        <result column="task_content" property="taskContent"/>
+        <result column="org_id" property="orgId"/>
+        <result column="issue_range" property="issueRange"/>
+        <result column="close_time" property="closeTime"/>
+        <result column="attachments" property="attachments"/>
+        <result column="type" property="type"/>
+        <result column="release_time" property="releaseTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                create_by,
+                create_time,
+                update_by,
+                update_time,
+                version,
+                deleted,
+            id, task_name, task_content, org_id, issue_range, close_time, attachments,type,release_time
+        </sql>
+
+    <!--真实删除-->
+    <delete id="realDelete">
+        DELETE FROM dj_work_deploy WHERE id = #{id}
+    </delete>
+
+<!--    <id column="id" property="id"/>-->
+<!--    <result column="create_time" property="createTime"/>-->
+<!--    <result column="task_name" property="taskName"/>-->
+<!--    <result column="task_content" property="taskContent"/>-->
+<!--    <result column="close_time" property="closeTime"/>-->
+<!--    <result column="org_id" property="orgId"/>-->
+<!--    <result column="org_name" property="orgName"/>-->
+<!--    <result column="issue_range" property="issueRange"/>-->
+<!--    <result column="type" property="type"/>-->
+<!--    <result column="release_time" property="releaseTime"/>-->
+    <!-- 查询工作部署分页列表查询映射结果 -->
+    <resultMap id="WorkDeployPageResultMap" type="com.sjz.partbuilding.model.vo.WorkDeployVo">
+        <id column="id" property="id"/>
+        <result column="task_name" property="taskName"/>
+        <result column="task_content" property="taskContent"/>
+        <result column="org_id" property="orgId"/>
+        <result column="type" property="type"/>
+        <result column="release_time" property="releaseTime"/>
+        <result column="issue_range" property="issueRange"/>
+        <result column="close_time" property="closeTime"/>
+        <result column="attachments" property="attachments"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="version" property="version"/>
+        <result column="deleted" property="deleted"/>
+        <result column="org_name" property="orgName"/>
+    </resultMap>
+
+    <!--查询工作部署分页列表-->
+    <select id="getWorkDeployPage" resultMap="WorkDeployPageResultMap">
+        SELECT
+        tw.*,tg.`name` as org_name
+        FROM
+        dj_work_deploy tw
+        LEFT JOIN dj_sys_org tg ON tw.`org_id` = tg.`id`
+        WHERE tw.`deleted` = 0
+        AND tg.`deleted` = 0
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(workDeploy.taskName)">
+            AND tw.`task_name` like CONCAT(CONCAT('%',#{workDeploy.taskName},'%'))
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(workDeploy.orgId)">
+            AND tw.`org_id` = #{workDeploy.orgId}
+        </if>
+        ORDER BY type,release_time DESC, create_time DESC
+    </select>
+
+    <!--根据orgId查询发布范围获取工作反馈分页-->
+    <select id="getWorkFeedbackPage" resultMap="WorkDeployPageResultMap">
+        SELECT
+        td.`id`,td.`task_name`,td.`task_content`,td.`issue_range`,td.`close_time`,td.`create_time`,td.`org_id`,tg.`name` AS org_name,tf.`complete_time`,td.`type`,td.`release_time`
+        FROM
+        dj_work_deploy td
+        LEFT JOIN dj_sys_org tg ON td.`org_id` = tg.`id`
+        JOIN t_work_feedback tf ON td.`id` = tf.`task_id`
+        WHERE td.`deleted` = 0
+        AND tg.`deleted` = 0
+        AND tf.`deleted` = 0
+        and td.`type` = '1'
+        AND td.`issue_range` LIKE CONCAT('%',#{workDeploy.orgId},'%')
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(workDeploy.taskName)">
+            AND td.`task_name` LIKE CONCAT('%',#{workDeploy.taskName},'%')
+        </if>
+        GROUP BY td.`id`
+        ORDER BY td.`create_time` DESC
+    </select>
+
+    <!-- 查询全部列表 -->
+    <select id="findList" resultType="com.sjz.partbuilding.model.vo.WorkDeployVo">
+        SELECT
+        tw.*,tg.`name` as org_name
+        FROM
+        dj_work_deploy tw
+        LEFT JOIN dj_sys_org tg ON tw.`org_id` = tg.`id`
+        WHERE tw.`deleted` = 0
+        AND tg.`deleted` = 0
+        and tw.type = #{workDeploy.type}
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(workDeploy.orgId)">
+            AND tw.`org_id` = #{workDeploy.orgId}
+        </if>
+        ORDER BY type,release_time DESC, create_time DESC
+    </select>
+
+</mapper>

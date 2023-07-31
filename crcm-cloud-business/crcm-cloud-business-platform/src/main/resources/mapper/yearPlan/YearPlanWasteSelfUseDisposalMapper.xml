@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.yearPlan.YearPlanWasteSelfUseDisposalMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.yearPlan.YearPlanWasteSelfUseDisposal"
+               id="YearPlanWasteSelfUseDisposalResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="childid" column="CHILDID"/>
+        <result property="xh" column="XH"/>
+        <result property="bndjhlyczl" column="BNDJHLYCZL"/>
+        <result property="sndsjlyczl" column="SNDSJLYCZL"/>
+        <result property="ssid" column="SSID"/>
+        <result property="ssmc" column="SSMC"/>
+        <result property="sssheng" column="SSSHENG"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectYearPlanWasteSelfUseDisposalVo">
+        select ID,
+               MAINID,
+               CHILDID,
+               XH,
+               BNDJHLYCZL,
+               SNDSJLYCZL,
+               SSID,
+               SSMC,
+               SSSHENG,
+               SSSHI,
+               SSQU,
+               MODIFYRQ,
+        from pp_wxfw_year_plan_waste_self_use_disposal
+    </sql>
+
+</mapper>

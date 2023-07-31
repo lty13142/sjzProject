@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.businessLicense.BusinessLicenseMainEquipmentMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.businessLicense.BusinessLicenseMainEquipment"
+               id="BusinessLicenseMainEquipmentResult">
+        <result column="id" property="id"/>
+        <result column="license_id" property="licenseId"/>
+        <result column="facilities_id" property="facilitiesId"/>
+        <result column="company_id" property="companyId"/>
+        <result column="equipment_name" property="equipmentName"/>
+        <result column="specification_model" property="specificationModel"/>
+        <result column="design_processing_capacity" property="designProcessingCapacity"/>
+        <result column="processing_capacity_unit" property="processingCapacityUnit"/>
+        <result column="equipment_number" property="equipmentNumber"/>
+        <result column="equipment_number_unit" property="equipmentNumberUnit"/>
+        <result column="other_params" property="otherParams"/>
+        <result column="data_source" property="dataSource"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <sql id="selectBusinessLicenseMainEquipmentVo">
+        select id,
+               license_id,
+               facilities_id,
+               company_id,
+               equipment_name,
+               specification_model,
+               design_processing_capacity,
+               processing_capacity_unit,
+               equipment_number,
+               equipment_number_unit,
+               other_params,
+               remark,
+               data_source,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               deleted
+        from pp_wxfw_business_license_main_equipment
+    </sql>
+
+</mapper>

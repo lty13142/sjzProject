@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.solid.SolidUseFacilitiesMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.solid.SolidUseFacilities" id="SolidUseFacilitiesResult">
+        <result property="id" column="ID"/>
+        <result property="dwid" column="DWID"/>
+        <result property="ssbh" column="SSBH"/>
+        <result property="ssmc" column="SSMC"/>
+        <result property="lyfs" column="LYFS"/>
+        <result property="lynl" column="LYNL"/>
+        <result property="lyczfsdl" column="LYCZFSDL"/>
+        <result property="lyczfsxl" column="LYCZFSXL"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectSolidUseFacilitiesVo">
+        select ID,
+               DWID,
+               SSBH,
+               SSMC,
+               LYFS,
+               LYNL,
+               LYCZFSDL,
+               LYCZFSXL,
+               MODIFYRQ
+        from pp_ybgygf_solid_use_facilities
+    </sql>
+
+</mapper>

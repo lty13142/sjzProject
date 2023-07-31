@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.businessReport.BusinessYearReportWasteMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.businessReport.BusinessYearReportWaste"
+               id="BusinessYearReportWasteResult">
+        <result property="id" column="ID"/>
+        <result property="mainid" column="MAINID"/>
+        <result property="dwid" column="DWID"/>
+        <result property="mlnf" column="MLNF"/>
+        <result property="fwdlbh" column="FWDLBH"/>
+        <result property="fwdlmc" column="FWDLMC"/>
+        <result property="fwxlbh" column="FWXLBH"/>
+        <result property="fwxlmc" column="FWXLMC"/>
+        <result property="fwxxmc" column="FWXXMC"/>
+        <result property="zyfwly" column="ZYFWLY"/>
+        <result property="fwms" column="FWMS"/>
+        <result property="xt" column="XT"/>
+        <result property="md" column="MD"/>
+        <result property="jsl" column="JSL"/>
+        <result property="ylzcl" column="YLZCL"/>
+        <result property="jldw" column="JLDW"/>
+        <result property="qxdc" column="QXDC"/>
+        <result property="gndc" column="GNDC"/>
+        <result property="yjsxg" column="YJSXG"/>
+        <result property="qt" column="QT"/>
+        <result property="sssheng" column="SSSHENG"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectBusinessYearReportWasteVo">
+        select ID,
+               MAINID,
+               DWID,
+               MLNF,
+               FWDLBH,
+               FWDLMC,
+               FWXLBH,
+               FWXLMC,
+               FWXXMC,
+               ZYFWLY,
+               FWMS,
+               XT,
+               MD,
+               JSL,
+               YLZCL,
+               JLDW,
+               QXDC,
+               GNDC,
+               YJSXG,
+               QT,
+               SSSHENG,
+               SSSHI,
+               SSQU,
+               MODIFYRQ,
+        from pp_wxfw_business_year_report_waste
+    </sql>
+
+</mapper>

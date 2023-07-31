@@ -1,0 +1,39 @@
+server:
+  port: 8899
+
+spring:
+  application:
+    name: @artifactId@
+  cloud:
+    nacos:
+      discovery:
+        #        namespace: ${NACOS_NAMESPACE:}
+        server-addr: ${NACOS_HOST:localhost}:${NACOS_PORT:8848}
+#      config:
+#        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+#        #        namespace: ${NACOS_NAMESPACE:}
+#        group: ${NACOS_GROUP:DEFAULT_GROUP}
+#        file-extension: yml
+#        prefix: ${spring.application.name}-${spring.profiles.active}
+#        username: ${NACOS_USERNAME:nacos}
+#        password: ${NACOS_PASSWORD:nacos}
+  profiles:
+    active: @spring.profiles.active@
+
+#开启安全认证 用户名和密码
+  security:
+    basic:
+      enabled: true
+    user:
+      name: admin
+      password: zzyt@123
+
+logging:
+  level:
+    com:
+      alibaba:
+        cloud:
+          nacos:
+            client:
+              NacosPropertySourceBuilder: error
+

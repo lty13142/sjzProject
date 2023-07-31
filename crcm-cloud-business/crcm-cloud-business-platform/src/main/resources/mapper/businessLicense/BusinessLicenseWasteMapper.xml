@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.businessLicense.BusinessLicenseWasteMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.businessLicense.BusinessLicenseWaste"
+               id="BusinessLicenseWasteResult">
+        <result property="id" column="id"/>
+        <result property="licenseId" column="license_id"/>
+        <result property="facilitiesId" column="facilities_id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="directoryVersion" column="directory_version"/>
+        <result property="wasteType" column="waste_type"/>
+        <result property="wasteTypeName" column="waste_type_name"/>
+        <result property="wasteCode" column="waste_code"/>
+        <result property="wasteCodeName" column="waste_code_name"/>
+        <result property="provincialCode" column="provincial_code"/>
+        <result property="cityCode" column="city_code"/>
+        <result property="zoneCode" column="zone_code"/>
+        <result property="dataSource" column="data_source"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectBusinessLicenseWasteVo">
+        select id,
+               license_id,
+               facilities_id,
+               company_id,
+               directory_version,
+               waste_type,
+               waste_type_name,
+               waste_code,
+               waste_code_name,
+               provincial_code,
+               city_code,
+               zone_code,
+               data_source,
+               deleted
+        from pp_wxfw_business_license_waste
+    </sql>
+
+</mapper>

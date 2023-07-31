@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.evaluations.mapper.ExamineMapper">
+    
+    <resultMap type="com.sjz.evaluations.model.entity.Examine" id="ExamineResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="yearly"    column="yearly"    />
+        <result property="releaseStatus"    column="release_status"    />
+        <result property="deleted"    column="deleted"    />
+    </resultMap>
+
+    <sql id="selectExamineVo">
+        select id, name, yearly, release_status, deleted, from gr_examine
+    </sql>
+    <select id="getAssessedPage" resultType="com.sjz.evaluations.model.vo.ExamineVo">
+        select distinct e.id,e.name,e.yearly,e.create_time,e.update_time,e.create_by,gas.confirm,gas.complete
+        from gr_examine e
+                 left join gr_assessment_score gas on e.id=gas.examine_id
+        where e.release_status=1
+          <if test="examine.areaId!=null and examine.areaId!=''">
+              and gas.area_id=#{examine.areaId}
+          </if>
+          <if test="examine.yearly!=null and examine.yearly!=''">
+              and e.yearly  like concat('%', #{examine.yearly}, '%')
+          </if>
+            <if test="examine.name!=null and examine.name!=''">
+                and e.name like concat('%',#{examine.name},'%')
+            </if>
+            <if test="examine.orgId!=null and examine.orgId!=''">
+             and gas.assessment_department=#{examine.orgId}
+            </if>
+            <if test="examine.positionId!=null and examine.positionId!=''">
+                and gas.post=#{examine.positionId}
+            </if>
+
+    </select>
+
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.sheets.EquipmentSheetMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.sheets.EquipmentSheet" id="EquipmentSheetResult">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="companyName" column="company_name"/>
+        <result property="fileId" column="file_id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="belongArea" column="belong_area"/>
+        <result property="uploadFlag" column="upload_flag"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectEquipmentSheetVo">
+        select id,
+               company_id,
+               company_name,
+               file_id,
+               file_name,
+               belong_area,
+               upload_flag,
+               deleted
+        from tbl_equipment_sheet
+    </sql>
+
+    <select id="selectByCompanyId" resultType="com.zsgf.platform.vo.sheets.EquipmentSheetFormWorkVo">
+        select id,
+               company_name,
+               file_id,
+               upload_flag,
+               file_name
+        from tbl_equipment_sheet
+        where deleted = 0
+        and company_id = #{companyId}
+    </select>
+
+</mapper>

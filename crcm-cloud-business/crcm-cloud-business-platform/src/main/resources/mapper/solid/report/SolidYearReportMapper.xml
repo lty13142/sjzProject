@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.solid.report.SolidYearReportMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.solid.report.SolidYearReport" id="SolidYearReportResult">
+        <result property="id" column="ID"/>
+        <result property="dwid" column="DWID"/>
+        <result property="nf" column="NF"/>
+        <result property="sbsj" column="SBSJ"/>
+        <result property="txr" column="TXR"/>
+        <result property="txrphone" column="TXRPHONE"/>
+        <result property="cslsfwl" column="CSLSFWL"/>
+        <result property="sbsftc" column="SBSFTC"/>
+        <result property="tcsj" column="TCSJ"/>
+        <result property="tcyy" column="TCYY"/>
+        <result property="sfcsybgf" column="SFCSYBGF"/>
+        <result property="ssshi" column="SSSHI"/>
+        <result property="ssqu" column="SSQU"/>
+        <result property="state" column="STATE"/>
+        <result property="remark" column="REMARK"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+    </resultMap>
+
+    <sql id="selectSolidYearReportVo">
+        select ID,
+               DWID,
+               NF,
+               SBSJ,
+               TXR,
+               TXRPHONE,
+               CSLSFWL,
+               SBSFTC,
+               TCSJ,
+               TCYY,
+               SFCSYBGF,
+               SSSHI,
+               SSQU,
+               STATE,
+               REMARK,
+               MODIFYRQ
+        from pp_ybgygf_solid_year_report
+    </sql>
+
+</mapper>

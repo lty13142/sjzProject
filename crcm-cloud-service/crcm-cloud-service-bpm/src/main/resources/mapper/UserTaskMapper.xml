@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.bpm.mapper.UserTaskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.crcm.bpm.domain.entity.UserTaskDO">
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="act_task_id" property="actTaskId"/>
+        <result column="apply_id" property="applyId"/>
+        <result column="process_id" property="processId"/>
+        <result column="proc_inst_id" property="procInstId"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="task_name" property="taskName"/>
+        <result column="task_type" property="taskType"/>
+        <result column="task_node_code" property="taskNodeCode"/>
+        <result column="parent_task_id" property="parentTaskId"/>
+        <result column="task_status" property="taskStatus"/>
+        <result column="candidate_user_list" property="candidateUserList"/>
+        <result column="candidate_user_name_list" property="candidateUserNameList"/>
+        <result column="task_owner_user_id" property="taskOwnerUserId"/>
+        <result column="task_owner_real_name" property="taskOwnerRealName"/>
+        <result column="task_assignee_user_id" property="taskAssigneeUserId"/>
+        <result column="task_assignee_real_name" property="taskAssigneeRealName"/>
+        <result column="task_priority" property="taskPriority"/>
+        <result column="form_key" property="formKey"/>
+        <result column="claim_time" property="claimTime"/>
+        <result column="due_time" property="dueTime"/>
+        <result column="approve_time" property="approveTime"/>
+        <result column="remarks" property="remarks"/>
+        <result column="version" property="version"/>
+        <result column="deleted" property="deleted"/>
+        <result column="model_id" property="modelId"/>
+        <result column="action_list" property="actionList"/>
+        <result column="form_edit_field" property="formEditField"/>
+        <result column="approve_opinion" property="approveOpinion"/>
+        <result column="approve_action" property="approveAction"/>
+        <result column="apply_node" property="applyNode"/>
+        <result column="source_action" property="sourceAction"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+            id, create_time, update_time, create_by, update_by,
+            act_task_id, apply_id, process_id, proc_inst_id, tenant_id, task_name, task_type,
+            task_node_code, parent_task_id, task_status, candidate_user_list,
+            task_owner_user_id, task_owner_real_name, task_assignee_user_id, task_assignee_real_name,
+            task_priority, form_key, claim_time, due_time, approve_time, remarks,
+            model_id, action_list, form_edit_field, approve_opinion, approve_action, approve_result, source_action
+        </sql>
+
+
+    <delete id="realDelete">
+        DELETE FROM bpm_user_task WHERE id = #{id}
+    </delete>
+    <select id="selectApplyList" resultType="com.crcm.bpm.domain.dto.response.UserTaskInfoDTO">
+        SELECT
+            a.id apply_id,
+            a.apply_sn,
+            a.proc_inst_id,
+            a.apply_title,
+            a.apply_user_id,
+            a.apply_real_name,
+            a.apply_dept_id,
+            a.apply_dept_code,
+            a.apply_dept_name,
+            a.apply_company_id,
+            a.apply_company_code,
+            a.apply_company_name,
+            a.tenant_id,
+            a.process_id,
+            a.process_key,
+            a.process_name,
+            a.model_id,
+            a.flow_type,
+            a.definition_id,
+            a.parent_apply_id,
+            a.apply_status,
+            a.remarks,
+            a.create_time as applyDate,
+            a.update_time,
+            a.is_old_data,
+            (select max(id) from bpm_user_task where bpm_user_task.apply_id = a.id) task_id,
+            (select max(CAST(bpm_history.act_task_id AS SIGNED)) from bpm_history where bpm_history.apply_id = a.id and bpm_history.task_type = 'start') act_task_id,
+            (select form_type from bpm_model where bpm_model.id = a.model_id) form_type,
+            (select form_Id from bpm_model where bpm_model.id = a.model_id) form_Id,
+            (select form_code from bpm_model where bpm_model.id = a.model_id) form_code,
+            (select GROUP_CONCAT(
+                IF (
+                    bpm_user_task.task_assignee_real_name != '',
+                    bpm_user_task.task_assignee_real_name,
+                    bpm_user_task.candidate_user_name_list
+                )
+            ) from bpm_user_task where bpm_user_task.apply_id = a.id and bpm_user_task.task_status IN (1, 2, 7)) AS currentApproveName
+        from
+            bpm_apply a
+        where
+            a.deleted = 0 and a.apply_status > 1
+        <if test="taskQuery.applyId != null and taskQuery.applyId > 0">
+            and a.id = #{taskQuery.applyId}
+        </if>
+        <if test="taskQuery.applyTitle != null and taskQuery.applyTitle != ''">
+            and a.apply_title like CONCAT('%',#{taskQuery.applyTitle},'%')
+        </if>
+        <if test="taskQuery.processName != null and taskQuery.processName != ''">
+            and a.process_name like CONCAT('%',#{taskQuery.processName},'%')
+        </if>
+        <if test="taskQuery.processId != null and taskQuery.processId > 0">
+            and a.process_id = #{taskQuery.processId}
+        </if>
+        <if test="taskQuery.procInstId != null and taskQuery.procInstId != ''">
+            and a.proc_inst_id = #{taskQuery.procInstId}
+        </if>
+        <if test="taskQuery.tenantId != null and taskQuery.tenantId != ''">
+            and a.tenant_id = #{taskQuery.tenantId}
+        </if>
+        <if test="taskQuery.applySn != null and taskQuery.applySn != ''">
+            and a.apply_sn = #{taskQuery.applySn}
+        </if>
+
+        <if test="taskQuery.processIdList != null and taskQuery.processIdList.size > 0">
+            and a.process_id in
+            <foreach collection="taskQuery.processIdList" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="taskQuery.flowType != null and taskQuery.flowType  != ''">
+            and a.flow_type = #{taskQuery.flowType}
+        </if>
+        <if test="taskQuery.applyStatus != null and taskQuery.applyStatus  > 0">
+            and a.apply_status = #{taskQuery.applyStatus}
+        </if>
+        <if test="taskQuery.companyCode != null and taskQuery.companyCode  !=''">
+            and a.apply_company_code like CONCAT (#{taskQuery.companyCode},'%')
+        </if>
+        <if test="taskQuery.deptCode != null and taskQuery.deptCode  !=''">
+            and a.apply_dept_code like CONCAT (#{taskQuery.deptCode},'%')
+        </if>
+        <if test="taskQuery.applyRealName != null and taskQuery.applyRealName  !=''">
+            and a.apply_real_name like CONCAT('%',#{taskQuery.applyRealName},'%')
+        </if>
+        <if test="taskQuery.applyUserId != null and taskQuery.applyUserId  !=''">
+            and a.apply_user_id = #{taskQuery.applyUserId}
+        </if>
+        <if test="taskQuery.currentUserId != null and taskQuery.currentUserId  !=''">
+            and a.apply_user_id = #{taskQuery.currentUserId}
+        </if>
+        <if test="taskQuery.searchName != null and taskQuery.searchName !=''">
+            AND CONCAT(a.apply_sn ,a.apply_user_id,a.apply_real_name) LIKE CONCAT('%',
+            #{taskQuery.searchName}, '%')
+        </if>
+        <if test="taskQuery.applyStartDate != null ">
+            and a.create_time >= #{taskQuery.applyStartDate}
+        </if>
+        <if test="taskQuery.applyEndDate != null ">
+            and a.create_time &lt;= #{taskQuery.applyEndDate}
+        </if>
+        <if test="taskQuery.lastId != null and taskQuery.lastId > 0">
+            and a.id > #{taskQuery.lastId}
+        </if>
+        <if test="taskQuery.appParam != null and taskQuery.appParam != ''">
+            and (
+                a.id = #{taskQuery.appParam}
+                or a.apply_title like CONCAT('%',#{taskQuery.appParam},'%')
+                or a.process_name like CONCAT('%',#{taskQuery.appParam},'%')
+                or a.apply_real_name like CONCAT('%',#{taskQuery.appParam},'%')
+            )
+        </if>
+        order by a.create_time desc
+    </select>
+    <select id="getToDoListByCondition" resultType="com.crcm.bpm.domain.dto.response.UserTaskInfoDTO">
+        SELECT
+        a.id apply_id,
+        a.apply_sn,
+        a.proc_inst_id,
+        a.apply_title,
+        a.apply_user_id,
+        a.apply_real_name,
+        a.apply_dept_id,
+        a.apply_dept_code,
+        a.apply_dept_name,
+        a.apply_company_id,
+        a.apply_company_code,
+        a.apply_company_name,
+        a.tenant_id,
+        a.process_id,
+        a.process_key,
+        a.model_id,
+        a.flow_type,
+        a.process_name,
+        a.definition_id,
+        a.parent_apply_id,
+        a.apply_status,
+        a.remarks,
+        a.create_time as applyDate,
+        a.update_time,
+        u.id task_id,
+        u.act_task_id,
+        u.task_name,
+        u.task_node_code,
+        u.parent_task_id,
+        u.task_type,
+        u.task_status,
+        u.task_owner_user_id,
+        u.task_owner_real_name,
+        u.task_assignee_real_name,
+        u.task_priority,
+        u.form_key,
+        u.claim_time,
+        u.create_time,
+        u.approve_time,
+        u.due_time,
+        u.action_list,
+        u.form_edit_field,
+        u.source_action,
+        bm.form_type as formType,
+        bm.form_id as formId,
+        bm.form_code,
+        (
+        SELECT
+        GROUP_CONCAT(
+        IF (
+        t.task_assignee_real_name != '',
+        t.task_assignee_real_name,
+        t.candidate_user_name_list
+        )
+        )
+        FROM
+        bpm_user_task t
+        WHERE
+        t.apply_id = a.id
+        <choose>
+        <when test="taskQuery.taskStatus == 7">
+            AND t.task_status = 7
+        </when>
+        <otherwise>
+            AND t.task_status IN (1, 2)
+        </otherwise>
+        </choose>
+        ) AS currentApproveName
+        FROM
+        bpm_apply a,
+        bpm_user_task u,
+        bpm_model bm
+        WHERE
+        a.id = u.apply_id and a.deleted = 0
+        AND
+        <choose>
+            <when test="taskQuery.taskStatus == 7">
+                    u.task_status = 7
+                    <if test="taskQuery.currentUserId != null and taskQuery.currentUserId !=''">
+                        and #{taskQuery.currentUserId} = IFNULL (
+                        u.task_assignee_user_id,
+                        u.task_owner_user_id
+                        )
+                    </if>
+            </when>
+            <otherwise>
+--         未签收
+        ((
+            u.task_status = 1
+            <if test="taskQuery.currentUserId != null and taskQuery.currentUserId !=''">
+            AND FIND_IN_SET(#{taskQuery.currentUserId}, u.candidate_user_list )
+            </if>
+        )
+        OR
+--         已签收/挂起
+        (
+            u.task_status = 2
+            <if test="taskQuery.currentUserId != null and taskQuery.currentUserId !=''">
+                and #{taskQuery.currentUserId} = IFNULL (
+                u.task_assignee_user_id,
+                u.task_owner_user_id
+                )
+            </if>
+        ))
+            </otherwise>
+        </choose>
+        and bm.id = a.model_id
+
+--         AND u.task_type != 'start'
+        <if test="taskQuery.taskId != null and taskQuery.taskId > 0">
+            and u.id = #{taskQuery.taskId}
+        </if>
+        <if test="taskQuery.applyId != null and taskQuery.applyId > 0">
+            and a.id = #{taskQuery.applyId}
+        </if>
+        <if test="taskQuery.applyTitle != null and taskQuery.applyTitle != ''">
+            and a.apply_title like CONCAT('%',#{taskQuery.applyTitle},'%')
+        </if>
+        <if test="taskQuery.processName != null and taskQuery.processName != ''">
+            and a.process_name like CONCAT('%',#{taskQuery.processName},'%')
+        </if>
+        <if test="taskQuery.taskNodeCode != null and taskQuery.taskNodeCode > 0">
+            and u.task_node_code = #{taskQuery.taskNodeCode}
+        </if>
+        <if test="taskQuery.processId != null and taskQuery.processId > 0">
+            and u.process_id = #{taskQuery.processId}
+        </if>
+        <if test="taskQuery.procInstId != null and taskQuery.procInstId != ''">
+            and u.proc_inst_id = #{taskQuery.procInstId}
+        </if>
+        <if test="taskQuery.tenantId != null and taskQuery.tenantId != ''">
+            and a.tenant_id = #{taskQuery.tenantId}
+        </if>
+        <if test="taskQuery.applySn != null and taskQuery.applySn != ''">
+            and a.apply_sn = #{taskQuery.applySn}
+        </if>
+        <if test="taskQuery.taskName != null and taskQuery.taskName != ''">
+            and u.task_name = #{taskQuery.taskName}
+        </if>
+        <if test="taskQuery.processIdList != null and taskQuery.processIdList.size > 0">
+            and a.process_id in
+            <foreach collection="taskQuery.processIdList" item="item" index="index" open="(" close=")" separator=",">
+                #{taskQuery.item}
+            </foreach>
+        </if>
+        <if test="taskQuery.flowType != null and taskQuery.flowType  != ''">
+            and a.flow_type = #{taskQuery.flowType}
+        </if>
+        <if test="taskQuery.applyStatus != null and taskQuery.applyStatus  > 0">
+            and a.apply_status = #{taskQuery.applyStatus}
+        </if>
+        <if test="taskQuery.companyCode != null and taskQuery.companyCode  !=''">
+            and a.apply_company_code like CONCAT (#{taskQuery.companyCode},'%')
+        </if>
+        <if test="taskQuery.deptCode != null and taskQuery.deptCode  !=''">
+            and a.apply_dept_code like CONCAT (#{taskQuery.deptCode},'%')
+        </if>
+        <if test="taskQuery.applyRealName != null and taskQuery.applyRealName  !=''">
+            and a.apply_real_name like CONCAT('%',#{taskQuery.applyRealName},'%')
+        </if>
+        <if test="taskQuery.applyUserId != null and taskQuery.applyUserId !=''">
+            and a.apply_user_id = #{taskQuery.applyUserId}
+        </if>
+        <if test="taskQuery.searchName != null and taskQuery.searchName !=''">
+            AND CONCAT(a.apply_sn ,a.apply_user_id,a.apply_real_name) LIKE CONCAT('%',
+            #{taskQuery.searchName}, '%')
+        </if>
+        <if test="taskQuery.taskStatus != null and taskQuery.taskStatus  > 0">
+            and u.task_status = #{taskQuery.taskStatus}
+        </if>
+        <if test="taskQuery.applyStartDate != null ">
+            and a.create_time >= #{taskQuery.applyStartDate}
+        </if>
+        <if test="taskQuery.applyEndDate != null ">
+            and a.create_time &lt;= #{taskQuery.applyEndDate}
+        </if>
+        <if test="taskQuery.lastId != null and taskQuery.lastId > 0">
+            and u.id > #{taskQuery.lastId}
+        </if>
+        <if test="taskQuery.appParam != null and taskQuery.appParam != ''">
+            and (
+                a.id = #{taskQuery.appParam}
+                or a.apply_title like CONCAT('%',#{taskQuery.appParam},'%')
+                or a.process_name like CONCAT('%',#{taskQuery.appParam},'%')
+                or a.apply_real_name like CONCAT('%',#{taskQuery.appParam},'%')
+            )
+        </if>
+        order by u.create_time desc
+    </select>
+    <select id="getDraftListByCondition" resultType="com.crcm.bpm.domain.dto.response.UserTaskInfoDTO">
+        SELECT
+        a.id apply_id,
+        a.apply_sn,
+        a.proc_inst_id,
+        a.apply_title,
+        a.apply_user_id,
+        a.apply_real_name,
+        a.apply_dept_id,
+        a.apply_dept_code,
+        a.apply_dept_name,
+        a.apply_company_id,
+        a.apply_company_code,
+        a.apply_company_name,
+        a.tenant_id,
+        a.process_id,
+        a.process_key,
+        a.process_name,
+        a.definition_id,
+        a.model_id,
+        a.flow_type,
+        a.source_system,
+        a.platform,
+        a.parent_apply_id,
+        a.apply_status,
+        a.remarks,
+        a.create_time as applyDate,
+        a.update_time,
+        b.form_edit_field,
+        bm.process_svg,
+        bm.form_type,
+        bm.form_id,
+        bm.form_code
+        from bpm_apply a
+        left join bpm_node b on b.definition_id = a.definition_id and b.task_type = 'start'
+        LEFT JOIN bpm_model bm ON bm.definition_id = a.definition_id
+        WHERE
+        a.apply_status = 1 and a.deleted = 0
+        <if test="taskQuery.applyId != null and taskQuery.applyId > 0">
+            and a.id = #{taskQuery.applyId}
+        </if>
+        <if test="taskQuery.applyTitle != null and taskQuery.applyTitle != ''">
+            and a.apply_title like CONCAT('%',#{taskQuery.applyTitle},'%')
+        </if>
+        <if test="taskQuery.processName != null and taskQuery.processName != ''">
+            and a.process_name like CONCAT('%',#{taskQuery.processName},'%')
+        </if>
+        <if test="taskQuery.processId != null and taskQuery.processId > 0">
+            and a.process_id = #{taskQuery.processId}
+        </if>
+        <if test="taskQuery.procInstId != null and taskQuery.procInstId != ''">
+            and a.proc_inst_id = #{taskQuery.procInstId}
+        </if>
+        <if test="taskQuery.tenantId != null and taskQuery.tenantId != ''">
+            and a.tenant_id = #{taskQuery.tenantId}
+        </if>
+        <if test="taskQuery.applySn != null and taskQuery.applySn != ''">
+            and a.apply_sn = #{taskQuery.applySn}
+        </if>
+
+        <if test="taskQuery.processIdList != null and taskQuery.processIdList.size > 0">
+            and a.process_id in
+            <foreach collection="processIdList" item="item" index="index" open="(" close=")" separator=",">
+                #{taskQuery.item}
+            </foreach>
+        </if>
+        <if test="taskQuery.flowType != null and taskQuery.flowType  != ''">
+            and a.flow_type = #{taskQuery.flowType}
+        </if>
+        <if test="taskQuery.applyStatus != null and taskQuery.applyStatus  > 0">
+            and a.apply_status = #{taskQuery.applyStatus}
+        </if>
+        <if test="taskQuery.companyCode != null and taskQuery.companyCode  !=''">
+            and a.apply_company_code like CONCAT (#{taskQuery.companyCode},'%')
+        </if>
+        <if test="taskQuery.deptCode != null and taskQuery.deptCode  !=''">
+            and a.apply_dept_code like CONCAT (#{taskQuery.deptCode},'%')
+        </if>
+        <if test="taskQuery.applyRealName != null and taskQuery.applyRealName  !=''">
+            and a.apply_real_name like CONCAT('%',#{taskQuery.applyRealName},'%')
+        </if>
+        <if test="taskQuery.applyUserId != null and taskQuery.applyUserId !=''">
+            and a.apply_user_id = #{taskQuery.applyUserId}
+        </if>
+        <if test="taskQuery.currentUserId != null and taskQuery.currentUserId !=''">
+            and a.apply_user_id = #{taskQuery.currentUserId}
+        </if>
+        <if test="taskQuery.searchName != null and taskQuery.searchName !=''">
+            AND CONCAT(a.apply_sn ,a.apply_user_id,a.apply_real_name) LIKE CONCAT('%',
+            #{taskQuery.searchName}, '%')
+        </if>
+        <if test="taskQuery.applyStartDate != null ">
+            and a.create_time >= #{taskQuery.applyStartDate}
+        </if>
+        <if test="taskQuery.applyEndDate != null ">
+            and a.create_time &lt;= #{taskQuery.applyEndDate}
+        </if>
+        <if test="taskQuery.lastId != null and taskQuery.lastId > 0">
+            and a.apply_id > #{taskQuery.lastId}
+        </if>
+        <if test="taskQuery.appParam != null and taskQuery.appParam != ''">
+            and (
+                a.id = #{taskQuery.appParam}
+                or a.apply_title like CONCAT('%',#{taskQuery.appParam},'%')
+                or a.process_name like CONCAT('%',#{taskQuery.appParam},'%')
+                or a.apply_real_name like CONCAT('%',#{taskQuery.appParam},'%')
+            )
+        </if>
+        order by a.id desc
+    </select>
+    <select id="getHaveDoListByCondition" resultType="com.crcm.bpm.domain.dto.response.UserTaskInfoDTO">
+        SELECT
+        a.id apply_id,
+        a.apply_sn,
+        a.proc_inst_id,
+        a.apply_title,
+        a.apply_user_id,
+        a.apply_real_name,
+        a.apply_dept_id,
+        a.apply_dept_code,
+        a.apply_dept_name,
+        a.apply_company_id,
+        a.apply_company_code,
+        a.apply_company_name,
+        a.tenant_id,
+        a.process_id,
+        a.process_key,
+        a.process_name,
+        a.definition_id,
+        a.model_id,
+        a.flow_type,
+        a.source_system,
+        a.platform,
+        a.parent_apply_id,
+        a.apply_status,
+        a.remarks,
+        a.create_time as applyDate,
+        a.update_time,
+        a.is_old_data,
+        h.id task_id,
+        h.act_task_id,
+        h.task_name,
+        h.task_node_code,
+        h.parent_task_id,
+        h.task_type,
+        h.task_status,
+        h.task_owner_user_id,
+        h.task_owner_real_name,
+        h.task_assignee_real_name,
+        h.task_priority,
+        h.form_key,
+        h.claim_time,
+        h.approve_time,
+        h.create_time,
+        h.due_time,
+        h.approve_action,
+        h.approve_opinion,
+        h.approve_result,
+        h.form_edit_field,
+        bm.form_type as formType,
+        bm.form_id as formId,
+        bm.form_code
+        FROM
+        bpm_apply a
+        join (select * from bpm_history where id in (select max(id) from bpm_history group by apply_id, task_assignee_user_id)) h on h.apply_id = a.id
+        left join bpm_model bm on bm.id = a.model_id
+        WHERE
+        -- h.id not in (select min(id) from bpm_history group by apply_id)
+        a.deleted = 0 and h.apply_node = 0
+        AND h.task_status = 3
+        <if test="taskQuery.taskId != null and taskQuery.taskId > 0">
+            and h.task_id = #{taskQuery.taskId}
+        </if>
+        <if test="taskQuery.applyId != null and taskQuery.applyId > 0">
+            and h.apply_id = #{taskQuery.applyId}
+        </if>
+        <if test="taskQuery.taskNodeCode != null and taskQuery.taskNodeCode > 0">
+            and h.task_node_code = #{taskQuery.taskNodeCode}
+        </if>
+        <if test="taskQuery.processId != null and taskQuery.processId > 0">
+            and h.process_id = #{taskQuery.processId}
+        </if>
+        <if test="taskQuery.procInstId != null and taskQuery.procInstId != ''">
+            and h.proc_inst_id = #{taskQuery.procInstId}
+        </if>
+        <if test="taskQuery.tenantId != null and taskQuery.tenantId != ''">
+            and a.tenant_id = #{taskQuery.tenantId}
+        </if>
+        <if test="taskQuery.applySn != null and taskQuery.applySn != ''">
+            and a.apply_sn = #{taskQuery.applySn}
+        </if>
+        <if test="taskQuery.taskName != null and taskQuery.taskName != ''">
+            and h.task_name = #{taskQuery.taskName}
+        </if>
+        <if test="taskQuery.processIdList != null and taskQuery.processIdList.size > 0">
+            and a.process_id in
+            <foreach collection="taskQuery.processIdList" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="taskQuery.flowType != null and taskQuery.flowType  != ''">
+            and a.flow_type = #{taskQuery.flowType}
+        </if>
+        <if test="taskQuery.applyStatus != null and taskQuery.applyStatus  > 0">
+            and a.apply_status = #{taskQuery.applyStatus}
+        </if>
+        <if test="taskQuery.applyTitle != null and taskQuery.applyTitle  !=''">
+            and a.apply_title like CONCAT ('%',#{taskQuery.applyTitle},'%')
+        </if>
+        <if test="taskQuery.companyCode != null and taskQuery.companyCode  !=''">
+            and a.apply_company_code like CONCAT (#{taskQuery.companyCode},'%')
+        </if>
+        <if test="taskQuery.deptCode != null and taskQuery.deptCode  !=''">
+            and a.apply_dept_code like CONCAT (#{taskQuery.deptCode},'%')
+        </if>
+        <if test="taskQuery.applyRealName != null and taskQuery.applyRealName  !=''">
+            and a.apply_real_name like CONCAT ('%',#{taskQuery.applyRealName},'%')
+        </if>
+        <if test="taskQuery.applyUserId != null and taskQuery.applyUserId  !=''">
+            and a.apply_user_id = #{taskQuery.applyUserId}
+        </if>
+        <if test="taskQuery.searchName != null and taskQuery.searchName !=''">
+            AND CONCAT(a.apply_sn ,a.apply_user_id,a.apply_real_name) LIKE CONCAT('%',
+            #{taskQuery.searchName}, '%')
+        </if>
+        <if test="taskQuery.taskStatus != null and taskQuery.taskStatus  > 0">
+            and h.task_status #{taskQuery.taskStatus}
+        </if>
+        <if test="taskQuery.currentUserId != null and taskQuery.currentUserId !=''">
+            and #{taskQuery.currentUserId} = h.task_assignee_user_id
+        </if>
+        <if test="taskQuery.applyStartDate != null ">
+            and a.create_time >= #{taskQuery.applyStartDate}
+        </if>
+        <if test="taskQuery.applyEndDate != null ">
+            and a.create_time &lt;= #{taskQuery.applyEndDate}
+        </if>
+        <if test="taskQuery.lastId != null and taskQuery.lastId > 0">
+            and h.task_id > #{taskQuery.lastId}
+        </if>
+        <if test="taskQuery.appParam != null and taskQuery.appParam != ''">
+            and (
+                a.id = #{taskQuery.appParam}
+                or a.apply_title like CONCAT('%',#{taskQuery.appParam},'%')
+                or a.process_name like CONCAT('%',#{taskQuery.appParam},'%')
+                or a.apply_real_name like CONCAT('%',#{taskQuery.appParam},'%')
+            )
+        </if>
+        --         group by a.id
+        order by h.approve_time desc, task_id desc
+    </select>
+
+    <select id="getApproveOpinionList" resultType="com.crcm.bpm.api.vo.GetApproveOpinionListVO">
+        select id, approve_time, approve_opinion as approveOpinionCode, task_name, task_assignee_real_name
+        from bpm_history
+        where apply_id = #{applyId} and approve_time is not null
+        order by approve_time desc
+    </select>
+
+    <select id="selectToDoNumber" resultType="java.lang.Integer">
+        select count(*) from bpm_user_task t, (select id from bpm_apply where deleted = 0) a
+        where t.apply_id = a.id and ((task_status = 1 AND FIND_IN_SET(#{empId}, candidate_user_list))
+            OR (task_status = 2 and #{empId} = IFNULL (task_assignee_user_id, task_owner_user_id)))
+    </select>
+
+
+</mapper>

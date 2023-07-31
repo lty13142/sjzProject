@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.solid.SolidStorageDisposalSiteMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.solid.SolidStorageDisposalSite" id="SolidStorageDisposalSiteResult">
+        <result property="id" column="ID"/>
+        <result property="dwid" column="DWID"/>
+        <result property="ssbh" column="SSBH"/>
+        <result property="ssmc" column="SSMC"/>
+        <result property="sslx" column="SSLX"/>
+        <result property="ssLngD" column="SS_LNG_D"/>
+        <result property="ssLngF" column="SS_LNG_F"/>
+        <result property="ssLngM" column="SS_LNG_M"/>
+        <result property="ssLatD" column="SS_LAT_D"/>
+        <result property="ssLatF" column="SS_LAT_F"/>
+        <result property="ssLatM" column="SS_LAT_M"/>
+        <result property="czcsjrl" column="CZCSJRL"/>
+        <result property="czcsjcznl" column="CZCSJCZNL"/>
+        <result property="wkkhjfxdj" column="WKKHJFXDJ"/>
+        <result property="wkkhjfxdjhdnf" column="WKKHJFXDJHDNF"/>
+        <result property="czcytrj" column="CZCYTRJ"/>
+        <result property="modifyrq" column="MODIFYRQ"/>
+        <result property="zcczfsdl" column="ZCCZFSDL"/>
+        <result property="zcczfsxl" column="ZCCZFSXL"/>
+    </resultMap>
+
+    <sql id="selectSolidStorageDisposalSiteVo">
+        select ID,
+               DWID,
+               SSBH,
+               SSMC,
+               SSLX,
+               SS_LNG_D,
+               SS_LNG_F,
+               SS_LNG_M,
+               SS_LAT_D,
+               SS_LAT_F,
+               SS_LAT_M,
+               CZCSJRL,
+               CZCSJCZNL,
+               WKKHJFXDJ,
+               WKKHJFXDJHDNF,
+               CZCYTRJ,
+               MODIFYRQ,
+               ZCCZFSDL,
+               ZCCZFSXL
+        from pp_ybgygf_solid_storage_disposal_site
+    </sql>
+
+</mapper>

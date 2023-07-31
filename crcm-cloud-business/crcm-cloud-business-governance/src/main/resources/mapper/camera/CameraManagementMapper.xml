@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.governance.mapper.camera.CameraManagementMapper">
+
+    <resultMap type="com.sjz.governance.model.entity.camera.CameraManagement" id="CameraManagementResult">
+        <result property="id" column="id"/>
+        <result property="cameraName" column="camera_name"/>
+        <result property="ip" column="ip"/>
+        <result property="deviceCode" column="device_code"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="channelId" column="channel_id"/>
+        <result property="status" column="status"/>
+        <result property="address" column="address"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="cameraCaptureType" column="camera_capture_type"/>
+        <result property="account" column="account"/>
+        <result property="password" column="password"/>
+        <result property="deviceDesc" column="device_desc"/>
+        <result property="cloudConsole" column="cloud_console"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectCameraManagementVo">
+        select id,
+               camera_name,
+               ip,
+               device_code,
+               device_id,
+               channel_id,
+               status,
+               address,
+               longitude,
+               latitude,
+               camera_capture_type,
+               account,
+               password,
+               device_desc,
+               cloud_console,
+               deleted,
+        from ct_camera_management
+    </sql>
+    <select id="selectCamera" resultType="com.sjz.governance.model.vo.camera.CameraTreeVo">
+        select id,
+               camera_name,
+               device_id,
+               channel_id,
+               status,
+               district_id as parentId,
+               cloud_console,
+               '1'         as cameraFlag
+        from ct_camera_management
+        where deleted = 0
+          and district_id is not null
+          and district_id != ''
+    </select>
+
+    <select id="findCameraManagementPage" resultType="com.sjz.governance.model.vo.camera.CameraManagementVo">
+        select id,
+        camera_name,
+        ip,
+        device_code,
+        device_id,
+        channel_id,
+        status,
+        address,
+        longitude,
+        latitude,
+        camera_type,
+        camera_capture_type,
+        district_id,
+        user_id,
+        user_name,
+        account,
+        password,
+        device_desc,
+        cloud_console
+        from ct_camera_management
+        where deleted = 0
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.cameraType)">
+            and camera_type = #{dto.cameraType}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.cameraCaptureType)">
+            and FIND_IN_SET (#{cameraCaptureType}, camera_capture_type)
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.cameraName)">
+            and (camera_name like CONCAT('%', #{dto.cameraName}, '%') or device_id like CONCAT('%', #{dto.cameraName}, '%'))
+        </if>
+        <if test="dto.status != null">
+            and status = #{dto.status}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(dto.districtId)">
+            and district_id = #{dto.districtId}
+        </if>
+        order by create_time DESC,district_id,device_id,channel_id
+    </select>
+
+    <select id="getCameraCountByStatus" resultType="com.crcm.core.vo.echarts.EChartsIntegerPie">
+        select status as typeCode, count(1) as valueData
+        from ct_camera_management
+        where deleted = 0
+        and status is not null
+        group by status
+    </select>
+
+</mapper>

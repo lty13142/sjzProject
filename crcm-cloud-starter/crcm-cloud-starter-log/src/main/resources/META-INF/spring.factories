@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.crcm.cloud.start.log.LogAutoConfiguration,\
+  com.crcm.cloud.start.log.init.ApplicationLoggerInitializer

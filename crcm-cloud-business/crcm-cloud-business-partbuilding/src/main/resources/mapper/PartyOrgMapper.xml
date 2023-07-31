@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.partbuilding.mapper.PartyOrgMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.sjz.partbuilding.model.entity.PartyOrg">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="version" property="version"/>
+        <result column="deleted" property="deleted"/>
+        <result column="org_id" property="orgId"/>
+        <result column="sup_org" property="supOrg"/>
+        <result column="full_name" property="fullName"/>
+        <result column="simple_name" property="simpleName"/>
+        <result column="attache" property="attache"/>
+        <result column="secretary" property="secretary"/>
+        <result column="contact_name" property="contactName"/>
+        <result column="phone" property="phone"/>
+        <result column="setup_time" property="setupTime"/>
+        <result column="flow" property="flow"/>
+        <result column="sup_name" property="supName"/>
+        <result column="org_category" property="orgCategory"/>
+        <result column="code" property="code"/>
+        <result column="change_time" property="changeTime"/>
+        <result column="guide_org" property="guideOrg"/>
+        <result column="sup_org_name" property="supOrgName"/>
+        <result column="change_term_count" property="changeTermCount"/>
+        <result column="telephone" property="telephone"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                create_by,
+                create_time,
+                update_by,
+                update_time,
+                version,
+                deleted,
+            id, org_id,  simple_name, attache, secretary, contact_name, phone, setup_time, flow, sup_org, full_name, org_category,sup_org_name,change_term_count,telephone
+        </sql>
+
+    <!--真实删除-->
+    <delete id="realDelete">
+        DELETE FROM dj_party_org WHERE id = #{id}
+    </delete>
+
+    <!--根据orgId获取基本信息-->
+    <select id="getBaseMessageByOrgId" resultMap="BaseResultMap">
+        SELECT
+        tp.`id`,tp.`org_id`,tp.`sup_org`,tp.`full_name`,tp.`simple_name`,tp.`attache`,tp.`secretary`,tp.`org_category`,
+        tp.`contact_name`,tp.`phone`,tp.`setup_time`,tp.`flow`,tp.`create_time`,tp.`code`,tp.`change_time`,tp.`guide_org`,tp.`sup_org_name`,tp.`change_term_count`,tp.`telephone`
+        FROM
+        dj_party_org tp
+        LEFT JOIN dj_sys_org tg ON tp.`org_id` = tg.`id`
+        WHERE tp.`deleted` = 0
+        AND tg.`deleted` = 0
+        AND tp.`org_id` = #{orgId}
+        order by tp.`update_time` ASC
+    </select>
+
+    <!--根据orgId获取partyOrgVo-->
+    <select id="getPartyOrgVoByOrgId" resultType="com.sjz.partbuilding.model.vo.PartyOrgVo">
+        select <include refid="Base_Column_List"/> from dj_party_org where deleted = 0 and org_id = #{partyOrg.orgId}
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(partyOrg.fullName)">
+            and full_name like CONCAT('%',#{partyOrg.fullName},'%')
+        </if>
+    </select>
+    <select id="getPartyOrgCompany" resultType="com.sjz.partbuilding.model.vo.PartyOrgVo">
+        SELECT
+        tp.`id`,tp.`org_id`,tp.`sup_org`,tp.`full_name`,tp.`simple_name`,tp.`attache`,tp.`secretary`,tp.`org_category`,
+        tp.`contact_name`,tp.`phone`,tp.`setup_time`,tp.`flow`,tp.`create_time`,tp.`telephone`, tg1.name as supName,
+        tp.`code`,tp.`change_time`,tp.`guide_org`,tp.`sup_org_name`,tp.`change_term_count`
+        FROM
+        dj_party_org tp
+        LEFT JOIN dj_sys_org tg ON tp.`org_id` = tg.`id`
+        left join dj_sys_org tg1 on tg1.id = tp.sup_org
+        WHERE tp.`deleted` = 0
+        AND tg.`deleted` = 0
+        AND tp.`org_id` = #{orgId}
+    </select>
+
+    <select id="getPartyOrgCompany0" resultType="com.sjz.partbuilding.model.vo.PartyOrgVo">
+        SELECT
+        tp.`id`,tp.`org_id`,tp.`sup_org`,tp.`full_name`,tp.`simple_name`,tp.`attache`,tp.`secretary`,tp.`org_category`,
+        tp.`contact_name`,tp.`phone`,tp.`setup_time`,tp.`flow`,tp.`create_time`,tp.`telephone`,sc.address,sc.contacts,tg1.name as supName,
+        sc.name as companyName,sc.phone as companyPhone,tp.`code`,tp.`change_time`,tp.`guide_org`,tp.`sup_org_name`,tp.`change_term_count`
+        FROM
+        dj_party_org tp
+        LEFT JOIN dj_sys_org tg ON tp.`org_id` = tg.`id`
+        left join dj_sys_org tg1 on tg1.id = tp.sup_org
+        left join t_sys_company sc on sc.id = tg.company_id
+        WHERE tp.`deleted` = 0
+        AND tg.`deleted` = 0
+        AND tp.`org_id` in
+        <foreach collection="orgIds" index="index" item="orgId" open="(" separator="," close=")">
+            #{orgId}
+        </foreach>
+    </select>
+
+</mapper>

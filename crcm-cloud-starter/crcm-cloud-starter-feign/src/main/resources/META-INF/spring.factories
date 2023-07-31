@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.crcm.cloud.start.feign.ProjectFeignAutoConfiguration,\
+  com.crcm.cloud.start.feign.ext.RequestInterceptorConfig

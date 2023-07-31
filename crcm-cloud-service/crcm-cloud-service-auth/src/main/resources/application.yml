@@ -1,0 +1,80 @@
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  thymeleaf:
+    prefix: classpath:/views/ # 访问template下的html文件需要配置模板，映射，路径指向
+    suffix: .html
+    cache: false #
+  boot:
+    admin:
+      client:
+        url: http://${crcm-cloud-monitor}:8859
+        username: admin
+        password: zzyt@123
+        instance:
+          prefer-ip: true
+  web:
+    resources:
+      static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,classpath:/webapp/
+
+
+#mybatis配置
+mybatis-plus:
+  mapper-locations: classpath:mapper/**/*.xml,classpath:mapper/*.xml
+  #MyBaits 别名包扫描路径，开启后在 Mapper 对应的 XML 文件中可以直接使用类名，而不用使用全限定的类名，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.crcm.auth.entity
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 0
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 2
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器
+    refresh-mapper: true
+    #是否开启大写命名，默认不开启
+    capital-mode: true
+    #逻辑删除配置
+    #逻辑已删除值,(逻辑删除下有效)
+    logic-delete-value: 1
+    #逻辑未删除值,(逻辑删除下有效)
+    logic-not-delete-value: 0
+  configuration:
+    #驼峰命名
+    map-underscore-to-camel-case: true
+    #mybatis二级缓存
+    cache-enabled: false
+    #打印执行的sql，开发时候用
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #配置JdbcTypeForNull, oracle数据库必须配置
+    jdbc-type-for-null: 'null'
+    #MyBatis 自动映射时未知列或未知属性处理策略 NONE：不做任何处理 (默认值), WARNING：以日志的形式打印相关警告信息, FAILING：当作映射失败处理，并抛出异常和详细信息
+    auto-mapping-unknown-column-behavior: warning
+
+security:
+  oauth2:
+    # 使用redis时可忽略该项所有配置
+    jwt-key-pair:
+      path: qpptest.jks  # jks证书文件存放路径.
+      pwd: mypass        # jks证书密钥.
+      alias: qpptest     # jks证书别名.
+    # token 存储方式 jwt redis redis-custom
+    token-store:
+      type: redis-custom
+    resource:
+      id: ${spring.application.name}
+
+feign:
+  sentinel:
+    enabled: true
+
+#开放监控节点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, refresh, bus-refresh
+  endpoint:
+    health:
+      show-details: always

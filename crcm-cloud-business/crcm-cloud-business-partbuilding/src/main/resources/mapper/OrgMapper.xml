@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjz.partbuilding.mapper.OrgMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.sjz.partbuilding.model.entity.Org">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="version" property="version"/>
+        <result column="deleted" property="deleted"/>
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="pid" property="pid"/>
+        <result column="number" property="number"/>
+        <result column="comments" property="comments"/>
+        <result column="branch_type" property="branchType"/>
+        <result column="directly_branch" property="directlyBranch"/>
+        <result column="ground_branch" property="groundBranch"/>
+        <result column="company_id" property="companyId"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        version,
+        deleted,
+        id, name, code, pid, number, comments, branch_type, directly_branch, ground_branch, company_id
+    </sql>
+
+    <resultMap id="PNumberResultMap" type="com.sjz.partbuilding.model.entity.Org">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="pid" property="pid"/>
+        <result column="number" property="number"/>
+    </resultMap>
+
+
+    <select id="findTree" resultType="com.crcm.core.dto.TreeView">
+        select id,name as label,pid from dj_sys_org where deleted = '0'
+        <if test="type != null and type != '' ">
+            and type = #{type}
+        </if>
+        <if test="code != null and code != '' ">
+            and code = #{code}
+        </if>
+        <if test="name != null and name != '' ">
+            and name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="number != null and number != ''">
+            and number like CONCAT(#{number},'%') or number = "02"
+        </if>
+        order by number
+    </select>
+
+    <select id="findTreeOrgTen" resultType="com.crcm.core.dto.TreeView">
+        select id,name as label,pid,branch_type as type from dj_sys_org where deleted = '0'
+        <if test="type != null and type != '' ">
+            and type = #{type}
+        </if>
+        <if test="branchType != null and branchType != ''">
+            and branch_type in(0,1)
+        </if>
+        <if test="code != null and code != '' ">
+            and code = #{code}
+        </if>
+        <if test="name != null and name != '' ">
+            and name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="number != null and number != ''">
+            and number like CONCAT(#{number},'%') or number = "02"
+        </if>
+        order by number
+    </select>
+
+    <select id="findTreeOrg" resultType="com.crcm.core.dto.TreeView">
+        select id,name as label,pid,branch_type as type from dj_sys_org where deleted = '0'
+        <if test="type != null and type != '' ">
+            and type = #{type}
+        </if>
+        <if test="branchType != null and branchType != ''">
+            and branch_type = #{branchType}
+        </if>
+        <if test="code != null and code != '' ">
+            and code = #{code}
+        </if>
+        <if test="name != null and name != '' ">
+            and name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="number != null and number != ''">
+            and number like CONCAT(#{number},'%') or number = "02"
+        </if>
+        order by number
+    </select>
+
+    <select id="findOrgs" resultType="com.sjz.partbuilding.model.vo.org.OrgPersonVo">
+        select o.id,o.name,o.code,o.pid,o.type,o.number from dj_sys_org o
+        where o.deleted = '0'
+        <if test="type != null and type != '' ">
+            and o.type = #{type}
+        </if>
+        <if test="code != null and code != '' ">
+            and o.code = #{code}
+        </if>
+        <if test="name != null and name != '' ">
+            and o.name like CONCAT(CONCAT('%',#{name},'%'))
+        </if>
+        <if test="number != null and number != ''">
+            and o.number = #{number}
+        </if>
+        <if test="pid != null and pid != ''">
+            and o.pid = #{pid}
+        </if>
+        order by o.number
+    </select>
+
+    <select id="selectChildren" resultType="com.sjz.partbuilding.model.vo.org.OrgPersonVo">
+        select o.id,o.name,o.code,o.pid,o.type,o.number from dj_sys_org o
+        where o.deleted = '0'
+        and o.id not in
+        <foreach collection="parentIds" index="index" item="pid" open="(" separator="," close=")">
+            #{pid}
+        </foreach>
+        and o.pid in
+        <foreach collection="parentIds" index="index" item="pid" open="(" separator="," close=")">
+            #{pid}
+        </foreach>
+        order by o.number
+    </select>
+
+    <select id="getOrgByPNumber" resultMap="PNumberResultMap">
+        SELECT id, name, pid, number FROM dj_sys_org WHERE deleted = 0 and  pid = #{id} ORDER BY number DESC
+    </select>
+
+    <select id="getSuperOrgNumber" resultMap="PNumberResultMap">
+        SELECT id, NAME, pid, number FROM dj_sys_org WHERE deleted = 0 and  pid IS NULL ORDER BY number DESC LIMIT 1
+    </select>
+
+    <select id="getOrgByCurrentLoginPerson" resultMap="PNumberResultMap">
+        SELECT
+        tg.id, tg.name, tg.pid, tg.number
+        FROM
+        dj_sys_org tu
+        LEFT JOIN t_sys_org tg ON tg.`id` = tu.`org_id`
+        WHERE tu.`deleted` = 0
+        AND tg.`deleted` = 0
+        AND tu.username = #{username}
+    </select>
+
+    <select id="getOrgIdsByCompanyNumber" resultType="java.lang.String">
+        SELECT
+        tg.id
+        FROM
+        dj_sys_org tg
+        LEFT JOIN t_sys_company tc ON tg.`company_id` = tc.`id`
+        WHERE tg.`deleted` = 0
+        AND tc.`deleted` = 0
+        AND tc.`number` LIKE CONCAT(#{number},'%')
+    </select>
+
+    <select id="getBranchOrgTreeListByCurrentLogin" resultType="com.crcm.core.dto.TreeView">
+        select
+        tg.id,tg.`name` AS label,tg.`pid`,tc.number as icon
+        FROM
+        dj_sys_org tg
+        LEFT JOIN t_sys_company tc ON tg.`company_id` = tc.`id`
+        WHERE tg.`deleted` = 0
+        AND tc.`deleted` = 0
+        AND tc.`number` LIKE CONCAT(#{number},'%')
+    </select>
+
+    <select id="getBranchList" resultType="com.crcm.core.dto.TreeView">
+        SELECT id,name as label,pid  FROM dj_sys_org WHERE deleted = 0 AND  pid IS NULL ORDER BY number ASC
+    </select>
+
+    <!--获取支部管理党组织树-->
+    <select id="getBranchManagementTree" resultMap="PNumberResultMap">
+        select id,name,pid,number from dj_sys_org where deleted = '0'
+        <if test="org.branchType != null">
+            and branch_type = #{org.branchType}
+        </if>
+        <if test="ids != null">
+            and id in
+            <foreach collection="ids" index="index" item="orgId" open="(" separator="," close=")">
+                #{orgId}
+            </foreach>
+        </if>
+        order by number ASC
+    </select>
+
+    <select id="getOrgByUserId" resultMap="BaseResultMap">
+        SELECT
+        tg.`id`,tg.`name`,tg.`code`,tg.`pid`,tg.`number`,tg.`type`,tg.`branch_type`
+        FROM
+        dj_sys_org tg
+        LEFT JOIN dj_sys_user tu ON tg.`id` = tu.`org_id`
+        WHERE tg.`deleted` = 0
+        AND tu.`deleted` = 0
+        AND tu.`id` = #{userId}
+    </select>
+
+    <!--zongzi-->
+    <select id="getLoginCount" resultType="java.util.HashMap">
+        select count(*) count from dj_sys_org where branch_type in(0,1) and deleted = 0 and pid is not null
+
+    </select>
+    <!--zhishu-->
+    <select id="getLoginCounts" resultType="java.util.HashMap">
+         select  count(*) count from dj_sys_org where branch_type=0 and deleted = 0 and pid is not null
+    </select>
+
+    <!--dishu-->
+    <select id="getLoginCountz" resultType="java.util.HashMap">
+        select  count(*) count from dj_sys_org where branch_type=1 and deleted = 0 and pid is not null
+    </select>
+
+    <!-- 查询当前组织及其子组织 -->
+    <select id="findOrgTree" resultType="com.sjz.partbuilding.model.vo.org.OrgPersonVo">
+        select o.id,o.name,o.code,o.pid,o.type,o.number from dj_sys_org o
+        where o.deleted = '0'
+        and o.number like CONCAT(#{org.number},'%')
+    </select>
+
+    <!-- 根据公司number查询当前组织及其子组织 -->
+    <select id="findOrgTreeAndUsers" resultType="com.crcm.core.dto.TreeView">
+        <!-- 根据组织和公司查下面子组织-->
+             SELECT
+            o.id as id,
+             o.id as icon,
+             o.pid,
+             o. NAME as label,
+             o. CODE,
+             o.type
+             FROM
+             dj_sys_org o
+             WHERE
+             o.deleted = '0'
+             AND o.`number` like CONCAT(#{org.number},'%')
+     <!--        select tc.id,tc.pid,tg.name as label,tg.id as icon-->
+<!--        FROM-->
+<!--        t_sys_company tc-->
+<!--        LEFT JOIN t_sys_org tg ON tc.`id` = tg.`company_id`-->
+<!--        WHERE tc.`deleted` = 0-->
+<!--        AND tg.`deleted` = 0-->
+<!--        <if test="org.branchType == 2 ">-->
+<!--            AND tg.branch_type = 2-->
+<!--        </if>-->
+<!--        <if test="org.branchType == 0 || org.branchType == 1 ">-->
+<!--            AND tg.branch_type in(0,1)-->
+<!--        </if>-->
+<!--        AND tc.`number` like CONCAT(#{number},'%')-->
+<!--        GROUP BY tc.`id`-->
+<!--        order by tc.number asc-->
+    </select>
+    <select id="findById" resultType="com.sjz.partbuilding.model.entity.Org">
+        select * from dj_sys_org
+        where deleted = 0
+        and id = #{id}
+    </select>
+    <select id="findOrgUserTree" resultType="com.crcm.core.dto.TreeView">
+        select id,name as label,pid,'1' as type from dj_sys_org  where deleted = 0
+        union all
+        select id,name as label,org_id as pid,'2' as type from dj_sys_user_detail  where deleted = 0
+    </select>
+    <select id="getOrgidsByPid" resultType="string">
+        select id from dj_sys_org
+        where deleted = 0
+        and pid = #{pid}
+    </select>
+</mapper>

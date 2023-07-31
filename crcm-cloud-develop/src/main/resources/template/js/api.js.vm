@@ -1,0 +1,63 @@
+import request from '@/plugin/axios/request'
+
+// 查询${functionName}列表
+export function list${BusinessName}(query) {
+  return request({
+    url: '/${moduleName}/${businessName}/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 分页查询${functionName}
+export function page${BusinessName}(query) {
+  return request({
+    url: '/${moduleName}/${businessName}/page',
+    method: 'get',
+    params: query
+  })
+}
+
+
+// 查询${functionName}详细
+export function get${BusinessName}(${pkColumn.javaField}) {
+  return request({
+    url: '/${moduleName}/${businessName}/get/' + ${pkColumn.javaField},
+    method: 'get'
+  })
+}
+
+// 新增${functionName}
+export function save${BusinessName}(data) {
+  return request({
+    url: '/${moduleName}/${businessName}/save',
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改${functionName}
+export function update${BusinessName}(data) {
+  return request({
+    url: '/${moduleName}/${businessName}/edit',
+    method: 'post',
+    data: data
+  })
+}
+
+// 删除${functionName}
+export function del${BusinessName}(data) {
+  return request({
+    url: '/${moduleName}/${businessName}/' + data.${pkColumn.javaField},
+    method: 'post'
+  })
+}
+
+// 导出${functionName}
+## export function export${BusinessName}(query) {
+##   return request({
+##     url: '/${moduleName}/${businessName}/export',
+##     method: 'get',
+##     params: query
+##   })
+## }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.wasteProduce.WasteProduceRecordMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.wasteProduce.WasteProduceRecord" id="WasteProduceRecordResult">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="recordDate" column="record_date"/>
+        <result property="directoryVersion" column="directory_version"/>
+        <result property="wasteName" column="waste_name"/>
+        <result property="wasteCategory" column="waste_category"/>
+        <result property="wasteType" column="waste_type"/>
+        <result property="wasteTypeName" column="waste_type_name"/>
+        <result property="wasteCode" column="waste_code"/>
+        <result property="wasteCodeName" column="waste_code_name"/>
+        <result property="totalStorageLastMonthEnd" column="total_storage_last_month_end"/>
+        <result property="totalProduceThisMonth" column="total_produce_this_month"/>
+        <result property="totalSelfDealThisMonth" column="total_self_deal_this_month"/>
+        <result property="totalOtherDealThisMonth" column="total_other_deal_this_month"/>
+        <result property="totalStorageThisMonthEnd" column="total_storage_this_month_end"/>
+        <result property="detailBatchNo" column="detail_batch_no"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectWasteProduceRecordVo">
+        select id,
+               company_id,
+               record_date,
+               directory_version,
+               waste_name,
+               waste_category,
+               waste_type,
+               waste_type_name,
+               waste_code,
+               waste_code_name,
+               total_storage_last_month_end,
+               total_produce_this_month,
+               total_self_deal_this_month,
+               total_other_deal_this_month,
+               total_storage_this_month_end,
+               detail_batch_no,
+               deleted,
+        from tbl_waste_produce_record
+    </sql>
+
+</mapper>

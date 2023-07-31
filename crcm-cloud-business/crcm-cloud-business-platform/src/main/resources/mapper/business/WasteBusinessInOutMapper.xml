@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.business.WasteBusinessInOutMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.business.WasteBusinessInOut" id="WasteBusinessInOutResult">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="transportNo" column="transport_no"/>
+        <result property="createUser" column="create_user"/>
+        <result property="driverName" column="driver_name"/>
+        <result property="driverPhone" column="driver_phone"/>
+        <result property="vehiclesCode" column="vehicles_code"/>
+        <result property="netWeight" column="net_weight"/>
+        <result property="crossWeight" column="cross_weight"/>
+        <result property="tareWeight" column="tare_weight"/>
+        <result property="unit" column="unit"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectWasteBusinessInOutVo">
+        select id,
+               company_id,
+               transport_no,
+               create_user,
+               driver_name,
+               driver_phone,
+               vehicles_code,
+               net_weight,
+               cross_weight,
+               tare_weight,
+               unit,
+               deleted,
+        from tbl_waste_business_in_out
+    </sql>
+
+</mapper>

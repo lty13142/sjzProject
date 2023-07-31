@@ -1,0 +1,97 @@
+version : '3.8'
+services:
+  mysql:
+    container_name: cloud-mysql
+    restart: always
+    image: mysql:8.0.27
+    volumes:
+      - "./mysql/mydir:/mydir"
+      - "./mysql/db:/var/lib/mysql"
+      - "./mysql/conf/my.cnf:/etc/my.cnf"
+      - "./mysql/init:/docker-entrypoint-initdb.d/"
+      - "./mysql/logs:/logs"
+    environment:
+      MYSQL_ROOT_PASSWORD: "mysql@2022" # root用户的密码
+      MYSQL_DATABASE: "crcm_cloud_admin"
+      TZ: "Asia/Shanghai"
+    #      MYSQL_USER: user # 创建新用户
+    #      MYSQL_PASSWORD: user_password # 新用户的密码
+    command:
+      # MySQL8的密码验证方式默认是 caching_sha2_password，但是很多的连接工具还不支持该方式
+      # 就需要手动设置下mysql的密码认证方式为以前的 mysql_native_password 方式
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+    ports:
+      - 3306:3306
+    #     增加healthcheck参数：执行'/usr/bin/mysql --user=root --password=123456 --execute "SHOW DATABASES;"'命令
+    #     执行时间设定为10秒，超时时常设定为20秒，重试次数为10次，如果数据库能登陆并且可以查询时，说明数据库启动完成
+    healthcheck:
+      # 只有真正能执行查询命令，才算启动完成
+      test: '/usr/bin/mysql --user=root --password=mysql@2022 --execute "SHOW DATABASES;"'
+      interval: 10s
+      timeout: 20s
+      retries: 10
+    networks:
+      - crcm-cloud-net
+
+
+  redis:
+    container_name: cloud-redis
+    image: redis:7.0.5
+    ports:
+      - "6379:6379"
+    environment:
+      TZ: Asia/Shanghai
+      JAVA_OPTS: -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m -Xms2g -Xmx2g -Xmn1g -XX:SurvivorRatio=8 -XX:+UseConcMarkSweepGC
+    volumes:
+      - ./redis/conf/redis.conf:/home/app/redis/redis.conf
+      - ./redis/data:/data
+    command: redis-server /home/app/redis/redis.conf
+    restart: always
+    depends_on:
+      - nacos
+    networks:
+      - crcm-cloud-net
+  #  rabbitmq:
+  #    image: rabbitmq:3.10.5-management
+  #    restart: always
+  #    ports:
+  #      - "15672:15672"
+  #      - "5672:5672"
+  #    container_name: rabbitmq
+  #    hostname: rabbitmq
+  #    networks:
+  #      - middle-net
+  #    environment:
+  #      RABBITMQ_DEFAULT_USER: guest
+  #      RABBITMQ_DEFAULT_PASS: guest
+  #    volumes:
+  #      - $PWD/data/rabbitmq:/var/lib/rabbitmq
+  nacos:
+    container_name: cloud-nacos
+    image: nacos/nacos-server:v2.1.0
+    environment:
+      MODE: standalone
+      TZ: Asia/Shanghai
+      JAVA_OPTS: -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms1024m -Xmx1024m -Xmn256m -Xss256k -XX:SurvivorRatio=8 -XX:+UseConcMarkSweepGC
+      SPRING_DATASOURCE_PLATFORM: mysql
+      MYSQL_SERVICE_HOST: cloud-mysql
+      MYSQL_SERVICE_PORT: 3306
+      MYSQL_SERVICE_DB_NAME: nacos_config
+      MYSQL_SERVICE_USER: root
+      MYSQL_SERVICE_PASSWORD: mysql@2022
+      MYSQL_SERVICE_DB_PARAM: characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC
+    volumes:
+      - ./nacos/logs/:/home/nacos/logs
+    restart: always
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+      - "9849:9849"
+    networks:
+      - crcm-cloud-net
+networks:
+  crcm-cloud-net:
+    name: crcm-cloud-net
+    driver: bridge

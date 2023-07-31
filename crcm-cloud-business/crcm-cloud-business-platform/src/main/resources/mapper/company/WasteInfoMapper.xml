@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsgf.platform.mapper.company.WasteInfoMapper">
+
+    <resultMap type="com.zsgf.platform.model.entity.company.WasteInfo" id="WasteInfoResult">
+        <result property="id" column="id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="directoryVersion" column="directory_version"/>
+        <result property="wasteName" column="waste_name"/>
+        <result property="wasteCategory" column="waste_category"/>
+        <result property="wasteType" column="waste_type"/>
+        <result property="wasteTypeName" column="waste_type_name"/>
+        <result property="wasteCode" column="waste_code"/>
+        <result property="wasteCodeName" column="waste_code_name"/>
+        <result property="hazards" column="hazards"/>
+        <result property="component" column="component"/>
+        <result property="hazardous_ingredients" column="hazardousIngredients"/>
+        <result property="shape" column="shape"/>
+        <result property="origin" column="origin"/>
+        <result property="careful" column="careful"/>
+        <result property="disposalMajor" column="disposal_major"/>
+        <result property="disposalSmall" column="disposal_small"/>
+        <result property="dangerousType" column="dangerous_type"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectWasteInfoVo">
+        select id,
+               company_id,
+               directory_version,
+               waste_name,
+               waste_category,
+               waste_type,
+               waste_type_name,
+               waste_code,
+               waste_code_name,
+               hazards,
+               component,
+               hazardous_ingredients,
+               shape,
+               origin,
+               careful,
+               disposal_major,
+               disposal_small,
+               dangerous_type,
+               deleted
+        from tbl_waste_info
+    </sql>
+
+    <select id="findWasteInfoPage" resultType="com.zsgf.platform.vo.company.WasteInfoVo">
+        select twi.id,
+               twi.company_id,
+               twi.directory_version,
+               twi.waste_name,
+               twi.waste_category,
+               twi.waste_type,
+               twi.waste_type_name,
+               twi.waste_code,
+               twi.waste_code_name,
+               twi.hazards,
+               twi.component,
+               twi.hazardous_ingredients,
+               twi.shape,
+               twi.origin,
+               twi.careful,
+               twi.disposal_major,
+               twi.disposal_small,
+               twi.dangerous_type,
+               pci.ENTERNAME AS companyName
+        from tbl_waste_info twi
+        inner join pp_company_info pci
+        on pci.ID = twi.company_id
+        where twi.deleted = 0
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(wasteInfo.wasteType)">
+            and twi.waste_type = #{wasteInfo.wasteType}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(wasteInfo.wasteCode)">
+            and twi.waste_code = #{wasteInfo.wasteCode}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(wasteInfo.companyId)">
+            and twi.company_id = #{wasteInfo.companyId}
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(wasteInfo.companyName)">
+            and pci.ENTERNAME like CONCAT('%', #{wasteInfo.companyName}, '%')
+        </if>
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(wasteInfo.wasteName)">
+            and twi.waste_name like CONCAT('%', #{wasteInfo.wasteName}, '%')
+        </if>
+        <if test="wasteInfo.wasteCategory != null">
+            and twi.waste_category = #{wasteInfo.wasteCategory}
+        </if>
+        order by twi.company_id,twi.create_time
+    </select>
+
+</mapper>

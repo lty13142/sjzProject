@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crcm.admin.mapper.SysAreaMapper">
+    
+    <resultMap type="com.crcm.admin.model.entity.SysArea" id="AreaResult">
+        <result property="id"    column="id"    />
+        <result property="pid"    column="pid"    />
+        <result property="pcode"    column="pcode"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+        <result property="type"    column="type"    />
+        <result property="registeredPopulation"    column="registered_population"    />
+        <result property="residentPopulation"    column="resident_population"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="longitude"    column="longitude"    />
+    </resultMap>
+
+    <sql id="selectAreaVo">
+        select id, pid, pcode, name, code, type, registered_population, resident_population, deleted, from sys_area
+    </sql>
+    <select id="findValidArea" resultType="java.lang.Integer">
+        select count(*) from sys_area
+        where deleted = 0
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(name)">
+            and name = #{name}
+        </if>
+
+    </select>
+    <select id="findTreeView" resultType="com.crcm.core.dto.TreeView">
+        select id,name as label,pid,type,code as icon,latitude,longitude
+        from sys_area
+        where deleted = 0
+        <if test="id != null and id != ''">
+            and pid = #{id}
+        </if>
+        <if test="code != null and code != ''">
+            and code = #{code}
+        </if>
+        order by code
+    </select>
+    <select id="findAreas" resultType="com.crcm.admin.model.entity.SysArea">
+        select id,pid,code,name,pcode,type,registered_population,resident_population,latitude,longitude
+        from sys_area
+        where deleted = 0 and type is not null and type != ''
+        order by code,type
+    </select>
+    <select id="findChildList" resultType="com.crcm.admin.model.entity.SysArea">
+        select id,pid,code,name,pcode,type,registered_population,resident_population,latitude,longitude
+        from sys_area
+        where deleted = 0
+        <if test="id != null and id != ''">
+            and pid = #{id}
+        </if>
+    </select>
+    <select id="findAreaById" resultType="com.crcm.admin.model.entity.SysArea">
+        select a.name pName ,p.* from sys_area a left join sys_area p on a.id=p.pid where p.id=#{id}
+    </select>
+
+    <select id="updateCoordinates" parameterType="com.crcm.admin.model.dto.AreaCoordinatesDTO">
+        update sys_area set latitude = #{latitude}, longitude = #{longitude}
+        where
+            name = #{name}
+    </select>
+
+    <!--查询所有村级区域数据，按照管区的ASC顺序来ASC-->
+    <select id="findVillageAsc" resultType="com.crcm.admin.model.entity.SysArea">
+        SELECT
+        area2.code,
+        area2.name,
+        area2.pcode
+        FROM
+        (SELECT CODE FROM sys_area
+        WHERE deleted = 0
+        AND TYPE = 2
+        <if test="regionCode != '' and regionCode != null">
+            AND code = #{regionCode}
+        </if>
+        ORDER BY CODE ASC) area1
+        LEFT JOIN sys_area area2 ON area1.code = area2.pcode
+        WHERE area2.deleted = 0
+        ORDER BY area1.code,area2.code ASC
+    </select>
+
+    <!--查询所有管区区域数据，按照管区CODE的ASC顺序-->
+    <select id="findRegionAsc" resultType="com.crcm.admin.model.entity.SysArea">
+        SELECT CODE,name FROM sys_area
+        WHERE deleted = 0
+        AND TYPE = 2
+        <if test="regionCode != '' and regionCode != null">
+            AND code = #{regionCode}
+        </if>
+        ORDER BY CODE ASC
+    </select>
+
+
+
+</mapper>
